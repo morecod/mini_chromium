@@ -33,7 +33,7 @@ enum BasePathKey {
                      // should not be used outside of test code.
   DIR_USER_DESKTOP,  // The current user's Desktop.
 
-  DIR_TEST_DATA,  // Used only for testing.
+  DIR_TEST_DATA,     // Used only for testing.
 
   PATH_END
 };

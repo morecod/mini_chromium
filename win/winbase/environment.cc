@@ -9,7 +9,7 @@
 
 #include <vector>
 
-#include "winbase\memory/ptr_util.h"
+#include "winbase\memory\ptr_util.h"
 #include "winbase\strings\string_piece.h"
 #include "winbase\strings\string_util.h"
 #include "winbase\strings\utf_string_conversions.h"

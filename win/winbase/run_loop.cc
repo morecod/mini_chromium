@@ -226,10 +226,10 @@ void RunLoop::QuitCurrentWhenIdleDeprecated() {
 // static
 Closure RunLoop::QuitCurrentWhenIdleClosureDeprecated() {
   // TODO(844016): Fix callsites and enable this check, or remove the API.
-  // Delegate* delegate = tls_delegate.Get().Get();
-  // DCHECK(delegate->active_run_loops_.top()->allow_quit_current_deprecated_)
-  //     << "Please migrate off QuitCurrentWhenIdleClosureDeprecated(), e.g to "
-  //        "QuitWhenIdleClosure().";
+  Delegate* delegate = tls_delegate.Get().Get();
+  WINBASE_DCHECK(delegate->active_run_loops_.top()->allow_quit_current_deprecated_)
+      << "Please migrate off QuitCurrentWhenIdleClosureDeprecated(), e.g to "
+         "QuitWhenIdleClosure().";
   return Bind(&RunLoop::QuitCurrentWhenIdleDeprecated);
 }
 
