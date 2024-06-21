@@ -1,0 +1,405 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="crbase" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug_x86">
+				<Option output="$(WORKSPACE_DIR)/build.bin/Debug_x86/crbase" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="" />
+				<Option object_output="$(WORKSPACE_DIR)/build.tmp/Debug_x86/" />
+				<Option type="2" />
+				<Option compiler="gcc" />
+				<Option createDefFile="1" />
+				<Compiler>
+					<Add option="-Wall" />
+					<Add option="-std=gnu++11" />
+					<Add option="-m32" />
+					<Add option="-g" />
+					<Add option="-D_WIN32_WINNT=0x602" />
+				</Compiler>
+				<Linker>
+					<Add option="-static-libstdc++" />
+					<Add option="-static-libgcc" />
+					<Add option="-static" />
+					<Add option="-m32" />
+				</Linker>
+			</Target>
+			<Target title="Release_x86">
+				<Option output="$(WORKSPACE_DIR)/build.bin/Release_x86/crbase" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="" />
+				<Option object_output="$(WORKSPACE_DIR)/build.tmp/Release_x86/" />
+				<Option type="2" />
+				<Option compiler="gcc" />
+				<Option createDefFile="1" />
+				<Compiler>
+					<Add option="-O2" />
+					<Add option="-Wall" />
+					<Add option="-std=gnu++11" />
+					<Add option="-std=c++11" />
+					<Add option="-m32" />
+					<Add option="-DNDEBUG" />
+					<Add option="-D_WIN32_WINNT=0x602" />
+					<Add directory="../../../src/" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+					<Add option="-static-libstdc++" />
+					<Add option="-static-libgcc" />
+					<Add option="-static" />
+					<Add option="-m32" />
+				</Linker>
+			</Target>
+			<Target title="Debug_x64">
+				<Option output="$(WORKSPACE_DIR)/build.bin/Debug_x64/crbase" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="" />
+				<Option object_output="$(WORKSPACE_DIR)/build.tmp/Debug_x64/" />
+				<Option type="2" />
+				<Option compiler="gcc" />
+				<Option createDefFile="1" />
+				<Compiler>
+					<Add option="-Wall" />
+					<Add option="-std=gnu++11" />
+					<Add option="-m64" />
+					<Add option="-g" />
+					<Add option="-D_WIN32_WINNT=0x602" />
+				</Compiler>
+				<Linker>
+					<Add option="-static-libstdc++" />
+					<Add option="-static-libgcc" />
+					<Add option="-static" />
+					<Add option="-m64" />
+				</Linker>
+			</Target>
+			<Target title="Release_x64">
+				<Option output="$(WORKSPACE_DIR)/build.bin/Release_x64/crbase" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="" />
+				<Option object_output="$(WORKSPACE_DIR)/build.tmp/Release_x64/" />
+				<Option type="2" />
+				<Option compiler="gcc" />
+				<Option createDefFile="1" />
+				<Compiler>
+					<Add option="-O2" />
+					<Add option="-Wall" />
+					<Add option="-std=gnu++11" />
+					<Add option="-std=c++11" />
+					<Add option="-m64" />
+					<Add option="-DNDEBUG" />
+					<Add option="-D_WIN32_WINNT=0x602" />
+					<Add directory="../../../src/" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+					<Add option="-static-libstdc++" />
+					<Add option="-static-libgcc" />
+					<Add option="-static" />
+					<Add option="-m64" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add directory="../../../src" />
+		</Compiler>
+		<Unit filename="../../../src/crbase/at_exit.cc" />
+		<Unit filename="../../../src/crbase/at_exit.h" />
+		<Unit filename="../../../src/crbase/atomic/atomic_ref_count.h" />
+		<Unit filename="../../../src/crbase/atomic/atomic_sequence_num.h" />
+		<Unit filename="../../../src/crbase/atomic/atomicops.h" />
+		<Unit filename="../../../src/crbase/auto_reset.h" />
+		<Unit filename="../../../src/crbase/base_export.h" />
+		<Unit filename="../../../src/crbase/base_paths.cc" />
+		<Unit filename="../../../src/crbase/base_paths.h" />
+		<Unit filename="../../../src/crbase/base_paths_win.cc" />
+		<Unit filename="../../../src/crbase/base_paths_win.h" />
+		<Unit filename="../../../src/crbase/bit_cast.h" />
+		<Unit filename="../../../src/crbase/bits.h" />
+		<Unit filename="../../../src/crbase/build_config.h" />
+		<Unit filename="../../../src/crbase/codes/base64.cc" />
+		<Unit filename="../../../src/crbase/codes/base64.h" />
+		<Unit filename="../../../src/crbase/command_line.cc" />
+		<Unit filename="../../../src/crbase/command_line.h" />
+		<Unit filename="../../../src/crbase/compiler_specific.h" />
+		<Unit filename="../../../src/crbase/containers/hash_tables.h" />
+		<Unit filename="../../../src/crbase/crypto/sha1.cc" />
+		<Unit filename="../../../src/crbase/crypto/sha1.h" />
+		<Unit filename="../../../src/crbase/debug/alias.cc" />
+		<Unit filename="../../../src/crbase/debug/alias.h" />
+		<Unit filename="../../../src/crbase/debug/debugger.cc" />
+		<Unit filename="../../../src/crbase/debug/debugger.h" />
+		<Unit filename="../../../src/crbase/debug/stack_trace.cc" />
+		<Unit filename="../../../src/crbase/debug/stack_trace.h" />
+		<Unit filename="../../../src/crbase/environment.cc" />
+		<Unit filename="../../../src/crbase/environment.h" />
+		<Unit filename="../../../src/crbase/file_version_info.cc" />
+		<Unit filename="../../../src/crbase/file_version_info.h" />
+		<Unit filename="../../../src/crbase/files/file.cc" />
+		<Unit filename="../../../src/crbase/files/file.h" />
+		<Unit filename="../../../src/crbase/files/file_enumerator.cc" />
+		<Unit filename="../../../src/crbase/files/file_enumerator.h" />
+		<Unit filename="../../../src/crbase/files/file_enumerator_win.cc" />
+		<Unit filename="../../../src/crbase/files/file_path.cc" />
+		<Unit filename="../../../src/crbase/files/file_path.h" />
+		<Unit filename="../../../src/crbase/files/file_path_constants.cc" />
+		<Unit filename="../../../src/crbase/files/file_util.cc" />
+		<Unit filename="../../../src/crbase/files/file_util.h" />
+		<Unit filename="../../../src/crbase/files/file_util_win.cc" />
+		<Unit filename="../../../src/crbase/files/file_win.cc" />
+		<Unit filename="../../../src/crbase/files/scoped_file.h" />
+		<Unit filename="../../../src/crbase/functional/bind.h" />
+		<Unit filename="../../../src/crbase/functional/bind_helpers.cc" />
+		<Unit filename="../../../src/crbase/functional/bind_helpers.h" />
+		<Unit filename="../../../src/crbase/functional/bind_internal.h" />
+		<Unit filename="../../../src/crbase/functional/bind_internal_win.h" />
+		<Unit filename="../../../src/crbase/functional/callback.h" />
+		<Unit filename="../../../src/crbase/functional/callback_forward.h" />
+		<Unit filename="../../../src/crbase/functional/callback_helpers.cc" />
+		<Unit filename="../../../src/crbase/functional/callback_helpers.h" />
+		<Unit filename="../../../src/crbase/functional/callback_internal.cc" />
+		<Unit filename="../../../src/crbase/functional/callback_internal.h" />
+		<Unit filename="../../../src/crbase/functional/critical_closure.h" />
+		<Unit filename="../../../src/crbase/guid.cc" />
+		<Unit filename="../../../src/crbase/guid.h" />
+		<Unit filename="../../../src/crbase/import_libs.cc" />
+		<Unit filename="../../../src/crbase/json/json_parser.cc" />
+		<Unit filename="../../../src/crbase/json/json_parser.h" />
+		<Unit filename="../../../src/crbase/json/json_reader.cc" />
+		<Unit filename="../../../src/crbase/json/json_reader.h" />
+		<Unit filename="../../../src/crbase/json/json_string_value_serializer.cc" />
+		<Unit filename="../../../src/crbase/json/json_string_value_serializer.h" />
+		<Unit filename="../../../src/crbase/json/json_value_converter.cc" />
+		<Unit filename="../../../src/crbase/json/json_value_converter.h" />
+		<Unit filename="../../../src/crbase/json/json_writer.cc" />
+		<Unit filename="../../../src/crbase/json/json_writer.h" />
+		<Unit filename="../../../src/crbase/json/string_escape.cc" />
+		<Unit filename="../../../src/crbase/json/string_escape.h" />
+		<Unit filename="../../../src/crbase/lazy_instance.cc" />
+		<Unit filename="../../../src/crbase/lazy_instance.h" />
+		<Unit filename="../../../src/crbase/logging.cc" />
+		<Unit filename="../../../src/crbase/logging.h" />
+		<Unit filename="../../../src/crbase/macros.h" />
+		<Unit filename="../../../src/crbase/memory/aligned_memory.cc" />
+		<Unit filename="../../../src/crbase/memory/aligned_memory.h" />
+		<Unit filename="../../../src/crbase/memory/linked_ptr.h" />
+		<Unit filename="../../../src/crbase/memory/ref_counted.cc" />
+		<Unit filename="../../../src/crbase/memory/ref_counted.h" />
+		<Unit filename="../../../src/crbase/memory/scoped_vector.h" />
+		<Unit filename="../../../src/crbase/memory/shared_memory.cc" />
+		<Unit filename="../../../src/crbase/memory/shared_memory.h" />
+		<Unit filename="../../../src/crbase/memory/shared_memory_handle.cc" />
+		<Unit filename="../../../src/crbase/memory/shared_memory_handle.h" />
+		<Unit filename="../../../src/crbase/memory/singleton.cc" />
+		<Unit filename="../../../src/crbase/memory/singleton.h" />
+		<Unit filename="../../../src/crbase/memory/weak_ptr.cc" />
+		<Unit filename="../../../src/crbase/memory/weak_ptr.h" />
+		<Unit filename="../../../src/crbase/message_loop/incoming_task_queue.cc" />
+		<Unit filename="../../../src/crbase/message_loop/incoming_task_queue.h" />
+		<Unit filename="../../../src/crbase/message_loop/message_loop.cc" />
+		<Unit filename="../../../src/crbase/message_loop/message_loop.h" />
+		<Unit filename="../../../src/crbase/message_loop/message_loop_task_runner.cc" />
+		<Unit filename="../../../src/crbase/message_loop/message_loop_task_runner.h" />
+		<Unit filename="../../../src/crbase/message_loop/message_pump.cc" />
+		<Unit filename="../../../src/crbase/message_loop/message_pump.h" />
+		<Unit filename="../../../src/crbase/message_loop/message_pump_default.cc" />
+		<Unit filename="../../../src/crbase/message_loop/message_pump_default.h" />
+		<Unit filename="../../../src/crbase/message_loop/message_pump_dispatcher.h" />
+		<Unit filename="../../../src/crbase/message_loop/message_pump_win.cc" />
+		<Unit filename="../../../src/crbase/message_loop/message_pump_win.h" />
+		<Unit filename="../../../src/crbase/message_loop/timer_slack.h" />
+		<Unit filename="../../../src/crbase/move.h" />
+		<Unit filename="../../../src/crbase/numerics/safe_conversions.h" />
+		<Unit filename="../../../src/crbase/numerics/safe_conversions_impl.h" />
+		<Unit filename="../../../src/crbase/numerics/safe_math.h" />
+		<Unit filename="../../../src/crbase/numerics/safe_math_impl.h" />
+		<Unit filename="../../../src/crbase/observer_list.h" />
+		<Unit filename="../../../src/crbase/observer_list_threadsafe.h" />
+		<Unit filename="../../../src/crbase/path_service.cc" />
+		<Unit filename="../../../src/crbase/path_service.h" />
+		<Unit filename="../../../src/crbase/pickle.cc" />
+		<Unit filename="../../../src/crbase/pickle.h" />
+		<Unit filename="../../../src/crbase/process/kill.cc" />
+		<Unit filename="../../../src/crbase/process/kill.h" />
+		<Unit filename="../../../src/crbase/process/launch.cc" />
+		<Unit filename="../../../src/crbase/process/launch.h" />
+		<Unit filename="../../../src/crbase/process/memory.cc" />
+		<Unit filename="../../../src/crbase/process/memory.h" />
+		<Unit filename="../../../src/crbase/process/memory_win.cc" />
+		<Unit filename="../../../src/crbase/process/process.cc" />
+		<Unit filename="../../../src/crbase/process/process.h" />
+		<Unit filename="../../../src/crbase/process/process_handle.cc" />
+		<Unit filename="../../../src/crbase/process/process_handle.h" />
+		<Unit filename="../../../src/crbase/process/process_iterator.cc" />
+		<Unit filename="../../../src/crbase/process/process_iterator.h" />
+		<Unit filename="../../../src/crbase/rand_util.cc" />
+		<Unit filename="../../../src/crbase/rand_util.h" />
+		<Unit filename="../../../src/crbase/rand_util_win.cc" />
+		<Unit filename="../../../src/crbase/run_loop.cc" />
+		<Unit filename="../../../src/crbase/run_loop.h" />
+		<Unit filename="../../../src/crbase/stl_util.h" />
+		<Unit filename="../../../src/crbase/strings/nullable_string16.cc" />
+		<Unit filename="../../../src/crbase/strings/nullable_string16.h" />
+		<Unit filename="../../../src/crbase/strings/pattern.cc" />
+		<Unit filename="../../../src/crbase/strings/pattern.h" />
+		<Unit filename="../../../src/crbase/strings/string16.h" />
+		<Unit filename="../../../src/crbase/strings/string_number_conversions.cc" />
+		<Unit filename="../../../src/crbase/strings/string_number_conversions.h" />
+		<Unit filename="../../../src/crbase/strings/string_piece.cc" />
+		<Unit filename="../../../src/crbase/strings/string_piece.h" />
+		<Unit filename="../../../src/crbase/strings/string_split.cc" />
+		<Unit filename="../../../src/crbase/strings/string_split.h" />
+		<Unit filename="../../../src/crbase/strings/string_util.cc" />
+		<Unit filename="../../../src/crbase/strings/string_util.h" />
+		<Unit filename="../../../src/crbase/strings/string_util_constants.cc" />
+		<Unit filename="../../../src/crbase/strings/stringprintf.cc" />
+		<Unit filename="../../../src/crbase/strings/stringprintf.h" />
+		<Unit filename="../../../src/crbase/strings/sys_string_conversions.cc" />
+		<Unit filename="../../../src/crbase/strings/sys_string_conversions.h" />
+		<Unit filename="../../../src/crbase/strings/utf_string_conversion_utils.cc" />
+		<Unit filename="../../../src/crbase/strings/utf_string_conversion_utils.h" />
+		<Unit filename="../../../src/crbase/strings/utf_string_conversions.cc" />
+		<Unit filename="../../../src/crbase/strings/utf_string_conversions.h" />
+		<Unit filename="../../../src/crbase/synchronization/condition_variable.cc" />
+		<Unit filename="../../../src/crbase/synchronization/condition_variable.h" />
+		<Unit filename="../../../src/crbase/synchronization/lock.cc" />
+		<Unit filename="../../../src/crbase/synchronization/lock.h" />
+		<Unit filename="../../../src/crbase/synchronization/lock_impl.h" />
+		<Unit filename="../../../src/crbase/synchronization/lock_impl_win.cc" />
+		<Unit filename="../../../src/crbase/synchronization/waitable_event.cc" />
+		<Unit filename="../../../src/crbase/synchronization/waitable_event.h" />
+		<Unit filename="../../../src/crbase/synchronization/waitable_event_watcher.cc" />
+		<Unit filename="../../../src/crbase/synchronization/waitable_event_watcher.h" />
+		<Unit filename="../../../src/crbase/sys_info.cc" />
+		<Unit filename="../../../src/crbase/sys_info.h" />
+		<Unit filename="../../../src/crbase/sys_info_win.cc" />
+		<Unit filename="../../../src/crbase/system_info/cpu.cc" />
+		<Unit filename="../../../src/crbase/system_info/cpu.h" />
+		<Unit filename="../../../src/crbase/template_util.h" />
+		<Unit filename="../../../src/crbase/third_party/double-conversion/bignum-dtoa.cc" />
+		<Unit filename="../../../src/crbase/third_party/double-conversion/bignum-dtoa.h" />
+		<Unit filename="../../../src/crbase/third_party/double-conversion/bignum.cc" />
+		<Unit filename="../../../src/crbase/third_party/double-conversion/bignum.h" />
+		<Unit filename="../../../src/crbase/third_party/double-conversion/cached-powers.cc" />
+		<Unit filename="../../../src/crbase/third_party/double-conversion/cached-powers.h" />
+		<Unit filename="../../../src/crbase/third_party/double-conversion/diy-fp.h" />
+		<Unit filename="../../../src/crbase/third_party/double-conversion/double-conversion.h" />
+		<Unit filename="../../../src/crbase/third_party/double-conversion/double-to-string.cc" />
+		<Unit filename="../../../src/crbase/third_party/double-conversion/double-to-string.h" />
+		<Unit filename="../../../src/crbase/third_party/double-conversion/fast-dtoa.cc" />
+		<Unit filename="../../../src/crbase/third_party/double-conversion/fast-dtoa.h" />
+		<Unit filename="../../../src/crbase/third_party/double-conversion/fixed-dtoa.cc" />
+		<Unit filename="../../../src/crbase/third_party/double-conversion/fixed-dtoa.h" />
+		<Unit filename="../../../src/crbase/third_party/double-conversion/ieee.h" />
+		<Unit filename="../../../src/crbase/third_party/double-conversion/string-to-double.cc" />
+		<Unit filename="../../../src/crbase/third_party/double-conversion/string-to-double.h" />
+		<Unit filename="../../../src/crbase/third_party/double-conversion/strtod.cc" />
+		<Unit filename="../../../src/crbase/third_party/double-conversion/strtod.h" />
+		<Unit filename="../../../src/crbase/third_party/double-conversion/utils.h" />
+		<Unit filename="../../../src/crbase/third_party/icu/icu_utf.cc" />
+		<Unit filename="../../../src/crbase/third_party/icu/icu_utf.h" />
+		<Unit filename="../../../src/crbase/third_party/modp_b64/modp_b64.cc" />
+		<Unit filename="../../../src/crbase/third_party/modp_b64/modp_b64.h" />
+		<Unit filename="../../../src/crbase/third_party/modp_b64/modp_b64_data.h" />
+		<Unit filename="../../../src/crbase/third_party/nspr/prtime.cc" />
+		<Unit filename="../../../src/crbase/third_party/nspr/prtime.h" />
+		<Unit filename="../../../src/crbase/threading/non_thread_safe.h" />
+		<Unit filename="../../../src/crbase/threading/pending_task.cc" />
+		<Unit filename="../../../src/crbase/threading/pending_task.h" />
+		<Unit filename="../../../src/crbase/threading/platform_thread.cc" />
+		<Unit filename="../../../src/crbase/threading/platform_thread.h" />
+		<Unit filename="../../../src/crbase/threading/post_task_and_reply_impl.cc" />
+		<Unit filename="../../../src/crbase/threading/post_task_and_reply_impl.h" />
+		<Unit filename="../../../src/crbase/threading/sequenced_task_runner.cc" />
+		<Unit filename="../../../src/crbase/threading/sequenced_task_runner.h" />
+		<Unit filename="../../../src/crbase/threading/sequenced_task_runner_helpers.h" />
+		<Unit filename="../../../src/crbase/threading/sequenced_worker_pool.cc" />
+		<Unit filename="../../../src/crbase/threading/sequenced_worker_pool.h" />
+		<Unit filename="../../../src/crbase/threading/simple_thread.cc" />
+		<Unit filename="../../../src/crbase/threading/simple_thread.h" />
+		<Unit filename="../../../src/crbase/threading/single_thread_task_runner.h" />
+		<Unit filename="../../../src/crbase/threading/task_runner.cc" />
+		<Unit filename="../../../src/crbase/threading/task_runner.h" />
+		<Unit filename="../../../src/crbase/threading/task_runner_util.h" />
+		<Unit filename="../../../src/crbase/threading/thread.cc" />
+		<Unit filename="../../../src/crbase/threading/thread.h" />
+		<Unit filename="../../../src/crbase/threading/thread_id_name_manager.cc" />
+		<Unit filename="../../../src/crbase/threading/thread_id_name_manager.h" />
+		<Unit filename="../../../src/crbase/threading/thread_local.cc" />
+		<Unit filename="../../../src/crbase/threading/thread_local.h" />
+		<Unit filename="../../../src/crbase/threading/thread_local_storage.cc" />
+		<Unit filename="../../../src/crbase/threading/thread_local_storage.h" />
+		<Unit filename="../../../src/crbase/threading/thread_local_storage_win.cc" />
+		<Unit filename="../../../src/crbase/threading/thread_restrictions.cc" />
+		<Unit filename="../../../src/crbase/threading/thread_restrictions.h" />
+		<Unit filename="../../../src/crbase/threading/thread_task_runner_handle.cc" />
+		<Unit filename="../../../src/crbase/threading/thread_task_runner_handle.h" />
+		<Unit filename="../../../src/crbase/threading/worker_pool.cc" />
+		<Unit filename="../../../src/crbase/threading/worker_pool.h" />
+		<Unit filename="../../../src/crbase/threading/worker_pool_win.cc" />
+		<Unit filename="../../../src/crbase/time/clock.cc" />
+		<Unit filename="../../../src/crbase/time/clock.h" />
+		<Unit filename="../../../src/crbase/time/default_clock.cc" />
+		<Unit filename="../../../src/crbase/time/default_clock.h" />
+		<Unit filename="../../../src/crbase/time/default_tick_clock.cc" />
+		<Unit filename="../../../src/crbase/time/default_tick_clock.h" />
+		<Unit filename="../../../src/crbase/time/tick_clock.cc" />
+		<Unit filename="../../../src/crbase/time/tick_clock.h" />
+		<Unit filename="../../../src/crbase/time/time.cc" />
+		<Unit filename="../../../src/crbase/time/time.h" />
+		<Unit filename="../../../src/crbase/time/time_win.cc" />
+		<Unit filename="../../../src/crbase/tracing/location.cc" />
+		<Unit filename="../../../src/crbase/tracing/location.h" />
+		<Unit filename="../../../src/crbase/tracing/tracked_objects.cc" />
+		<Unit filename="../../../src/crbase/tracing/tracked_objects.h" />
+		<Unit filename="../../../src/crbase/tracing/tracked_time.cc" />
+		<Unit filename="../../../src/crbase/tracing/tracked_time.h" />
+		<Unit filename="../../../src/crbase/tracing/tracking_info.cc" />
+		<Unit filename="../../../src/crbase/tracing/tracking_info.h" />
+		<Unit filename="../../../src/crbase/tuple.h" />
+		<Unit filename="../../../src/crbase/value_conversions.cc" />
+		<Unit filename="../../../src/crbase/value_conversions.h" />
+		<Unit filename="../../../src/crbase/values.cc" />
+		<Unit filename="../../../src/crbase/values.h" />
+		<Unit filename="../../../src/crbase/version.cc" />
+		<Unit filename="../../../src/crbase/version.h" />
+		<Unit filename="../../../src/crbase/win/native_api_wrapper.cc" />
+		<Unit filename="../../../src/crbase/win/native_api_wrapper.h" />
+		<Unit filename="../../../src/crbase/win/native_internal.h" />
+		<Unit filename="../../../src/crbase/win/object_watcher.cc" />
+		<Unit filename="../../../src/crbase/win/object_watcher.h" />
+		<Unit filename="../../../src/crbase/win/pe_image.cc" />
+		<Unit filename="../../../src/crbase/win/pe_image.h" />
+		<Unit filename="../../../src/crbase/win/registry.cc" />
+		<Unit filename="../../../src/crbase/win/registry.h" />
+		<Unit filename="../../../src/crbase/win/scoped_bstr.cc" />
+		<Unit filename="../../../src/crbase/win/scoped_bstr.h" />
+		<Unit filename="../../../src/crbase/win/scoped_co_mem.h" />
+		<Unit filename="../../../src/crbase/win/scoped_com_initializer.h" />
+		<Unit filename="../../../src/crbase/win/scoped_comptr.h" />
+		<Unit filename="../../../src/crbase/win/scoped_handle.cc" />
+		<Unit filename="../../../src/crbase/win/scoped_handle.h" />
+		<Unit filename="../../../src/crbase/win/scoped_process_information.cc" />
+		<Unit filename="../../../src/crbase/win/scoped_process_information.h" />
+		<Unit filename="../../../src/crbase/win/scoped_propvariant.h" />
+		<Unit filename="../../../src/crbase/win/scoped_sc_handle.h" />
+		<Unit filename="../../../src/crbase/win/scoped_variant.cc" />
+		<Unit filename="../../../src/crbase/win/scoped_variant.h" />
+		<Unit filename="../../../src/crbase/win/shortcut.cc" />
+		<Unit filename="../../../src/crbase/win/shortcut.h" />
+		<Unit filename="../../../src/crbase/win/startup_information.cc" />
+		<Unit filename="../../../src/crbase/win/startup_information.h" />
+		<Unit filename="../../../src/crbase/win/win_util.cc" />
+		<Unit filename="../../../src/crbase/win/win_util.h" />
+		<Unit filename="../../../src/crbase/win/windows_service.cc" />
+		<Unit filename="../../../src/crbase/win/windows_service.h" />
+		<Unit filename="../../../src/crbase/win/windows_version.cc" />
+		<Unit filename="../../../src/crbase/win/windows_version.h" />
+		<Unit filename="../../../src/crbase/win/wmi.cc" />
+		<Unit filename="../../../src/crbase/win/wmi.h" />
+		<Unit filename="../../../src/crbase/win/wrapped_window_proc.cc" />
+		<Unit filename="../../../src/crbase/win/wrapped_window_proc.h" />
+		<Extensions>
+			<lib_finder disable_auto="1" />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

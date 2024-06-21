@@ -1,0 +1,93 @@
+// Copyright (c) 2012 The Chromium Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+#ifndef MINI_CHROMIUM_SRC_CRBASE_SYNCHRONIZATION_WAITABLE_EVENT_WATCHER_H_
+#define MINI_CHROMIUM_SRC_CRBASE_SYNCHRONIZATION_WAITABLE_EVENT_WATCHER_H_
+
+#include "crbase/base_export.h"
+#include "crbase/win/object_watcher.h"
+#include "crbase/functional/callback.h"
+#include "crbase/message_loop/message_loop.h"
+#include "crbase/synchronization/waitable_event.h"
+
+namespace crbase {
+
+class Flag;
+class AsyncWaiter;
+class AsyncCallbackTask;
+class WaitableEvent;
+
+// This class provides a way to wait on a WaitableEvent asynchronously.
+//
+// Each instance of this object can be waiting on a single WaitableEvent. When
+// the waitable event is signaled, a callback is made in the thread of a given
+// MessageLoop. This callback can be deleted by deleting the waiter.
+//
+// Typical usage:
+//
+//   class MyClass {
+//    public:
+//     void DoStuffWhenSignaled(WaitableEvent *waitable_event) {
+//       watcher_.StartWatching(waitable_event,
+//           base::Bind(&MyClass::OnWaitableEventSignaled, this);
+//     }
+//    private:
+//     void OnWaitableEventSignaled(WaitableEvent* waitable_event) {
+//       // OK, time to do stuff!
+//     }
+//     base::WaitableEventWatcher watcher_;
+//   };
+//
+// In the above example, MyClass wants to "do stuff" when waitable_event
+// becomes signaled. WaitableEventWatcher makes this task easy. When MyClass
+// goes out of scope, the watcher_ will be destroyed, and there is no need to
+// worry about OnWaitableEventSignaled being called on a deleted MyClass
+// pointer.
+//
+// BEWARE: With automatically reset WaitableEvents, a signal may be lost if it
+// occurs just before a WaitableEventWatcher is deleted. There is currently no
+// safe way to stop watching an automatic reset WaitableEvent without possibly
+// missing a signal.
+//
+// NOTE: you /are/ allowed to delete the WaitableEvent while still waiting on
+// it with a Watcher. It will act as if the event was never signaled.
+
+class CRBASE_EXPORT WaitableEventWatcher : public win::ObjectWatcher::Delegate {
+ public:
+  typedef Callback<void(WaitableEvent*)> EventCallback;
+  WaitableEventWatcher();
+  ~WaitableEventWatcher() override;
+
+  // When @event is signaled, the given callback is called on the thread of the
+  // current message loop when StartWatching is called.
+  bool StartWatching(WaitableEvent* event, const EventCallback& callback);
+
+  // Cancel the current watch. Must be called from the same thread which
+  // started the watch.
+  //
+  // Does nothing if no event is being watched, nor if the watch has completed.
+  // The callback will *not* be called for the current watch after this
+  // function returns. Since the callback runs on the same thread as this
+  // function, it cannot be called during this function either.
+  void StopWatching();
+
+  // Return the currently watched event, or NULL if no object is currently being
+  // watched.
+  WaitableEvent* GetWatchedEvent();
+
+  // Return the callback that will be invoked when the event is
+  // signaled.
+  const EventCallback& callback() const { return callback_; }
+
+ private:
+  void OnObjectSignaled(HANDLE h) override;
+  win::ObjectWatcher watcher_;
+
+  WaitableEvent* event_;
+  EventCallback callback_;
+};
+
+}  // namespace crbase
+
+#endif  // MINI_CHROMIUM_SRC_CRBASE_SYNCHRONIZATION_WAITABLE_EVENT_WATCHER_H_
