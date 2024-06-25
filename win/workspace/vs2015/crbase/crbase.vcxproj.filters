@@ -73,6 +73,9 @@
     <Filter Include="third_party\nspr">
       <UniqueIdentifier>{2a420aae-cfc5-4eff-a598-d5f4181b8e8c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="timer">
+      <UniqueIdentifier>{b721be01-e6a7-4c2f-8230-eb058a3365c2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\src\crbase\atomic\atomic_ref_count.h">
@@ -513,6 +516,25 @@
     <ClInclude Include="..\..\..\src\crbase\values.h" />
     <ClInclude Include="..\..\..\src\crbase\version.h" />
     <ClInclude Include="..\..\..\src\crbase\file_version_info.h" />
+    <ClInclude Include="..\..\..\src\crbase\strings\string_tokenizer.h">
+      <Filter>strings</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\crbase\bytes_swap.h" />
+    <ClInclude Include="..\..\..\src\crbase\strings\utf_offset_string_conversions.h">
+      <Filter>strings</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\crbase\functional\cancelable_callback.h">
+      <Filter>functional</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\crbase\memory\free_deleter.h">
+      <Filter>memory</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\crbase\timer\timer.h">
+      <Filter>timer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\crbase\threading\thread_checker.h">
+      <Filter>threading</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\crbase\codes\base64.cc">
@@ -865,5 +887,14 @@
     <ClCompile Include="..\..\..\src\crbase\values.cc" />
     <ClCompile Include="..\..\..\src\crbase\version.cc" />
     <ClCompile Include="..\..\..\src\crbase\file_version_info.cc" />
+    <ClCompile Include="..\..\..\src\crbase\strings\utf_offset_string_conversions.cc">
+      <Filter>strings</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\crbase\timer\timer.cc">
+      <Filter>timer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\crbase\threading\thread_checker.cc">
+      <Filter>threading</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

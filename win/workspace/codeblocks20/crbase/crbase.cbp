@@ -116,6 +116,7 @@
 		<Unit filename="../../../src/crbase/bit_cast.h" />
 		<Unit filename="../../../src/crbase/bits.h" />
 		<Unit filename="../../../src/crbase/build_config.h" />
+		<Unit filename="../../../src/crbase/bytes_swap.h" />
 		<Unit filename="../../../src/crbase/codes/base64.cc" />
 		<Unit filename="../../../src/crbase/codes/base64.h" />
 		<Unit filename="../../../src/crbase/command_line.cc" />
@@ -158,6 +159,7 @@
 		<Unit filename="../../../src/crbase/functional/callback_helpers.h" />
 		<Unit filename="../../../src/crbase/functional/callback_internal.cc" />
 		<Unit filename="../../../src/crbase/functional/callback_internal.h" />
+		<Unit filename="../../../src/crbase/functional/cancelable_callback.h" />
 		<Unit filename="../../../src/crbase/functional/critical_closure.h" />
 		<Unit filename="../../../src/crbase/guid.cc" />
 		<Unit filename="../../../src/crbase/guid.h" />
@@ -181,6 +183,7 @@
 		<Unit filename="../../../src/crbase/macros.h" />
 		<Unit filename="../../../src/crbase/memory/aligned_memory.cc" />
 		<Unit filename="../../../src/crbase/memory/aligned_memory.h" />
+		<Unit filename="../../../src/crbase/memory/free_deleter.h" />
 		<Unit filename="../../../src/crbase/memory/linked_ptr.h" />
 		<Unit filename="../../../src/crbase/memory/ref_counted.cc" />
 		<Unit filename="../../../src/crbase/memory/ref_counted.h" />
@@ -248,6 +251,7 @@
 		<Unit filename="../../../src/crbase/strings/string_piece.h" />
 		<Unit filename="../../../src/crbase/strings/string_split.cc" />
 		<Unit filename="../../../src/crbase/strings/string_split.h" />
+		<Unit filename="../../../src/crbase/strings/string_tokenizer.h" />
 		<Unit filename="../../../src/crbase/strings/string_util.cc" />
 		<Unit filename="../../../src/crbase/strings/string_util.h" />
 		<Unit filename="../../../src/crbase/strings/string_util_constants.cc" />
@@ -255,6 +259,8 @@
 		<Unit filename="../../../src/crbase/strings/stringprintf.h" />
 		<Unit filename="../../../src/crbase/strings/sys_string_conversions.cc" />
 		<Unit filename="../../../src/crbase/strings/sys_string_conversions.h" />
+		<Unit filename="../../../src/crbase/strings/utf_offset_string_conversions.cc" />
+		<Unit filename="../../../src/crbase/strings/utf_offset_string_conversions.h" />
 		<Unit filename="../../../src/crbase/strings/utf_string_conversion_utils.cc" />
 		<Unit filename="../../../src/crbase/strings/utf_string_conversion_utils.h" />
 		<Unit filename="../../../src/crbase/strings/utf_string_conversions.cc" />
@@ -322,6 +328,8 @@
 		<Unit filename="../../../src/crbase/threading/task_runner_util.h" />
 		<Unit filename="../../../src/crbase/threading/thread.cc" />
 		<Unit filename="../../../src/crbase/threading/thread.h" />
+		<Unit filename="../../../src/crbase/threading/thread_checker.cc" />
+		<Unit filename="../../../src/crbase/threading/thread_checker.h" />
 		<Unit filename="../../../src/crbase/threading/thread_id_name_manager.cc" />
 		<Unit filename="../../../src/crbase/threading/thread_id_name_manager.h" />
 		<Unit filename="../../../src/crbase/threading/thread_local.cc" />
@@ -347,6 +355,8 @@
 		<Unit filename="../../../src/crbase/time/time.cc" />
 		<Unit filename="../../../src/crbase/time/time.h" />
 		<Unit filename="../../../src/crbase/time/time_win.cc" />
+		<Unit filename="../../../src/crbase/timer/timer.cc" />
+		<Unit filename="../../../src/crbase/timer/timer.h" />
 		<Unit filename="../../../src/crbase/tracing/location.cc" />
 		<Unit filename="../../../src/crbase/tracing/location.h" />
 		<Unit filename="../../../src/crbase/tracing/tracked_objects.cc" />

@@ -30,6 +30,7 @@
     <ClInclude Include="..\..\..\src\crbase\bits.h" />
     <ClInclude Include="..\..\..\src\crbase\bit_cast.h" />
     <ClInclude Include="..\..\..\src\crbase\build_config.h" />
+    <ClInclude Include="..\..\..\src\crbase\bytes_swap.h" />
     <ClInclude Include="..\..\..\src\crbase\codes\base64.h" />
     <ClInclude Include="..\..\..\src\crbase\command_line.h" />
     <ClInclude Include="..\..\..\src\crbase\compiler_specific.h" />
@@ -53,6 +54,7 @@
     <ClInclude Include="..\..\..\src\crbase\functional\callback_forward.h" />
     <ClInclude Include="..\..\..\src\crbase\functional\callback_helpers.h" />
     <ClInclude Include="..\..\..\src\crbase\functional\callback_internal.h" />
+    <ClInclude Include="..\..\..\src\crbase\functional\cancelable_callback.h" />
     <ClInclude Include="..\..\..\src\crbase\functional\critical_closure.h" />
     <ClInclude Include="..\..\..\src\crbase\guid.h" />
     <ClInclude Include="..\..\..\src\crbase\json\json_parser.h" />
@@ -65,6 +67,7 @@
     <ClInclude Include="..\..\..\src\crbase\logging.h" />
     <ClInclude Include="..\..\..\src\crbase\macros.h" />
     <ClInclude Include="..\..\..\src\crbase\memory\aligned_memory.h" />
+    <ClInclude Include="..\..\..\src\crbase\memory\free_deleter.h" />
     <ClInclude Include="..\..\..\src\crbase\memory\linked_ptr.h" />
     <ClInclude Include="..\..\..\src\crbase\memory\ref_counted.h" />
     <ClInclude Include="..\..\..\src\crbase\memory\scoped_vector.h" />
@@ -105,8 +108,10 @@
     <ClInclude Include="..\..\..\src\crbase\strings\string_number_conversions.h" />
     <ClInclude Include="..\..\..\src\crbase\strings\string_piece.h" />
     <ClInclude Include="..\..\..\src\crbase\strings\string_split.h" />
+    <ClInclude Include="..\..\..\src\crbase\strings\string_tokenizer.h" />
     <ClInclude Include="..\..\..\src\crbase\strings\string_util.h" />
     <ClInclude Include="..\..\..\src\crbase\strings\sys_string_conversions.h" />
+    <ClInclude Include="..\..\..\src\crbase\strings\utf_offset_string_conversions.h" />
     <ClInclude Include="..\..\..\src\crbase\strings\utf_string_conversions.h" />
     <ClInclude Include="..\..\..\src\crbase\strings\utf_string_conversion_utils.h" />
     <ClInclude Include="..\..\..\src\crbase\synchronization\condition_variable.h" />
@@ -145,12 +150,14 @@
     <ClInclude Include="..\..\..\src\crbase\threading\task_runner.h" />
     <ClInclude Include="..\..\..\src\crbase\threading\task_runner_util.h" />
     <ClInclude Include="..\..\..\src\crbase\threading\thread.h" />
+    <ClInclude Include="..\..\..\src\crbase\threading\thread_checker.h" />
     <ClInclude Include="..\..\..\src\crbase\threading\thread_id_name_manager.h" />
     <ClInclude Include="..\..\..\src\crbase\threading\thread_local.h" />
     <ClInclude Include="..\..\..\src\crbase\threading\thread_local_storage.h" />
     <ClInclude Include="..\..\..\src\crbase\threading\thread_restrictions.h" />
     <ClInclude Include="..\..\..\src\crbase\threading\thread_task_runner_handle.h" />
     <ClInclude Include="..\..\..\src\crbase\threading\worker_pool.h" />
+    <ClInclude Include="..\..\..\src\crbase\timer\timer.h" />
     <ClInclude Include="..\..\..\src\crbase\time\clock.h" />
     <ClInclude Include="..\..\..\src\crbase\time\default_clock.h" />
     <ClInclude Include="..\..\..\src\crbase\time\default_tick_clock.h" />
@@ -252,6 +259,7 @@
     <ClCompile Include="..\..\..\src\crbase\strings\string_util.cc" />
     <ClCompile Include="..\..\..\src\crbase\strings\string_util_constants.cc" />
     <ClCompile Include="..\..\..\src\crbase\strings\sys_string_conversions.cc" />
+    <ClCompile Include="..\..\..\src\crbase\strings\utf_offset_string_conversions.cc" />
     <ClCompile Include="..\..\..\src\crbase\strings\utf_string_conversions.cc" />
     <ClCompile Include="..\..\..\src\crbase\strings\utf_string_conversion_utils.cc" />
     <ClCompile Include="..\..\..\src\crbase\synchronization\condition_variable.cc" />
@@ -281,6 +289,7 @@
     <ClCompile Include="..\..\..\src\crbase\threading\simple_thread.cc" />
     <ClCompile Include="..\..\..\src\crbase\threading\task_runner.cc" />
     <ClCompile Include="..\..\..\src\crbase\threading\thread.cc" />
+    <ClCompile Include="..\..\..\src\crbase\threading\thread_checker.cc" />
     <ClCompile Include="..\..\..\src\crbase\threading\thread_id_name_manager.cc" />
     <ClCompile Include="..\..\..\src\crbase\threading\thread_local.cc" />
     <ClCompile Include="..\..\..\src\crbase\threading\thread_local_storage.cc" />
@@ -289,6 +298,7 @@
     <ClCompile Include="..\..\..\src\crbase\threading\thread_task_runner_handle.cc" />
     <ClCompile Include="..\..\..\src\crbase\threading\worker_pool.cc" />
     <ClCompile Include="..\..\..\src\crbase\threading\worker_pool_win.cc" />
+    <ClCompile Include="..\..\..\src\crbase\timer\timer.cc" />
     <ClCompile Include="..\..\..\src\crbase\time\clock.cc" />
     <ClCompile Include="..\..\..\src\crbase\time\default_clock.cc" />
     <ClCompile Include="..\..\..\src\crbase\time\default_tick_clock.cc" />

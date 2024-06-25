@@ -3,5 +3,7 @@
 	<Workspace title="Workspace">
 		<Project filename="crbase/crbase.cbp" />
 		<Project filename="cripc/cripc.cbp" />
+		<Project filename="crurl/crurl.cbp" />
+		<Project filename="crnet/crnet.cbp" />
 	</Workspace>
 </CodeBlocks_workspace_file>

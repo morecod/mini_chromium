@@ -84,6 +84,7 @@
     <ClCompile Include="..\..\..\src\crbase\strings\string_util.cc" />
     <ClCompile Include="..\..\..\src\crbase\strings\string_util_constants.cc" />
     <ClCompile Include="..\..\..\src\crbase\strings\sys_string_conversions.cc" />
+    <ClCompile Include="..\..\..\src\crbase\strings\utf_offset_string_conversions.cc" />
     <ClCompile Include="..\..\..\src\crbase\strings\utf_string_conversions.cc" />
     <ClCompile Include="..\..\..\src\crbase\strings\utf_string_conversion_utils.cc" />
     <ClCompile Include="..\..\..\src\crbase\synchronization\condition_variable.cc" />
@@ -161,6 +162,7 @@
     <ClInclude Include="..\..\..\src\crbase\bits.h" />
     <ClInclude Include="..\..\..\src\crbase\bit_cast.h" />
     <ClInclude Include="..\..\..\src\crbase\build_config.h" />
+    <ClInclude Include="..\..\..\src\crbase\bytes_swap.h" />
     <ClInclude Include="..\..\..\src\crbase\codes\base64.h" />
     <ClInclude Include="..\..\..\src\crbase\command_line.h" />
     <ClInclude Include="..\..\..\src\crbase\compiler_specific.h" />
@@ -237,8 +239,10 @@
     <ClInclude Include="..\..\..\src\crbase\strings\string_number_conversions.h" />
     <ClInclude Include="..\..\..\src\crbase\strings\string_piece.h" />
     <ClInclude Include="..\..\..\src\crbase\strings\string_split.h" />
+    <ClInclude Include="..\..\..\src\crbase\strings\string_tokenizer.h" />
     <ClInclude Include="..\..\..\src\crbase\strings\string_util.h" />
     <ClInclude Include="..\..\..\src\crbase\strings\sys_string_conversions.h" />
+    <ClInclude Include="..\..\..\src\crbase\strings\utf_offset_string_conversions.h" />
     <ClInclude Include="..\..\..\src\crbase\strings\utf_string_conversions.h" />
     <ClInclude Include="..\..\..\src\crbase\strings\utf_string_conversion_utils.h" />
     <ClInclude Include="..\..\..\src\crbase\synchronization\condition_variable.h" />

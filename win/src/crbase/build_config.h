@@ -5,6 +5,9 @@
 #ifndef MINI_CHROMIUM_SRC_CRBASE_BUILD_CONFIG_H_
 #define MINI_CHROMIUM_SRC_CRBASE_BUILD_CONFIG_H_
 
+// target os
+#define MINI_CHROMIUM_OS_WIN 1
+
 // compiler
 #if defined(__GNUC__) || defined(__MINGW32__) || defined(__MINGW64__)
 #define MINI_CHROMIUM_COMPILER_GCC 1

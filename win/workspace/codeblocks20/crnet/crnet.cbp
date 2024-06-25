@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="crnet" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug_x86">
+				<Option output="$(WORKSPACE_DIR)/build.bin/Debug_x86/crnet" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="" />
+				<Option object_output="$(WORKSPACE_DIR)/build.tmp/Debug_x86/" />
+				<Option type="2" />
+				<Option compiler="gcc" />
+				<Option createDefFile="1" />
+				<Compiler>
+					<Add option="-Wall" />
+					<Add option="-std=gnu++11" />
+					<Add option="-std=c++11" />
+					<Add option="-m32" />
+					<Add option="-g" />
+					<Add directory="../../../src" />
+				</Compiler>
+				<Linker>
+					<Add option="-static-libstdc++" />
+					<Add option="-static-libgcc" />
+					<Add option="-static" />
+					<Add option="-m32" />
+				</Linker>
+			</Target>
+			<Target title="Release_x86">
+				<Option output="$(WORKSPACE_DIR)/build.bin/Release_x86/crnet" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="" />
+				<Option object_output="$(WORKSPACE_DIR)/build.tmp/Release_x86/" />
+				<Option type="2" />
+				<Option compiler="gcc" />
+				<Option createDefFile="1" />
+				<Compiler>
+					<Add option="-O2" />
+					<Add option="-Wall" />
+					<Add option="-std=gnu++11" />
+					<Add option="-std=c++11" />
+					<Add option="-m32" />
+					<Add directory="../../../src" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+					<Add option="-static-libstdc++" />
+					<Add option="-static-libgcc" />
+					<Add option="-static" />
+					<Add option="-m32" />
+				</Linker>
+			</Target>
+			<Target title="Debug_x64">
+				<Option output="$(WORKSPACE_DIR)/build.bin/Debug_x64/crnet" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="" />
+				<Option object_output="$(WORKSPACE_DIR)/build.tmp/Debug_x64/" />
+				<Option type="2" />
+				<Option compiler="gcc" />
+				<Option createDefFile="1" />
+				<Compiler>
+					<Add option="-Wall" />
+					<Add option="-std=gnu++11" />
+					<Add option="-std=c++11" />
+					<Add option="-m64" />
+					<Add option="-g" />
+					<Add directory="../../../src" />
+				</Compiler>
+				<Linker>
+					<Add option="-static-libstdc++" />
+					<Add option="-static-libgcc" />
+					<Add option="-static" />
+					<Add option="-m64" />
+				</Linker>
+			</Target>
+			<Target title="Release_x64">
+				<Option output="$(WORKSPACE_DIR)/build.bin/Release_x64/crnet" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="" />
+				<Option object_output="$(WORKSPACE_DIR)/build.tmp/Release_x64/" />
+				<Option type="2" />
+				<Option compiler="gcc" />
+				<Option createDefFile="1" />
+				<Compiler>
+					<Add option="-O2" />
+					<Add option="-Wall" />
+					<Add option="-std=gnu++11" />
+					<Add option="-std=c++11" />
+					<Add option="-m32" />
+					<Add directory="../../../src" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+					<Add option="-static-libstdc++" />
+					<Add option="-static-libgcc" />
+					<Add option="-static" />
+					<Add option="-m32" />
+				</Linker>
+			</Target>
+		</Build>
+		<Unit filename="../../../src/crnet/base/address_family.cc" />
+		<Unit filename="../../../src/crnet/base/address_family.h" />
+		<Unit filename="../../../src/crnet/base/ip_address.cc" />
+		<Unit filename="../../../src/crnet/base/ip_address.h" />
+		<Unit filename="../../../src/crnet/base/ip_address_number.cc" />
+		<Unit filename="../../../src/crnet/base/ip_address_number.h" />
+		<Unit filename="../../../src/crnet/base/ip_endpoint.cc" />
+		<Unit filename="../../../src/crnet/base/ip_endpoint.h" />
+		<Unit filename="../../../src/crnet/base/ip_pattern.cc" />
+		<Unit filename="../../../src/crnet/base/ip_pattern.h" />
+		<Unit filename="../../../src/crnet/base/net_export.h" />
+		<Unit filename="../../../src/crnet/base/sys_addrinfo.h" />
+		<Unit filename="../../../src/crnet/base/sys_byteorder.h" />
+		<Unit filename="../../../src/crnet/base/winsock_util.h" />
+		<Extensions>
+			<lib_finder disable_auto="1" />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

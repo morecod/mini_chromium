@@ -247,10 +247,10 @@ const SYSTEM_INFO& GetSystemInfoStorage() {
 
 // static
 OSInfo** OSInfo::GetInstanceStorage() {
-  // Note: we don't use the Singleton class because it depends on AtExitManager,
-  // and it's convenient for other modules to use this class without it.
-  static OSInfo* info = []() {
-    OSVERSIONINFOEXW version_info;
+	// Note: we don't use the Singleton class because it depends on AtExitManager,
+	// and it's convenient for other modules to use this class without it.
+	static OSInfo* info = []() {
+		OSVERSIONINFOEXW version_info;
     ZeroMemory(&version_info, sizeof(version_info));
     version_info.dwOSVersionInfoSize = sizeof(version_info);
 
@@ -272,16 +272,17 @@ OSInfo** OSInfo::GetInstanceStorage() {
       RtlGetVersion(&version_info);
     }
 
-    GetProductInfoPtr get_product_info = reinterpret_cast<GetProductInfoPtr>(
+    GetProductInfoPtr get_product_info =
+      reinterpret_cast<GetProductInfoPtr>(
         GetProcAddress(::GetModuleHandleW(L"kernel32.dll"), "GetProductInfo"));
-    DWORD os_type = 0;
+		DWORD os_type = 0;
 
     if (get_product_info)
       get_product_info(version_info.dwMajorVersion, version_info.dwMinorVersion,
-                       0, 0, &os_type);
+                  		 0, 0, &os_type);
 
-    return new OSInfo(version_info, GetSystemInfoStorage(), os_type);
-  }();
+		return new OSInfo(version_info, GetSystemInfoStorage(), os_type);
+	}();
 
 	return &info;
 }

@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="crurl" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug_x86">
+				<Option output="$(WORKSPACE_DIR)/build.bin/Debug_x86/crurl" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="" />
+				<Option object_output="$(WORKSPACE_DIR)/build.tmp/Debug_x86/" />
+				<Option type="2" />
+				<Option compiler="gcc" />
+				<Option createDefFile="1" />
+				<Compiler>
+					<Add option="-Wall" />
+					<Add option="-std=gnu++11" />
+					<Add option="-std=c++11" />
+					<Add option="-m32" />
+					<Add option="-g" />
+					<Add directory="../../../src/" />
+				</Compiler>
+				<Linker>
+					<Add option="-static-libstdc++" />
+					<Add option="-static-libgcc" />
+					<Add option="-static" />
+					<Add option="-m32" />
+				</Linker>
+			</Target>
+			<Target title="Release_x86">
+				<Option output="$(WORKSPACE_DIR)/build.bin/Release_x86/crurl" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="" />
+				<Option object_output="$(WORKSPACE_DIR)/build.tmp/Release_x86/" />
+				<Option type="2" />
+				<Option compiler="gcc" />
+				<Option createDefFile="1" />
+				<Compiler>
+					<Add option="-O2" />
+					<Add option="-Wall" />
+					<Add option="-std=gnu++11" />
+					<Add option="-std=c++11" />
+					<Add option="-m32" />
+					<Add directory="../../../src/" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+					<Add option="-static-libstdc++" />
+					<Add option="-static-libgcc" />
+					<Add option="-static" />
+					<Add option="-m32" />
+				</Linker>
+			</Target>
+			<Target title="Debug_x64">
+				<Option output="$(WORKSPACE_DIR)/build.bin/Debug_x64/crurl" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="" />
+				<Option object_output="$(WORKSPACE_DIR)/build.tmp/Debug_x64/" />
+				<Option type="2" />
+				<Option compiler="gcc" />
+				<Option createDefFile="1" />
+				<Compiler>
+					<Add option="-Wall" />
+					<Add option="-std=gnu++11" />
+					<Add option="-std=c++11" />
+					<Add option="-m64" />
+					<Add option="-g" />
+					<Add directory="../../../src/" />
+				</Compiler>
+				<Linker>
+					<Add option="-static-libstdc++" />
+					<Add option="-static-libgcc" />
+					<Add option="-static" />
+					<Add option="-m64" />
+				</Linker>
+			</Target>
+			<Target title="Release_x64">
+				<Option output="$(WORKSPACE_DIR)/build.bin/Release_x64/crurl" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="" />
+				<Option object_output="$(WORKSPACE_DIR)/build.tmp/Release_x64/" />
+				<Option type="2" />
+				<Option compiler="gcc" />
+				<Option createDefFile="1" />
+				<Compiler>
+					<Add option="-O2" />
+					<Add option="-Wall" />
+					<Add option="-std=gnu++11" />
+					<Add option="-std=c++11" />
+					<Add option="-m64" />
+					<Add directory="../../../src/" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+					<Add option="-static-libstdc++" />
+					<Add option="-static-libgcc" />
+					<Add option="-static" />
+					<Add option="-m64" />
+				</Linker>
+			</Target>
+		</Build>
+		<Unit filename="../../../src/crurl/gurl.cc" />
+		<Unit filename="../../../src/crurl/gurl.h" />
+		<Unit filename="../../../src/crurl/origin.cc" />
+		<Unit filename="../../../src/crurl/origin.h" />
+		<Unit filename="../../../src/crurl/scheme_host_port.cc" />
+		<Unit filename="../../../src/crurl/scheme_host_port.h" />
+		<Unit filename="../../../src/crurl/third_party/mozilla/url_parse.cc" />
+		<Unit filename="../../../src/crurl/third_party/mozilla/url_parse.h" />
+		<Unit filename="../../../src/crurl/url_canon.h" />
+		<Unit filename="../../../src/crurl/url_canon_etc.cc" />
+		<Unit filename="../../../src/crurl/url_canon_filesystemurl.cc" />
+		<Unit filename="../../../src/crurl/url_canon_fileurl.cc" />
+		<Unit filename="../../../src/crurl/url_canon_host.cc" />
+		<Unit filename="../../../src/crurl/url_canon_internal.cc" />
+		<Unit filename="../../../src/crurl/url_canon_internal.h" />
+		<Unit filename="../../../src/crurl/url_canon_internal_file.h" />
+		<Unit filename="../../../src/crurl/url_canon_ip.cc" />
+		<Unit filename="../../../src/crurl/url_canon_ip.h" />
+		<Unit filename="../../../src/crurl/url_canon_mailtourl.cc" />
+		<Unit filename="../../../src/crurl/url_canon_path.cc" />
+		<Unit filename="../../../src/crurl/url_canon_pathurl.cc" />
+		<Unit filename="../../../src/crurl/url_canon_query.cc" />
+		<Unit filename="../../../src/crurl/url_canon_relative.cc" />
+		<Unit filename="../../../src/crurl/url_canon_stdstring.cc" />
+		<Unit filename="../../../src/crurl/url_canon_stdstring.h" />
+		<Unit filename="../../../src/crurl/url_constants.cc" />
+		<Unit filename="../../../src/crurl/url_constants.h" />
+		<Unit filename="../../../src/crurl/url_export.h" />
+		<Unit filename="../../../src/crurl/url_file.h" />
+		<Unit filename="../../../src/crurl/url_parse_file.cc" />
+		<Unit filename="../../../src/crurl/url_parse_internal.h" />
+		<Unit filename="../../../src/crurl/url_util.cc" />
+		<Unit filename="../../../src/crurl/url_util.h" />
+		<Unit filename="../../../src/crurl/url_util_internal.h" />
+		<Extensions />
+	</Project>
+</CodeBlocks_project_file>

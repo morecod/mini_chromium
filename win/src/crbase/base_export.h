@@ -5,8 +5,10 @@
 #ifndef MINI_CHROMIUM_SRC_CRBASE_CRBASE_EXPORT_H_
 #define MINI_CHROMIUM_SRC_CRBASE_CRBASE_EXPORT_H_
 
+#include "crbase/build_config.h"
+
 #if defined(MINI_CHROMIUM_COMPONENT_BUILD)
-#if defined(WIN32)
+#if defined(MINI_CHROMIUM_COMPILER_MSVC)
 
 #if defined(MINI_CHROMIUM_IMPLEMENTATION)
 #define CRBASE_EXPORT __declspec(dllexport)
@@ -14,7 +16,7 @@
 #define CRBASE_EXPORT __declspec(dllimport)
 #endif  // defined(MINI_CHROMIUM_IMPLEMENTATION)
 
-#else  // defined(WIN32)
+#else  // defined(MINI_CHROMIUM_COMPILER_MSVC)
 #if defined(MINI_CHROMIUM_IMPLEMENTATION)
 #define CRBASE_EXPORT __attribute__((visibility("default")))
 #else
