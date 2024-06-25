@@ -7,14 +7,14 @@
 			<Cursor1 position="5508" topLine="40" />
 		</Cursor>
 	</File>
-	<File name="..\..\..\src\crbase\strings\utf_offset_string_conversions.cc" open="1" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="0" topLine="0" />
-		</Cursor>
-	</File>
 	<File name="..\..\..\src\crbase\win\windows_version.cc" open="1" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
 			<Cursor1 position="14936" topLine="6" />
+		</Cursor>
+	</File>
+	<File name="..\..\..\src\crbase\strings\utf_offset_string_conversions.cc" open="1" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="0" topLine="0" />
 		</Cursor>
 	</File>
 </CodeBlocks_layout_file>

@@ -41,6 +41,7 @@
 					<Add option="-std=gnu++11" />
 					<Add option="-std=c++11" />
 					<Add option="-m32" />
+					<Add option="-DNDEBUG" />
 					<Add directory="../../../src/" />
 				</Compiler>
 				<Linker>
@@ -86,6 +87,7 @@
 					<Add option="-std=gnu++11" />
 					<Add option="-std=c++11" />
 					<Add option="-m64" />
+					<Add option="-DNDEBUG" />
 					<Add directory="../../../src/" />
 				</Compiler>
 				<Linker>
