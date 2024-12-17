@@ -354,6 +354,9 @@
     <ClCompile Include="..\..\..\src\crbase\strings\utf_offset_string_conversions.cc">
       <Filter>strings</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\crbase\codes\punycode.cc">
+      <Filter>codes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\src\crbase\at_exit.h" />
@@ -801,6 +804,9 @@
       <Filter>strings</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\crbase\bytes_swap.h" />
+    <ClInclude Include="..\..\..\src\crbase\codes\punycode.h">
+      <Filter>codes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="codes">

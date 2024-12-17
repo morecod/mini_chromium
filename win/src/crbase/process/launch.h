@@ -23,7 +23,6 @@
 #include "crbase/strings/string_piece.h"
 #include "crbase/build_config.h"
 
-
 namespace crbase {
 
 class CommandLine;

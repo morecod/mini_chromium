@@ -2,8 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#ifndef MINI_CHROMIUM_SRC_CRBASE_BASE64_H_
-#define MINI_CHROMIUM_SRC_CRBASE_BASE64_H_
+#ifndef MINI_CHROMIUM_SRC_CRBASE_CODES_BASE64_H_
+#define MINI_CHROMIUM_SRC_CRBASE_CODES_BASE64_H_
 
 #include <string>
 
@@ -22,4 +22,4 @@ CRBASE_EXPORT bool Base64Decode(const StringPiece& input, std::string* output);
 
 }  // namespace crbase
 
-#endif  // MINI_CHROMIUM_SRC_CRBASE_BASE64_H_
+#endif  // MINI_CHROMIUM_SRC_CRBASE_CODES_BASE64_H_

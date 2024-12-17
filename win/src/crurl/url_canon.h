@@ -29,6 +29,8 @@ namespace crurl {
 template<typename T>
 class CanonOutputT {
  public:
+  typedef T CharType;
+
   CanonOutputT() : buffer_(NULL), buffer_len_(0), cur_len_(0) {
   }
   virtual ~CanonOutputT() {

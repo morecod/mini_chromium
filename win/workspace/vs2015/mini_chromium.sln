@@ -6,10 +6,22 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "crbase", "crbase\crbase.vcxproj", "{9DD56123-00D1-4C71-A78C-A67BF29F71A9}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cripc", "cripc\cripc.vcxproj", "{4E1AE3A7-D1FE-4511-ACEE-098AFCA6B871}"
+	ProjectSection(ProjectDependencies) = postProject
+		{9DD56123-00D1-4C71-A78C-A67BF29F71A9} = {9DD56123-00D1-4C71-A78C-A67BF29F71A9}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "crurl", "crurl\crurl.vcxproj", "{88D4F374-9AB9-4E5F-AB69-4647F234636B}"
+	ProjectSection(ProjectDependencies) = postProject
+		{9DD56123-00D1-4C71-A78C-A67BF29F71A9} = {9DD56123-00D1-4C71-A78C-A67BF29F71A9}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "crnet", "crnet\crnet.vcxproj", "{A8A01B7E-0ECC-4393-B685-2BD5B14005AD}"
+	ProjectSection(ProjectDependencies) = postProject
+		{9DD56123-00D1-4C71-A78C-A67BF29F71A9} = {9DD56123-00D1-4C71-A78C-A67BF29F71A9}
+		{88D4F374-9AB9-4E5F-AB69-4647F234636B} = {88D4F374-9AB9-4E5F-AB69-4647F234636B}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "examples", "examples\examples.vcxproj", "{C7AD89BE-F6F5-4F9E-95EA-AF8D9AD6AD5D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +63,14 @@ Global
 		{A8A01B7E-0ECC-4393-B685-2BD5B14005AD}.Release|x64.Build.0 = Release|x64
 		{A8A01B7E-0ECC-4393-B685-2BD5B14005AD}.Release|x86.ActiveCfg = Release|Win32
 		{A8A01B7E-0ECC-4393-B685-2BD5B14005AD}.Release|x86.Build.0 = Release|Win32
+		{C7AD89BE-F6F5-4F9E-95EA-AF8D9AD6AD5D}.Debug|x64.ActiveCfg = Debug|x64
+		{C7AD89BE-F6F5-4F9E-95EA-AF8D9AD6AD5D}.Debug|x64.Build.0 = Debug|x64
+		{C7AD89BE-F6F5-4F9E-95EA-AF8D9AD6AD5D}.Debug|x86.ActiveCfg = Debug|Win32
+		{C7AD89BE-F6F5-4F9E-95EA-AF8D9AD6AD5D}.Debug|x86.Build.0 = Debug|Win32
+		{C7AD89BE-F6F5-4F9E-95EA-AF8D9AD6AD5D}.Release|x64.ActiveCfg = Release|x64
+		{C7AD89BE-F6F5-4F9E-95EA-AF8D9AD6AD5D}.Release|x64.Build.0 = Release|x64
+		{C7AD89BE-F6F5-4F9E-95EA-AF8D9AD6AD5D}.Release|x86.ActiveCfg = Release|Win32
+		{C7AD89BE-F6F5-4F9E-95EA-AF8D9AD6AD5D}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

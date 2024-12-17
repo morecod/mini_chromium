@@ -30,6 +30,7 @@
     <ClCompile Include="..\..\..\src\crurl\url_canon_filesystemurl.cc" />
     <ClCompile Include="..\..\..\src\crurl\url_canon_fileurl.cc" />
     <ClCompile Include="..\..\..\src\crurl\url_canon_host.cc" />
+    <ClCompile Include="..\..\..\src\crurl\url_canon_icu.cc" />
     <ClCompile Include="..\..\..\src\crurl\url_canon_internal.cc" />
     <ClCompile Include="..\..\..\src\crurl\url_canon_ip.cc" />
     <ClCompile Include="..\..\..\src\crurl\url_canon_mailtourl.cc" />
@@ -38,6 +39,7 @@
     <ClCompile Include="..\..\..\src\crurl\url_canon_query.cc" />
     <ClCompile Include="..\..\..\src\crurl\url_canon_relative.cc" />
     <ClCompile Include="..\..\..\src\crurl\url_canon_stdstring.cc" />
+    <ClCompile Include="..\..\..\src\crurl\url_canon_stdurl.cc" />
     <ClCompile Include="..\..\..\src\crurl\url_constants.cc" />
     <ClCompile Include="..\..\..\src\crurl\url_parse_file.cc" />
     <ClCompile Include="..\..\..\src\crurl\url_util.cc" />

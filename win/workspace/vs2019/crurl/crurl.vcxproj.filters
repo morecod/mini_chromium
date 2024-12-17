@@ -35,6 +35,8 @@
     <ClCompile Include="..\..\..\src\crurl\url_constants.cc" />
     <ClCompile Include="..\..\..\src\crurl\url_parse_file.cc" />
     <ClCompile Include="..\..\..\src\crurl\url_util.cc" />
+    <ClCompile Include="..\..\..\src\crurl\url_canon_icu.cc" />
+    <ClCompile Include="..\..\..\src\crurl\url_canon_stdurl.cc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\src\crurl\third_party\mozilla\url_parse.h">

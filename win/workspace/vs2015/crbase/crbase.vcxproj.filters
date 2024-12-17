@@ -535,6 +535,9 @@
     <ClInclude Include="..\..\..\src\crbase\threading\thread_checker.h">
       <Filter>threading</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\crbase\codes\punycode.h">
+      <Filter>codes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\crbase\codes\base64.cc">
@@ -895,6 +898,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\crbase\threading\thread_checker.cc">
       <Filter>threading</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\crbase\codes\punycode.cc">
+      <Filter>codes</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

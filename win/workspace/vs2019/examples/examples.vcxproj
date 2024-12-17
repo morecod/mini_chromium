@@ -21,32 +21,32 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{6b7ab3b2-6f0f-4ad3-96cc-ae7692a22add}</ProjectGuid>
-    <RootNamespace>crurl</RootNamespace>
+    <ProjectGuid>{c1d4fe23-76b0-4642-b982-7eeea373e7bd}</ProjectGuid>
+    <RootNamespace>examples</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -94,15 +94,16 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NOMINMAX;WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(ProjectDir)..\..\..\src\;</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
-      <SubSystem>
-      </SubSystem>
+      <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(OutDir)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>crbase.lib;cripc.lib;crnet.lib;crurl.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -111,32 +112,34 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NOMINMAX;WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(ProjectDir)..\..\..\src\;</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
-      <SubSystem>
-      </SubSystem>
+      <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(OutDir)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>crbase.lib;cripc.lib;crnet.lib;crurl.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NOMINMAX;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(ProjectDir)..\..\..\src\;</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
-      <SubSystem>
-      </SubSystem>
+      <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(OutDir)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>crbase.lib;cripc.lib;crnet.lib;crurl.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -145,61 +148,27 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NOMINMAX;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(ProjectDir)..\..\..\src\;</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
-      <SubSystem>
-      </SubSystem>
+      <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(OutDir)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>crbase.lib;cripc.lib;crnet.lib;crurl.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <Text Include="..\..\..\src\crurl\third_party\mozilla\LICENSE.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="..\..\..\src\crurl\gurl.cc" />
-    <ClCompile Include="..\..\..\src\crurl\origin.cc" />
-    <ClCompile Include="..\..\..\src\crurl\scheme_host_port.cc" />
-    <ClCompile Include="..\..\..\src\crurl\third_party\mozilla\url_parse.cc" />
-    <ClCompile Include="..\..\..\src\crurl\url_canon_etc.cc" />
-    <ClCompile Include="..\..\..\src\crurl\url_canon_filesystemurl.cc" />
-    <ClCompile Include="..\..\..\src\crurl\url_canon_fileurl.cc" />
-    <ClCompile Include="..\..\..\src\crurl\url_canon_host.cc" />
-    <ClCompile Include="..\..\..\src\crurl\url_canon_icu.cc" />
-    <ClCompile Include="..\..\..\src\crurl\url_canon_internal.cc" />
-    <ClCompile Include="..\..\..\src\crurl\url_canon_ip.cc" />
-    <ClCompile Include="..\..\..\src\crurl\url_canon_mailtourl.cc" />
-    <ClCompile Include="..\..\..\src\crurl\url_canon_path.cc" />
-    <ClCompile Include="..\..\..\src\crurl\url_canon_pathurl.cc" />
-    <ClCompile Include="..\..\..\src\crurl\url_canon_query.cc" />
-    <ClCompile Include="..\..\..\src\crurl\url_canon_relative.cc" />
-    <ClCompile Include="..\..\..\src\crurl\url_canon_stdstring.cc" />
-    <ClCompile Include="..\..\..\src\crurl\url_canon_stdurl.cc" />
-    <ClCompile Include="..\..\..\src\crurl\url_constants.cc" />
-    <ClCompile Include="..\..\..\src\crurl\url_parse_file.cc" />
-    <ClCompile Include="..\..\..\src\crurl\url_util.cc" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\..\..\src\crurl\gurl.h" />
-    <ClInclude Include="..\..\..\src\crurl\origin.h" />
-    <ClInclude Include="..\..\..\src\crurl\scheme_host_port.h" />
-    <ClInclude Include="..\..\..\src\crurl\third_party\mozilla\url_parse.h" />
-    <ClInclude Include="..\..\..\src\crurl\url_canon.h" />
-    <ClInclude Include="..\..\..\src\crurl\url_canon_internal.h" />
-    <ClInclude Include="..\..\..\src\crurl\url_canon_internal_file.h" />
-    <ClInclude Include="..\..\..\src\crurl\url_canon_ip.h" />
-    <ClInclude Include="..\..\..\src\crurl\url_canon_stdstring.h" />
-    <ClInclude Include="..\..\..\src\crurl\url_constants.h" />
-    <ClInclude Include="..\..\..\src\crurl\url_export.h" />
-    <ClInclude Include="..\..\..\src\crurl\url_file.h" />
-    <ClInclude Include="..\..\..\src\crurl\url_parse_internal.h" />
-    <ClInclude Include="..\..\..\src\crurl\url_util.h" />
-    <ClInclude Include="..\..\..\src\crurl\url_util_internal.h" />
+    <ClCompile Include="..\..\..\src\examples\crurl_gurl.cc">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">/utf-8 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">/utf-8 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">/utf-8 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|x64'">/utf-8 %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

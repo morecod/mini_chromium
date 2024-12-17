@@ -11,6 +11,14 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "crurl", "crurl\crurl.vcxpro
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "crnet", "crnet\crnet.vcxproj", "{38374907-3F53-4F0C-BB90-16779853DD01}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "examples", "examples\examples.vcxproj", "{C1D4FE23-76B0-4642-B982-7EEEA373E7BD}"
+	ProjectSection(ProjectDependencies) = postProject
+		{38374907-3F53-4F0C-BB90-16779853DD01} = {38374907-3F53-4F0C-BB90-16779853DD01}
+		{66D5C779-1B72-4E17-890C-4606250D0B8D} = {66D5C779-1B72-4E17-890C-4606250D0B8D}
+		{6B7AB3B2-6F0F-4AD3-96CC-AE7692A22ADD} = {6B7AB3B2-6F0F-4AD3-96CC-AE7692A22ADD}
+		{84C2BEC8-80E3-4122-94A7-F577AF5223B0} = {84C2BEC8-80E3-4122-94A7-F577AF5223B0}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -51,6 +59,14 @@ Global
 		{38374907-3F53-4F0C-BB90-16779853DD01}.Release|x64.Build.0 = Release|x64
 		{38374907-3F53-4F0C-BB90-16779853DD01}.Release|x86.ActiveCfg = Release|Win32
 		{38374907-3F53-4F0C-BB90-16779853DD01}.Release|x86.Build.0 = Release|Win32
+		{C1D4FE23-76B0-4642-B982-7EEEA373E7BD}.Debug|x64.ActiveCfg = Debug|x64
+		{C1D4FE23-76B0-4642-B982-7EEEA373E7BD}.Debug|x64.Build.0 = Debug|x64
+		{C1D4FE23-76B0-4642-B982-7EEEA373E7BD}.Debug|x86.ActiveCfg = Debug|Win32
+		{C1D4FE23-76B0-4642-B982-7EEEA373E7BD}.Debug|x86.Build.0 = Debug|Win32
+		{C1D4FE23-76B0-4642-B982-7EEEA373E7BD}.Release|x64.ActiveCfg = Release|x64
+		{C1D4FE23-76B0-4642-B982-7EEEA373E7BD}.Release|x64.Build.0 = Release|x64
+		{C1D4FE23-76B0-4642-B982-7EEEA373E7BD}.Release|x86.ActiveCfg = Release|Win32
+		{C1D4FE23-76B0-4642-B982-7EEEA373E7BD}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

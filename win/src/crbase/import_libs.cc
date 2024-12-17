@@ -8,5 +8,6 @@
 #pragma comment(lib, "dbghelp.lib")
 #pragma comment(lib, "version.lib")
 #pragma comment(lib, "userenv.lib")
+#pragma comment(lib, "winmm.lib")
 #pragma comment(lib, "wbemuuid.lib") // for wmi
 #endif

@@ -32,6 +32,7 @@
     <ClInclude Include="..\..\..\src\crbase\build_config.h" />
     <ClInclude Include="..\..\..\src\crbase\bytes_swap.h" />
     <ClInclude Include="..\..\..\src\crbase\codes\base64.h" />
+    <ClInclude Include="..\..\..\src\crbase\codes\punycode.h" />
     <ClInclude Include="..\..\..\src\crbase\command_line.h" />
     <ClInclude Include="..\..\..\src\crbase\compiler_specific.h" />
     <ClInclude Include="..\..\..\src\crbase\containers\hash_tables.h" />
@@ -198,6 +199,7 @@
     <ClCompile Include="..\..\..\src\crbase\base_paths.cc" />
     <ClCompile Include="..\..\..\src\crbase\base_paths_win.cc" />
     <ClCompile Include="..\..\..\src\crbase\codes\base64.cc" />
+    <ClCompile Include="..\..\..\src\crbase\codes\punycode.cc" />
     <ClCompile Include="..\..\..\src\crbase\command_line.cc" />
     <ClCompile Include="..\..\..\src\crbase\crypto\sha1.cc" />
     <ClCompile Include="..\..\..\src\crbase\debug\alias.cc" />
