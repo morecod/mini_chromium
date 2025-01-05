@@ -10,8 +10,8 @@ using namespace std;
 int main(int argc, char* argv[]) {
   crbase::AtExitManager atexit_manager;
 
-  GURL url(u8"https://www.旺旺google中国.旺旺:888/1.txt");
-  cout << url.scheme() << endl; // "http"
+  GURL url(u8"https://www.旺旺google中国.旺旺:888/1.txt?a=11&b=cc");
+  cout << url.scheme() << endl; // "https"
   cout << url.host() << endl;   // "www.xn--google-gw7is51dpz5aa.xn--ihva"
   cout << url.path() << endl;   // "/1.txt"
   cout << url.port() << endl;   // "888"
