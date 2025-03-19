@@ -8,10 +8,12 @@
 #ifndef MINI_CHROMIUM_SRC_CRBASE_FUNCTIONAL_BIND_INTERNAL_WIN_H_
 #define MINI_CHROMIUM_SRC_CRBASE_FUNCTIONAL_BIND_INTERNAL_WIN_H_
 
+#include "crbase/build_config.h"
+
 // In the x64 architecture in Windows, __fastcall, __stdcall, etc, are all
 // the same as __cdecl which would turn the following specializations into
 // multiple definitions.
-#if !(defined(_M_X64) || defined(__x86_64__))
+#if !defined(MINI_CHROMIUM_ARCH_CPU_X86_64)
 
 namespace crbase {
 namespace internal {
@@ -62,6 +64,6 @@ class RunnableAdapter<R(__fastcall *)(Args...)> {
 }  // namespace internal
 }  // namespace crbase
 
-#endif  // !(defined(_M_X64) || defined(__x86_64__))
+#endif  // !defined(MINI_CHROMIUM_ARCH_CPU_X86_64)
 
 #endif  // MINI_CHROMIUM_SRC_CRBASE_FUNCTIONAL_BIND_INTERNAL_WIN_H_

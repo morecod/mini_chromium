@@ -7,7 +7,14 @@
 
 // This file declares path keys for the crbase module.  These can be used with
 // the PathService to access various special directories and files.
+
+#include "crbase/build_config.h"
+
+#if defined(MINI_CHROMIUM_OS_WIN)
 #include "crbase/base_paths_win.h"
+#elif defined(MINI_CHROMIUM_OS_POSIX)
+#include "crbase/base_paths_posix.h"
+#endif
 
 namespace crbase {
 
@@ -27,9 +34,6 @@ enum BasePathKey {
                      // the PathService (which could differ from FILE_EXE if the
                      // PathService were compiled into a shared object, for
                      // example).
-  DIR_SOURCE_ROOT,   // Returns the root of the source tree. This key is useful
-                     // for tests that need to locate various resources. It
-                     // should not be used outside of test code.
   DIR_USER_DESKTOP,  // The current user's Desktop.
   PATH_END
 };

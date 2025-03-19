@@ -28,7 +28,6 @@
 #include <string>
 
 #include "crbase/base_export.h"
-#include "crbase/containers/hash_tables.h"
 #include "crbase/strings/string16.h"
 
 namespace crbase {
@@ -55,92 +54,92 @@ CRBASE_EXPORT void AppendToString(const StringPiece& self, std::string* target);
 CRBASE_EXPORT void AppendToString(const StringPiece16& self, string16* target);
 
 CRBASE_EXPORT size_t copy(const StringPiece& self,
-                        char* buf,
-                        size_t n,
-                        size_t pos);
+                          char* buf,
+                          size_t n,
+                          size_t pos);
 CRBASE_EXPORT size_t copy(const StringPiece16& self,
-                        char16* buf,
-                        size_t n,
-                        size_t pos);
+                          char16* buf,
+                          size_t n,
+                          size_t pos);
 
 CRBASE_EXPORT size_t find(const StringPiece& self,
-                        const StringPiece& s,
-                        size_t pos);
+                          const StringPiece& s,
+                          size_t pos);
 CRBASE_EXPORT size_t find(const StringPiece16& self,
-                        const StringPiece16& s,
-                        size_t pos);
+                          const StringPiece16& s,
+                          size_t pos);
 CRBASE_EXPORT size_t find(const StringPiece& self,
-                        char c,
-                        size_t pos);
+                          char c,
+                          size_t pos);
 CRBASE_EXPORT size_t find(const StringPiece16& self,
-                        char16 c,
-                        size_t pos);
+                          char16 c,
+                          size_t pos);
 
 CRBASE_EXPORT size_t rfind(const StringPiece& self,
-                         const StringPiece& s,
-                         size_t pos);
+                           const StringPiece& s,
+                           size_t pos);
 CRBASE_EXPORT size_t rfind(const StringPiece16& self,
-                         const StringPiece16& s,
-                         size_t pos);
+                           const StringPiece16& s,
+                           size_t pos);
 CRBASE_EXPORT size_t rfind(const StringPiece& self,
-                         char c,
-                         size_t pos);
+                           char c,
+                           size_t pos);
 CRBASE_EXPORT size_t rfind(const StringPiece16& self,
-                         char16 c,
-                         size_t pos);
+                           char16 c,
+                           size_t pos);
 
 CRBASE_EXPORT size_t find_first_of(const StringPiece& self,
-                                 const StringPiece& s,
-                                 size_t pos);
+                                   const StringPiece& s,
+                                   size_t pos);
 CRBASE_EXPORT size_t find_first_of(const StringPiece16& self,
-                                 const StringPiece16& s,
-                                 size_t pos);
+                                   const StringPiece16& s,
+                                   size_t pos);
 
 CRBASE_EXPORT size_t find_first_not_of(const StringPiece& self,
-                                     const StringPiece& s,
-                                     size_t pos);
+                                       const StringPiece& s,
+                                       size_t pos);
 CRBASE_EXPORT size_t find_first_not_of(const StringPiece16& self,
-                                     const StringPiece16& s,
-                                     size_t pos);
+                                       const StringPiece16& s,
+                                       size_t pos);
 CRBASE_EXPORT size_t find_first_not_of(const StringPiece& self,
-                                     char c,
-                                     size_t pos);
+                                       char c,
+                                       size_t pos);
 CRBASE_EXPORT size_t find_first_not_of(const StringPiece16& self,
-                                     char16 c,
-                                     size_t pos);
+                                       char16 c,
+                                       size_t pos);
 
 CRBASE_EXPORT size_t find_last_of(const StringPiece& self,
-                                const StringPiece& s,
-                                size_t pos);
+                                  const StringPiece& s,
+                                  size_t pos);
 CRBASE_EXPORT size_t find_last_of(const StringPiece16& self,
-                                const StringPiece16& s,
-                                size_t pos);
+                                  const StringPiece16& s,
+                                  size_t pos);
 CRBASE_EXPORT size_t find_last_of(const StringPiece& self,
-                                char c,
-                                size_t pos);
+                                  char c,
+                                  size_t pos);
 CRBASE_EXPORT size_t find_last_of(const StringPiece16& self,
-                                char16 c,
-                                size_t pos);
+                                  char16 c,
+                                  size_t pos);
 
 CRBASE_EXPORT size_t find_last_not_of(const StringPiece& self,
-                                    const StringPiece& s,
-                                    size_t pos);
+                                      const StringPiece& s,
+                                      size_t pos);
 CRBASE_EXPORT size_t find_last_not_of(const StringPiece16& self,
-                                    const StringPiece16& s,
-                                    size_t pos);
+                                      const StringPiece16& s,
+                                     size_t pos);
 CRBASE_EXPORT size_t find_last_not_of(const StringPiece16& self,
                                       char16 c,
                                       size_t pos);
 CRBASE_EXPORT size_t find_last_not_of(const StringPiece& self,
-                                    char c,
-                                    size_t pos);
+                                      char c,
+                                      size_t pos);
 
 CRBASE_EXPORT StringPiece substr(const StringPiece& self,
-                               size_t pos,
-                               size_t n);
-CRBASE_EXPORT StringPiece16 substr(const StringPiece16& self,
                                  size_t pos,
                                  size_t n);
+CRBASE_EXPORT StringPiece16 substr(const StringPiece16& self,
+                                   size_t pos,
+                                   size_t n);
 
 }  // namespace internal
 

@@ -10,18 +10,29 @@
 #define MINI_CHROMIUM_SRC_CRBASE_THREADING_PLATFORM_THREAD_H_
 
 #include <stddef.h>
-#include <windows.h>
 
 #include <string>
 
 #include "crbase/base_export.h"
 #include "crbase/macros.h"
 #include "crbase/time/time.h"
+#include "crbase/build_config.h"
+
+#if defined(MINI_CHROMIUM_OS_WIN)
+#include <windows.h>
+#elif defined(MINI_CHROMIUM_OS_POSIX)
+#include <pthread.h>
+#include <unistd.h>
+#endif
 
 namespace crbase {
 
 // Used for logging. Always an integer value.
+#if defined(MINI_CHROMIUM_OS_WIN)
 typedef DWORD PlatformThreadId;
+#elif defined(MINI_CHROMIUM_OS_POSIX)
+typedef pid_t PlatformThreadId;
+#endif
 
 // Used for thread checking and debugging.
 // Meant to be as fast as possible.
@@ -33,7 +44,11 @@ typedef DWORD PlatformThreadId;
 // to distinguish a new thread from an old, dead thread.
 class PlatformThreadRef {
  public:
+#if defined(MINI_CHROMIUM_OS_WIN)
   typedef DWORD RefType;
+#elif defined(MINI_CHROMIUM_OS_POSIX)
+  typedef pthread_t RefType;
+#endif
   PlatformThreadRef()
       : id_(0) {
   }
@@ -56,7 +71,11 @@ class PlatformThreadRef {
 // Used to operate on threads.
 class PlatformThreadHandle {
  public:
+#if defined(MINI_CHROMIUM_OS_WIN)
   typedef void* Handle;
+#elif defined(MINI_CHROMIUM_OS_POSIX)
+  typedef pthread_t Handle;
+#endif
 
   PlatformThreadHandle() : handle_(0) {}
 

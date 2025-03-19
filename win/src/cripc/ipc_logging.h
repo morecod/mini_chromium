@@ -13,8 +13,8 @@
 
 #include <vector>
 #include <memory>
+#include <unordered_map>
 
-#include "crbase/containers/hash_tables.h"
 #include "crbase/memory/singleton.h"
 #include "crbase/message_loop/message_loop.h"
 #include "cripc/ipc_export.h"
@@ -25,7 +25,7 @@ typedef void (*LogFunction)(std::string* name,
                             const cripc::Message* msg,
                             std::string* params);
 
-typedef crbase::hash_map<uint32_t, LogFunction > LogFunctionMap;
+typedef std::unordered_map<uint32_t, LogFunction > LogFunctionMap;
 
 namespace cripc {
 

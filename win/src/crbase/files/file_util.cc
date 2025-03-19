@@ -4,14 +4,15 @@
 
 #include "crbase/files/file_util.h"
 
+#if defined(MINI_CHROMIUM_OS_WIN)
 #include <io.h>
+#endif
 #include <stdio.h>
 
 #include <fstream>
 #include <algorithm>
 #include <limits>
 
-#include "crbase/build_config.h"
 #include "crbase/files/file_enumerator.h"
 #include "crbase/files/file_path.h"
 #include "crbase/strings/string_piece.h"
@@ -19,6 +20,7 @@
 #include "crbase/strings/stringprintf.h"
 #include "crbase/strings/utf_string_conversions.h"
 #include "crbase/strings/sys_string_conversions.h"
+#include "crbase/build_config.h"
 
 namespace crbase {
 
@@ -51,12 +53,11 @@ bool ContentsEqual(const FilePath& filename1, const FilePath& filename2) {
   // We open the file in binary format even if they are text files because
   // we are just comparing that bytes are exactly same in both files and not
   // doing anything smart with text formatting.
-#if defined(MINI_CHROMIUM_COMPILER_GCC)
+#if defined(MINI_CHROMIUM_OS_WIN)  && defined(MINI_CHROMIUM_COMPILER_GCC)
   std::ifstream file1(SysWideToNativeMB(filename1.value()),
                       std::ios::in | std::ios::binary);
   std::ifstream file2(SysWideToNativeMB(filename2.value()),
                       std::ios::in | std::ios::binary);
-
 #else
   std::ifstream file1(filename1.value().c_str(),
                       std::ios::in | std::ios::binary);
@@ -90,7 +91,7 @@ bool ContentsEqual(const FilePath& filename1, const FilePath& filename2) {
 }
 
 bool TextContentsEqual(const FilePath& filename1, const FilePath& filename2) {
-#if defined(MINI_CHROMIUM_COMPILER_GCC)
+#if defined(MINI_CHROMIUM_OS_WIN) && defined(MINI_CHROMIUM_COMPILER_GCC)
   std::ifstream file1(SysWideToNativeMB(filename1.value()), std::ios::in);
   std::ifstream file2(SysWideToNativeMB(filename2.value()), std::ios::in);
 #else
@@ -208,9 +209,11 @@ bool TouchFile(const FilePath& path,
                const Time& last_modified) {
   int flags = File::FLAG_OPEN | File::FLAG_WRITE_ATTRIBUTES;
 
+#if defined(MINI_CHROMIUM_OS_WIN)
   // On Windows, FILE_FLAG_BACKUP_SEMANTICS is needed to open a directory.
   if (DirectoryExists(path))
     flags |= File::FLAG_BACKUP_SEMANTICS;
+#endif
 
   File file(path, flags);
   if (!file.IsValid())
@@ -231,10 +234,15 @@ bool TruncateFile(FILE* file) {
   long current_offset = ftell(file);
   if (current_offset == -1)
     return false;
+#if defined(MINI_CHROMIUM_OS_WIN)
   int fd = _fileno(file);
   if (_chsize(fd, current_offset) != 0)
     return false;
-
+#else
+  int fd = fileno(file);
+  if (ftruncate(fd, current_offset) != 0)
+    return false;
+#endif
   return true;
 }
 

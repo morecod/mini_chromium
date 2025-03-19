@@ -1,10 +1,10 @@
 // Copyright (c) 2011 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
-#include "crbase/debug/debugger.h"
 
-#include <stdlib.h>
-#include <windows.h>
+#include "crbase/debug/debugger.h"
+#include "crbase/logging.h"
+#include "crbase/threading/platform_thread.h"
 
 namespace crbase {
 namespace debug {
@@ -18,7 +18,7 @@ bool WaitForDebugger(int wait_seconds, bool silent) {
         BreakDebugger();
       return true;
     }
-    ::Sleep(100);
+    PlatformThread::Sleep(TimeDelta::FromMilliseconds(100));
   }
   return false;
 }
@@ -29,16 +29,6 @@ void SetSuppressDebugUI(bool suppress) {
 
 bool IsDebugUISuppressed() {
   return is_debug_ui_suppressed;
-}
-bool BeingDebugged() {
-  return ::IsDebuggerPresent() != 0;
-}
-
-void BreakDebugger() {
-  if (IsDebugUISuppressed())
-    _exit(1);
-
-  __debugbreak();
 }
 
 }  // namespace debug

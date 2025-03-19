@@ -9,7 +9,19 @@
 
 #include "crbase/base_export.h"
 #include "crbase/macros.h"
+#include "crbase/build_config.h"
+
+#if defined(MINI_CHROMIUM_OS_WIN)
 #include "crbase/win/scoped_handle.h"
+#endif
+
+#if defined(MINI_CHROMIUM_OS_POSIX)
+#include <list>
+#include <utility>
+#include "crbase/memory/ref_counted.h"
+#include "crbase/synchronization/lock.h"
+#endif
+
 
 namespace crbase {
 
@@ -41,10 +53,12 @@ class CRBASE_EXPORT WaitableEvent {
   // waiting thread has been released.
   WaitableEvent(bool manual_reset, bool initially_signaled);
 
+#if defined(MINI_CHROMIUM_OS_WIN)
   // Create a WaitableEvent from an Event HANDLE which has already been
   // created. This objects takes ownership of the HANDLE and will close it when
   // deleted.
   explicit WaitableEvent(win::ScopedHandle event_handle);
+#endif
 
   ~WaitableEvent();
 
@@ -76,7 +90,9 @@ class CRBASE_EXPORT WaitableEvent {
   // TimedWait can synchronise its own destruction like |Wait|.
   bool TimedWait(const TimeDelta& max_time);
 
+#if defined(MINI_CHROMIUM_OS_WIN)
   HANDLE handle() const { return handle_.Get(); }
+#endif
 
   // Wait, synchronously, on multiple events.
   //   waitables: an array of WaitableEvent pointers
@@ -124,7 +140,50 @@ class CRBASE_EXPORT WaitableEvent {
  private:
   friend class WaitableEventWatcher;
 
+#if defined(MINI_CHROMIUM_OS_WIN)
   win::ScopedHandle handle_;
+#else
+  // On Windows, one can close a HANDLE which is currently being waited on. The
+  // MSDN documentation says that the resulting behaviour is 'undefined', but
+  // it doesn't crash. However, if we were to include the following members
+  // directly then, on POSIX, one couldn't use WaitableEventWatcher to watch an
+  // event which gets deleted. This mismatch has bitten us several times now,
+  // so we have a kernel of the WaitableEvent, which is reference counted.
+  // WaitableEventWatchers may then take a reference and thus match the Windows
+  // behaviour.
+  struct WaitableEventKernel :
+    public RefCountedThreadSafe<WaitableEventKernel> {
+  public:
+    WaitableEventKernel(bool manual_reset, bool initially_signaled);
+
+    bool Dequeue(Waiter* waiter, void* tag);
+
+    base::Lock lock_;
+    const bool manual_reset_;
+    bool signaled_;
+    std::list<Waiter*> waiters_;
+
+  private:
+    friend class RefCountedThreadSafe<WaitableEventKernel>;
+    ~WaitableEventKernel();
+  };
+
+  typedef std::pair<WaitableEvent*, size_t> WaiterAndIndex;
+
+  // When dealing with arrays of WaitableEvent*, we want to sort by the address
+  // of the WaitableEvent in order to have a globally consistent locking order.
+  // In that case we keep them, in sorted order, in an array of pairs where the
+  // second element is the index of the WaitableEvent in the original,
+  // unsorted, array.
+  static size_t EnqueueMany(WaiterAndIndex* waitables,
+    size_t count, Waiter* waiter);
+
+  bool SignalAll();
+  bool SignalOne();
+  void Enqueue(Waiter* waiter);
+
+  scoped_refptr<WaitableEventKernel> kernel_;
+#endif
 };
 
 }  // namespace crbase

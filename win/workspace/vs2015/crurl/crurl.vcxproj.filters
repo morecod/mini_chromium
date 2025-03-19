@@ -37,6 +37,7 @@
     <ClCompile Include="..\..\..\src\crurl\url_util.cc" />
     <ClCompile Include="..\..\..\src\crurl\url_canon_stdurl.cc" />
     <ClCompile Include="..\..\..\src\crurl\url_canon_icu.cc" />
+    <ClCompile Include="..\..\..\src\crurl\gurl_util.cc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\src\crurl\third_party\mozilla\url_parse.h">
@@ -56,5 +57,6 @@
     <ClInclude Include="..\..\..\src\crurl\url_util.h" />
     <ClInclude Include="..\..\..\src\crurl\url_util_internal.h" />
     <ClInclude Include="..\..\..\src\crurl\url_export.h" />
+    <ClInclude Include="..\..\..\src\crurl\gurl_util.h" />
   </ItemGroup>
 </Project>

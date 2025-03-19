@@ -7,7 +7,7 @@
 
 #include <utility>
 
-#include "crbase\macros.h"
+#include "crbase/macros.h"
 
 // crbase::AutoReset<> is useful for setting a variable to a new value only 
 // within a particular scope. An crbase::AutoReset<> object resets a variable 

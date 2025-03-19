@@ -1,4 +1,4 @@
-// Copyright 2012 The Chromium Authors
+// Copyright (c) 2012 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -25,8 +25,8 @@
 // to use these.
 //
 
-#ifndef MINI_CHROMIUM_SRC_CRBASE_ATOMIC_ATOMICOPS_H_
-#define MINI_CHROMIUM_SRC_CRBASE_ATOMIC_ATOMICOPS_H_
+#ifndef MINI_CHROMIUM_CRBASE_ATOMIC_ATOMICOPS_H_
+#define MINI_CHROMIUM_CRBASE_ATOMIC_ATOMICOPS_H_
 
 #include <stdint.h>
 
@@ -35,18 +35,18 @@
 // - libc++: captures __config for _LIBCPP_VERSION
 // - libstdc++: captures bits/c++config.h for __GLIBCXX__
 #include <cstddef>
-#include <atomic>
+
+#include "crbase/base_export.h"
+#include "crbase/build_config.h"
 
 namespace crbase {
 namespace subtle {
 
 typedef int32_t Atomic32;
-#if defined(_M_X64) || defined(__x86_64__)
+#ifdef MINI_CHROMIUM_ARCH_CPU_64_BITS
 // We need to be able to go between Atomic64 and AtomicWord implicitly.  This
 // means Atomic64 and AtomicWord should be the same type on 64-bit.
-#if defined(__ILP32__) 
-// NaCl's intptr_t is not actually 64-bits on 64-bit!
-// http://code.google.com/p/nativeclient/issues/detail?id=1162
+#if defined(__ILP32__)
 typedef int64_t Atomic64;
 #else
 typedef intptr_t Atomic64;
@@ -104,7 +104,7 @@ Atomic32 NoBarrier_Load(volatile const Atomic32* ptr);
 Atomic32 Acquire_Load(volatile const Atomic32* ptr);
 
 // 64-bit atomic operations (only available on 64-bit processors).
-#if defined(_M_X64) || defined(__x86_64__)
+#ifdef MINI_CHROMIUM_ARCH_CPU_64_BITS
 Atomic64 NoBarrier_CompareAndSwap(volatile Atomic64* ptr,
                                   Atomic64 old_value,
                                   Atomic64 new_value);
@@ -122,164 +122,11 @@ void NoBarrier_Store(volatile Atomic64* ptr, Atomic64 value);
 void Release_Store(volatile Atomic64* ptr, Atomic64 value);
 Atomic64 NoBarrier_Load(volatile const Atomic64* ptr);
 Atomic64 Acquire_Load(volatile const Atomic64* ptr);
-#endif  // defined(_M_X64) || defined(__x86_64__)
-
-// This implementation is transitional and maintains the original API for
-// atomicops.h. This requires casting memory locations to the atomic types, and
-// assumes that the API and the C++11 implementation are layout-compatible,
-// which isn't true for all implementations or hardware platforms. The static
-// assertion should detect this issue, were it to fire then this header
-// shouldn't be used.
-//
-// TODO(jfb) If this header manages to stay committed then the API should be
-//           modified, and all call sites updated.
-typedef volatile std::atomic<Atomic32>* AtomicLocation32;
-static_assert(sizeof(*(AtomicLocation32) nullptr) == sizeof(Atomic32),
-              "incompatible 32-bit atomic layout");
-
-inline Atomic32 NoBarrier_CompareAndSwap(volatile Atomic32* ptr,
-                                         Atomic32 old_value,
-                                         Atomic32 new_value) {
-  ((AtomicLocation32)ptr)
-      ->compare_exchange_strong(old_value,
-                                new_value,
-                                std::memory_order_relaxed,
-                                std::memory_order_relaxed);
-  return old_value;
-}
-
-inline Atomic32 NoBarrier_AtomicExchange(volatile Atomic32* ptr,
-                                         Atomic32 new_value) {
-  return ((AtomicLocation32)ptr)
-      ->exchange(new_value, std::memory_order_relaxed);
-}
-
-inline Atomic32 NoBarrier_AtomicIncrement(volatile Atomic32* ptr,
-                                          Atomic32 increment) {
-  return increment +
-         ((AtomicLocation32)ptr)
-             ->fetch_add(increment, std::memory_order_relaxed);
-}
-
-inline Atomic32 Barrier_AtomicIncrement(volatile Atomic32* ptr,
-                                        Atomic32 increment) {
-  return increment + ((AtomicLocation32)ptr)->fetch_add(increment);
-}
-
-inline Atomic32 Acquire_CompareAndSwap(volatile Atomic32* ptr,
-                                       Atomic32 old_value,
-                                       Atomic32 new_value) {
-  ((AtomicLocation32)ptr)
-      ->compare_exchange_strong(old_value,
-                                new_value,
-                                std::memory_order_acquire,
-                                std::memory_order_acquire);
-  return old_value;
-}
-
-inline Atomic32 Release_CompareAndSwap(volatile Atomic32* ptr,
-                                       Atomic32 old_value,
-                                       Atomic32 new_value) {
-  ((AtomicLocation32)ptr)
-      ->compare_exchange_strong(old_value,
-                                new_value,
-                                std::memory_order_release,
-                                std::memory_order_relaxed);
-  return old_value;
-}
-
-inline void NoBarrier_Store(volatile Atomic32* ptr, Atomic32 value) {
-  ((AtomicLocation32)ptr)->store(value, std::memory_order_relaxed);
-}
-
-inline void Release_Store(volatile Atomic32* ptr, Atomic32 value) {
-  ((AtomicLocation32)ptr)->store(value, std::memory_order_release);
-}
-
-inline Atomic32 NoBarrier_Load(volatile const Atomic32* ptr) {
-  return ((AtomicLocation32)ptr)->load(std::memory_order_relaxed);
-}
-
-inline Atomic32 Acquire_Load(volatile const Atomic32* ptr) {
-  return ((AtomicLocation32)ptr)->load(std::memory_order_acquire);
-}
-
-#if defined(_M_X64) || defined(__x86_64__)
-
-typedef volatile std::atomic<Atomic64>* AtomicLocation64;
-static_assert(sizeof(*(AtomicLocation64) nullptr) == sizeof(Atomic64),
-              "incompatible 64-bit atomic layout");
-
-inline Atomic64 NoBarrier_CompareAndSwap(volatile Atomic64* ptr,
-                                         Atomic64 old_value,
-                                         Atomic64 new_value) {
-  ((AtomicLocation64)ptr)
-      ->compare_exchange_strong(old_value,
-                                new_value,
-                                std::memory_order_relaxed,
-                                std::memory_order_relaxed);
-  return old_value;
-}
-
-inline Atomic64 NoBarrier_AtomicExchange(volatile Atomic64* ptr,
-                                         Atomic64 new_value) {
-  return ((AtomicLocation64)ptr)
-      ->exchange(new_value, std::memory_order_relaxed);
-}
-
-inline Atomic64 NoBarrier_AtomicIncrement(volatile Atomic64* ptr,
-                                          Atomic64 increment) {
-  return increment +
-         ((AtomicLocation64)ptr)
-             ->fetch_add(increment, std::memory_order_relaxed);
-}
-
-inline Atomic64 Barrier_AtomicIncrement(volatile Atomic64* ptr,
-                                        Atomic64 increment) {
-  return increment + ((AtomicLocation64)ptr)->fetch_add(increment);
-}
-
-inline Atomic64 Acquire_CompareAndSwap(volatile Atomic64* ptr,
-                                       Atomic64 old_value,
-                                       Atomic64 new_value) {
-  ((AtomicLocation64)ptr)
-      ->compare_exchange_strong(old_value,
-                                new_value,
-                                std::memory_order_acquire,
-                                std::memory_order_acquire);
-  return old_value;
-}
-
-inline Atomic64 Release_CompareAndSwap(volatile Atomic64* ptr,
-                                       Atomic64 old_value,
-                                       Atomic64 new_value) {
-  ((AtomicLocation64)ptr)
-      ->compare_exchange_strong(old_value,
-                                new_value,
-                                std::memory_order_release,
-                                std::memory_order_relaxed);
-  return old_value;
-}
-
-inline void NoBarrier_Store(volatile Atomic64* ptr, Atomic64 value) {
-  ((AtomicLocation64)ptr)->store(value, std::memory_order_relaxed);
-}
-
-inline void Release_Store(volatile Atomic64* ptr, Atomic64 value) {
-  ((AtomicLocation64)ptr)->store(value, std::memory_order_release);
-}
-
-inline Atomic64 NoBarrier_Load(volatile const Atomic64* ptr) {
-  return ((AtomicLocation64)ptr)->load(std::memory_order_relaxed);
-}
-
-inline Atomic64 Acquire_Load(volatile const Atomic64* ptr) {
-  return ((AtomicLocation64)ptr)->load(std::memory_order_acquire);
-}
-
-#endif  // defined(_M_X64) || defined(__x86_64__)
+#endif  // MINI_CHROMIUM_ARCH_CPU_64_BITS
 
 }  // namespace subtle
 }  // namespace crbase
 
-#endif  // MINI_CHROMIUM_SRC_CRBASE_ATOMIC_ATOMICOPS_H_
+#include "crbase/atomic/atomicops_internals_portable.h"
+
+#endif  // MINI_CHROMIUM_CRBASE_ATOMIC_ATOMICOPS_H_

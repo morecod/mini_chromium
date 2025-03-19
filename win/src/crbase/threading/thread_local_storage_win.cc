@@ -6,8 +6,8 @@
 
 #include <windows.h>
 
-#include "crbase/build_config.h"
 #include "crbase/logging.h"
+#include "crbase/build_config.h"
 
 namespace crbase {
 

@@ -13,8 +13,12 @@
 #include "crbase/strings/string_util.h"
 #include "crbase/strings/sys_string_conversions.h"
 #include "crbase/strings/utf_string_conversions.h"
+#include "crbase/logging.h"
+#include "crbase/build_config.h"
 
+#if defined(MINI_CHROMIUM_OS_WIN)
 #include <windows.h>
+#endif
 
 namespace crbase {
 
@@ -207,6 +211,7 @@ bool FilePath::IsSeparator(CharType character) {
 }
 
 void FilePath::GetComponents(std::vector<StringType>* components) const {
+  CR_DCHECK(components);
   if (!components)
     return;
   components->clear();
@@ -407,7 +412,12 @@ FilePath FilePath::InsertBeforeExtension(StringPieceType suffix) const {
 
 FilePath FilePath::InsertBeforeExtensionASCII(StringPiece suffix)
     const {
+  CR_DCHECK(IsStringASCII(suffix));
+#if defined(MINI_CHROMIUM_OS_WIN)
   return InsertBeforeExtension(ASCIIToUTF16(suffix));
+#elif defined(MINI_CHROMIUM_OS_POSIX)
+  return InsertBeforeExtension(suffix);
+#endif
 }
 
 FilePath FilePath::AddExtension(StringPieceType extension) const {
@@ -446,6 +456,7 @@ FilePath FilePath::ReplaceExtension(StringPieceType extension) const {
 }
 
 bool FilePath::MatchesExtension(StringPieceType extension) const {
+  CR_DCHECK(extension.empty() || extension[0] == kExtensionSeparator);
   StringType current_extension = Extension();
 
   if (current_extension.length() != extension.length())
@@ -463,6 +474,8 @@ FilePath FilePath::Append(StringPieceType component) const {
     component.substr(0, nul_pos).CopyToString(&without_nuls);
     appended = StringPieceType(without_nuls);
   }
+
+  CR_DCHECK(!IsPathAbsolute(appended));
 
   if (path_.compare(kCurrentDirectory) == 0) {
     // Append normally doesn't do any normalization, but as a special case,
@@ -501,7 +514,12 @@ FilePath FilePath::Append(const FilePath& component) const {
 }
 
 FilePath FilePath::AppendASCII(StringPiece component) const {
+  CR_DCHECK(crbase::IsStringASCII(component));
+#if defined(MINI_CHROMIUM_OS_WIN)
   return Append(ASCIIToUTF16(component));
+#elif defined(MINI_CHROMIUM_OS_POSIX)
+  return Append(component);
+#endif
 }
 
 bool FilePath::IsAbsolute() const {
@@ -553,6 +571,57 @@ bool FilePath::ReferencesParent() const {
   return false;
 }
 
+
+#if defined(MINI_CHROMIUM_OS_POSIX)
+// See file_path.h for a discussion of the encoding of paths on POSIX
+// platforms.  These encoding conversion functions are not quite correct.
+
+string16 FilePath::LossyDisplayName() const {
+  return WideToUTF16(SysNativeMBToWide(path_));
+}
+
+std::string FilePath::MaybeAsASCII() const {
+  if (crbase::IsStringASCII(path_))
+    return path_;
+  return std::string();
+}
+
+std::string FilePath::AsUTF8Unsafe() const {
+#if defined(SYSTEM_NATIVE_UTF8)
+  return value();
+#else
+  return WideToUTF8(SysNativeMBToWide(value()));
+#endif
+}
+
+string16 FilePath::AsUTF16Unsafe() const {
+#if defined(SYSTEM_NATIVE_UTF8)
+  return UTF8ToUTF16(value());
+#else
+  return WideToUTF16(SysNativeMBToWide(value()));
+#endif
+}
+
+// static
+FilePath FilePath::FromUTF8Unsafe(const std::string& utf8) {
+#if defined(SYSTEM_NATIVE_UTF8)
+  return FilePath(utf8);
+#else
+  return FilePath(SysWideToNativeMB(UTF8ToWide(utf8)));
+#endif
+}
+
+// static
+FilePath FilePath::FromUTF16Unsafe(const string16& utf16) {
+#if defined(SYSTEM_NATIVE_UTF8)
+  return FilePath(UTF16ToUTF8(utf16));
+#else
+  return FilePath(SysWideToNativeMB(UTF16ToWide(utf16)));
+#endif
+}
+
+#elif defined(MINI_CHROMIUM_OS_WIN)
+
 string16 FilePath::LossyDisplayName() const {
   return path_;
 }
@@ -581,13 +650,24 @@ FilePath FilePath::FromUTF16Unsafe(const string16& utf16) {
   return FilePath(utf16);
 }
 
+#endif  // MINI_CHROMIUM_OS_WIN 
+
 void FilePath::WriteToPickle(Pickle* pickle) const {
+#if defined(MINI_CHROMIUM_OS_WIN)
   pickle->WriteString16(path_);
+#else
+  pickle->WriteString(path_);
+#endif
 }
 
 bool FilePath::ReadFromPickle(PickleIterator* iter) {
+#if defined(MINI_CHROMIUM_OS_WIN)
   if (!iter->ReadString16(&path_))
     return false;
+#else
+  if (!iter->ReadString(&path_))
+    return false;
+#endif
 
   if (path_.find(kStringTerminator) != StringType::npos)
     return false;
@@ -595,6 +675,7 @@ bool FilePath::ReadFromPickle(PickleIterator* iter) {
   return true;
 }
 
+#if defined(MINI_CHROMIUM_OS_WIN)
 // Windows specific implementation of file string comparisons.
 
 int FilePath::CompareIgnoreCase(StringPieceType string1,
@@ -622,6 +703,23 @@ int FilePath::CompareIgnoreCase(StringPieceType string1,
     return -1;
   return 0;
 }
+
+#else  //  << other (POSIX) >>
+
+// Generic Posix system comparisons.
+int FilePath::CompareIgnoreCase(StringPieceType string1,
+                                StringPieceType string2) {
+  // Specifically need null termianted strings for this API call.
+  int comparison = strcasecmp(string1.as_string().c_str(),
+    string2.as_string().c_str());
+  if (comparison < 0)
+    return -1;
+  if (comparison > 0)
+    return 1;
+  return 0;
+}
+
+#endif  // OS versions of CompareIgnoreCase()
 
 void FilePath::StripTrailingSeparatorsInternal() {
   // If there is no drive letter, start will be 1, which will prevent stripping
@@ -665,7 +763,7 @@ FilePath FilePath::NormalizePathSeparatorsTo(CharType separator) const {
 
 namespace std {
 
-    std::ostream& operator<<(std::ostream& out, const crbase::FilePath& value) {
+std::ostream& operator<<(std::ostream& out, const crbase::FilePath& value) {
   std::string str = crbase::UTF16ToUTF8(value.value());
   return out << str;
 }

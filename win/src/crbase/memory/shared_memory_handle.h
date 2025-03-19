@@ -6,14 +6,26 @@
 #define MINI_CHROMIUM_SRC_CRBASE_MEMORY_SHARED_MEMORY_HANDLE_H_
 
 #include <stddef.h>
-#include <windows.h>
 
+#include "crbase/build_config.h"
+
+#if defined(MINI_CHROMIUM_OS_WIN)
+#include <windows.h>
 #include "crbase/process/process_handle.h"
+#elif defined(MINI_CHROMIUM_OS_POSIX)
+#include <sys/types.h>
+#include "crbase/file_descriptor_posix.h"
+#endif
 
 namespace crbase {
 
 class Pickle;
 
+// SharedMemoryHandle is a platform specific type which represents
+// the underlying OS handle to a shared memory segment.
+#if defined(MINI_CHROMIUM_OS_POSIX)
+typedef FileDescriptor SharedMemoryHandle;
+#elif defined(MINI_CHROMIUM_OS_WIN)
 class CRBASE_EXPORT SharedMemoryHandle {
  public:
   // The default constructor returns an invalid SharedMemoryHandle.
@@ -55,6 +67,7 @@ class CRBASE_EXPORT SharedMemoryHandle {
   // invalid, this will be kNullProcessId.
   ProcessId pid_;
 };
+#endif
 
 }  // namespace crbase
 

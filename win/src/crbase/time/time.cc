@@ -12,7 +12,9 @@
 
 #include "crbase/macros.h"
 #include "crbase/strings/stringprintf.h"
+#include "crbase/logging.h"
 #include "crbase/third_party/nspr/prtime.h"
+#include "crbase/build_config.h"
 
 namespace crbase {
 
@@ -154,8 +156,8 @@ time_t Time::ToTimeT() const {
     return std::numeric_limits<time_t>::max();
   }
   if (std::numeric_limits<int64_t>::max() - kTimeTToMicrosecondsOffset <= us_) {
-    ///CR_DLOG(WARNING) << "Overflow when converting crbase::Time with internal " 
-    ///                 << "value " << us_ << " to time_t.";
+    CR_DLOG(WARNING) << "Overflow when converting crbase::Time with internal " 
+                     << "value " << us_ << " to time_t.";
     return std::numeric_limits<time_t>::max();
   }
   return (us_ - kTimeTToMicrosecondsOffset) / kMicrosecondsPerSecond;
@@ -178,6 +180,15 @@ double Time::ToDoubleT() const {
   return (static_cast<double>(us_ - kTimeTToMicrosecondsOffset) /
           static_cast<double>(kMicrosecondsPerSecond));
 }
+
+#if defined(MINI_CHROMIUM_OS_POSIX)
+// static
+Time Time::FromTimeSpec(const timespec& ts) {
+  return FromDoubleT(ts.tv_sec +
+                     static_cast<double>(ts.tv_nsec) /
+                         base::Time::kNanosecondsPerSecond);
+}
+#endif
 
 // static
 Time Time::FromJsTime(double ms_since_epoch) {

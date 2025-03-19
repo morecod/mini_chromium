@@ -107,11 +107,11 @@
 // Return the byte alignment of the given type (available at compile time).
 // Use like:
 //   CR_ALIGNOF(int32_t)  // this would be 4
-///#if defined(MINI_CHROMIUM_COMPILER_MSVC)
-///#define CR_ALIGNOF(type) __alignof(type)
-///#elif defined(MINI_CHROMIUM_COMPILER_GCC)
-///#define CR_ALIGNOF(type) __alignof__(type)
-///#endif
+#if defined(MINI_CHROMIUM_COMPILER_MSVC)
+#define CR_ALIGNOF(type) __alignof(type)
+#elif defined(MINI_CHROMIUM_COMPILER_GCC)
+#define CR_ALIGNOF(type) __alignof__(type)
+#endif
 
 // Annotate a function indicating the caller must examine the return value.
 // Use like:

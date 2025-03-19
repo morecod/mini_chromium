@@ -110,22 +110,29 @@
 #include <vector>
 
 #include "crbase/base_export.h"
-#include "crbase/containers/hash_tables.h"
 #include "crbase/macros.h"
+#include "crbase/compiler_specific.h"
 #include "crbase/strings/string16.h"
 #include "crbase/strings/string_piece.h"
+#include "crbase/build_config.h"
 
 // Windows-style drive letter support and pathname separator characters can be
 // enabled and disabled independently, to aid testing.  These #defines are
 // here so that the same setting can be used in both the implementation and
 // in the unit test.
+#if defined(MINI_CHROMIUM_OS_WIN)
 #define FILE_PATH_USES_DRIVE_LETTERS
 #define FILE_PATH_USES_WIN_SEPARATORS
+#endif  // MINI_CHROMIUM_OS_WIN
 
 // To print path names portably use PRIsFP (based on PRIuS and friends from
 // C99 and format_macros.h) like this:
-// crbase::StringPrintf("Path is %" PRIsFP ".\n", path.value().c_str());
+// base::StringPrintf("Path is %" PRIsFP ".\n", path.value().c_str());
+#if defined(MINI_CHROMIUM_OS_POSIX)
+#define PRIsFP "s"
+#elif defined(MINI_CHROMIUM_OS_WIN)
 #define PRIsFP "ls"
+#endif  // MINI_CHROMIUM_OS_WIN
 
 namespace crbase {
 
@@ -136,9 +143,16 @@ class PickleIterator;
 // pathnames on different platforms.
 class CRBASE_EXPORT FilePath {
  public:
+#if defined(MINI_CHROMIUM_OS_POSIX)
+  // On most platforms, native pathnames are char arrays, and the encoding
+  // may or may not be specified.  On Mac OS X, native pathnames are encoded
+  // in UTF-8.
+  typedef std::string StringType;
+#elif defined(MINI_CHROMIUM_OS_WIN)
   // On Windows, for Unicode-aware applications, native pathnames are wchar_t
   // arrays encoded in UTF-16.
   typedef std::wstring StringType;
+#endif  // OS_WIN
 
   typedef BasicStringPiece<StringType> StringPieceType;
   typedef StringType::value_type CharType;
@@ -409,8 +423,13 @@ class CRBASE_EXPORT FilePath {
 
 // Macros for string literal initialization of FilePath::CharType[], and for
 // using a FilePath::CharType[] in a printf-style format string.
+#if defined(MINI_CHROMIUM_OS_POSIX)
+#define FILE_PATH_LITERAL(x) x
+#define PRFilePath "s"
+#elif defined(MINI_CHROMIUM_OS_WIN)
 #define FILE_PATH_LITERAL(x) L ## x
 #define PRFilePath "ls"
+#endif  // MINI_CHROMIUM_OS_WIN
 
 // Provide a hash function so that hash_sets and maps can contain FilePath
 // objects.

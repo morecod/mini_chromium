@@ -11,6 +11,7 @@
 #include <limits>
 
 #include "crbase/files/file_path.h"
+#include "crbase/logging.h"
 #include "crbase/strings/stringprintf.h"
 #include "crbase/win/windows_version.h"
 
@@ -20,6 +21,7 @@ int64_t AmountOfMemory(DWORDLONG MEMORYSTATUSEX::*memory_field) {
   MEMORYSTATUSEX memory_info;
   memory_info.dwLength = sizeof(memory_info);
   if (!GlobalMemoryStatusEx(&memory_info)) {
+    CR_NOTREACHED  ();
     return 0;
   }
 

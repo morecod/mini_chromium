@@ -41,11 +41,11 @@
 #include <x86intrin.h>
 #endif
 
-#include "crbase/build_config.h"
 #include "crbase/logging.h"
 #include "crbase/bit_cast.h"
 #include "crbase/system_info/cpu.h"
 #include "crbase/synchronization/lock.h"
+#include "crbase/build_config.h"
 
 using crbase::ThreadTicks;
 using crbase::Time;

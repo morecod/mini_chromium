@@ -59,9 +59,8 @@ class CancelableCallback;
 template <typename... A>
 class CancelableCallback<void(A...)> {
  public:
-  CancelableCallback(const CancelableCallback<A...>&) = delete;
-  CancelableCallback<A...>& operator=(
-      const CancelableCallback<A...>&) = delete;
+  CancelableCallback(const CancelableCallbac&) = delete;
+  CancelableCallback& operator=(const CancelableCallback&) = delete;
 
   CancelableCallback() : weak_factory_(this) {}
 

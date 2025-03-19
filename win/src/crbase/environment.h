@@ -11,8 +11,17 @@
 
 #include "crbase/base_export.h"
 #include "crbase/strings/string16.h"
+#include "crbase/build_config.h"
 
 namespace crbase {
+  
+namespace env_vars {
+
+#if defined(MINI_CHROMIUM_OS_POSIX)
+CRBASE_EXPORT extern const char kHome[];
+#endif
+
+}  // namespace env_vars
 
 class CRBASE_EXPORT Environment {
  public:
@@ -37,6 +46,7 @@ class CRBASE_EXPORT Environment {
   virtual bool UnSetVar(const char* variable_name) = 0;
 };
 
+#if defined(MINI_CHROMIUM_OS_WIN)
 
 typedef string16 NativeEnvironmentString;
 typedef std::map<NativeEnvironmentString, NativeEnvironmentString>
@@ -55,6 +65,23 @@ typedef std::map<NativeEnvironmentString, NativeEnvironmentString>
 CRBASE_EXPORT string16 AlterEnvironment(const wchar_t* env,
                                         const EnvironmentMap& changes);
 
+#elif defined(MINI_CHROMIUM_OS_POSIX)
+
+typedef std::string NativeEnvironmentString;
+typedef std::map<NativeEnvironmentString, NativeEnvironmentString>
+    EnvironmentMap;
+
+// See general comments for the Windows version above.
+//
+// This Posix version takes and returns a Posix-style environment block, which
+// is a null-terminated list of pointers to null-terminated strings. The
+// returned array will have appended to it the storage for the array itself so
+// there is only one pointer to manage, but this means that you can't copy the
+// array without keeping the original around.
+CRBASE_EXPORT scoped_ptr<char*[]> AlterEnvironment(
+    const char* const* env,
+    const EnvironmentMap& changes);
+#endif
 
 }  // namespace crbase
 

@@ -10,6 +10,8 @@
 #include <algorithm>
 #include <ostream>
 
+#include "crbase/logging.h"
+
 namespace crbase {
 namespace {
 
@@ -29,6 +31,12 @@ inline void BuildLookupTable(const StringPiece& characters_wanted,
     table[static_cast<unsigned char>(data[i])] = true;
   }
 }
+
+// MSVC doesn't like complex extern templates and DLLs.
+#if !defined(MINI_CHROMIUM_COMPILER_MSVC)
+template class BasicStringPiece<std::string>;
+template class BasicStringPiece<string16>;
+#endif
 
 }  // namespace
 

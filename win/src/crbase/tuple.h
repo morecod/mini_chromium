@@ -31,6 +31,7 @@
 #include <stddef.h>
 
 #include "crbase/functional/bind_helpers.h"
+#include "crbase/build_config.h"
 
 namespace crbase {
 
@@ -44,7 +45,7 @@ struct IndexSequence {};
 template <size_t... Ns>
 struct MakeIndexSequenceImpl;
 
-#if defined(_PREFAST_)
+#if defined(_PREFAST_) && defined(MINI_CHROMIUM_OS_WIN)
 
 // Work around VC++ 2013 /analyze internal compiler error:
 // https://connect.microsoft.com/VisualStudio/feedback/details/1053626
@@ -92,7 +93,7 @@ template <> struct MakeIndexSequenceImpl<13> {
   using Type = IndexSequence<0,1,2,3,4,5,6,7,8,9,10,11,12>;
 };
 
-#else  // defined(_PREFAST_)
+#else  // defined(_PREFAST_) && defined(MINI_CHROMIUM_OS_WIN)
 
 template <size_t... Ns>
 struct MakeIndexSequenceImpl<0, Ns...> {
@@ -103,7 +104,7 @@ template <size_t N, size_t... Ns>
 struct MakeIndexSequenceImpl<N, Ns...>
     : MakeIndexSequenceImpl<N - 1, N - 1, Ns...> {};
 
-#endif  // defined(_PREFAST_)
+#endif  // defined(_PREFAST_) && defined(MINI_CHROMIUM_OS_WIN)
 
 template <size_t N>
 using MakeIndexSequence = typename MakeIndexSequenceImpl<N>::Type;

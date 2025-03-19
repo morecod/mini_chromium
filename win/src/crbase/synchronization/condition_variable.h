@@ -69,6 +69,11 @@
 #include "crbase/logging.h"
 #include "crbase/macros.h"
 #include "crbase/synchronization/lock.h"
+#include "crbase/build_config.h"
+
+#if defined(MINI_CHROMIUM_OS_POSIX)
+#include <pthread.h>
+#endif
 
 namespace crbase {
 
@@ -96,7 +101,12 @@ class CRBASE_EXPORT ConditionVariable {
   void Signal();
 
  private:
+#if defined(MINI_CHROMIUM_OS_WIN)
   ConditionVarImpl* impl_;
+#elif defined(MINI_CHROMIUM_OS_POSIX)
+  pthread_cond_t condition_;
+  pthread_mutex_t* user_mutex_;
+#endif
 };
 
 }  // namespace crbase

@@ -5,7 +5,6 @@
 #include "crbase/environment.h"
 
 #include <stddef.h>
-#include <windows.h>
 
 #include <vector>
 #include <memory>
@@ -13,7 +12,13 @@
 #include "crbase/strings/string_piece.h"
 #include "crbase/strings/string_util.h"
 #include "crbase/strings/utf_string_conversions.h"
+#include "crbase/build_config.h"
 
+#if defined(MINI_CHROMIUM_OS_POSIX)
+#include <stdlib.h>
+#elif defined(MINI_CHROMIUM_OS_WIN)
+#include <windows.h>
+#endif
 
 namespace crbase {
 
@@ -51,7 +56,16 @@ class EnvironmentImpl : public Environment {
 
  private:
   bool GetVarImpl(const char* variable_name, std::string* result) {
-    DWORD value_length = ::GetEnvironmentVariableW(
+#if defined(MINI_CHROMIUM_OS_POSIX)
+    const char* env_value = getenv(variable_name);
+    if (!env_value)
+      return false;
+    // Note that the variable may be defined but empty.
+    if (result)
+      *result = env_value;
+    return true;
+#elif defined(MINI_CHROMIUM_OS_WIN)
+    DWORD value_length = ::GetEnvironmentVariable(
         UTF8ToWide(variable_name).c_str(), NULL, 0);
     if (value_length == 0)
       return false;
@@ -62,12 +76,20 @@ class EnvironmentImpl : public Environment {
       *result = WideToUTF8(value.get());
     }
     return true;
+#else
+#error need to port
+#endif
   }
 
   bool SetVarImpl(const char* variable_name, const std::string& new_value) {
-    // On success, a nonzero value is returned.
+#if defined(MINI_CHROMIUM_OS_POSIX)
+    // On success, zero is returned.
+    return !setenv(variable_name, new_value.c_str(), 1);
+#elif defined(MINI_CHROMIUM_OS_WIN)
+// On success, a nonzero value is returned.
     return !!SetEnvironmentVariableW(UTF8ToWide(variable_name).c_str(),
                                      UTF8ToWide(new_value).c_str());
+#endif
   }
 
   bool UnSetVarImpl(const char* variable_name) {
@@ -95,6 +117,16 @@ size_t ParseEnvLine(const NativeEnvironmentString::value_type* input,
 
 }  // namespace
 
+namespace env_vars {
+
+#if defined(MINI_CHROMIUM_OS_POSIX)
+// On Posix systems, this variable contains the location of the user's home
+// directory. (e.g, /home/username/).
+const char kHome[] = "HOME";
+#endif
+
+}  // namespace env_vars
+
 Environment::~Environment() {}
 
 // static
@@ -105,6 +137,8 @@ Environment* Environment::Create() {
 bool Environment::HasVar(const char* variable_name) {
   return GetVar(variable_name, NULL);
 }
+
+#if defined(MINI_CHROMIUM_OS_WIN)
 
 string16 AlterEnvironment(const wchar_t* env,
                           const EnvironmentMap& changes) {
@@ -143,5 +177,59 @@ string16 AlterEnvironment(const wchar_t* env,
   result.push_back(0);
   return result;
 }
+
+#elif defined(MINI_CHROMIUM_OS_POSIX)
+
+std::unique_ptr<char*[]> AlterEnvironment(const char* const* const env,
+                                          const EnvironmentMap& changes) {
+  std::string value_storage;  // Holds concatenated null-terminated strings.
+  std::vector<size_t> result_indices;  // Line indices into value_storage.
+
+  // First build up all of the unchanged environment strings. These are
+  // null-terminated of the form "key=value".
+  std::string key;
+  for (size_t i = 0; env[i]; i++) {
+    size_t line_length = ParseEnvLine(env[i], &key);
+
+    // Keep only values not specified in the change vector.
+    EnvironmentMap::const_iterator found_change = changes.find(key);
+    if (found_change == changes.end()) {
+      result_indices.push_back(value_storage.size());
+      value_storage.append(env[i], line_length);
+    }
+  }
+
+  // Now append all modified and new values.
+  for (EnvironmentMap::const_iterator i = changes.begin();
+       i != changes.end(); ++i) {
+    if (!i->second.empty()) {
+      result_indices.push_back(value_storage.size());
+      value_storage.append(i->first);
+      value_storage.push_back('=');
+      value_storage.append(i->second);
+      value_storage.push_back(0);
+    }
+  }
+
+  size_t pointer_count_required =
+      result_indices.size() + 1 +  // Null-terminated array of pointers.
+      (value_storage.size() + sizeof(char*) - 1) / sizeof(char*);  // Buffer.
+  std::unique_ptr<char*[]> result(new char*[pointer_count_required]);
+
+  // The string storage goes after the array of pointers.
+  char* storage_data = reinterpret_cast<char*>(
+      &result.get()[result_indices.size() + 1]);
+  if (!value_storage.empty())
+    memcpy(storage_data, value_storage.data(), value_storage.size());
+
+  // Fill array of pointers at the beginning of the result.
+  for (size_t i = 0; i < result_indices.size(); i++)
+    result[i] = &storage_data[result_indices[i]];
+  result[result_indices.size()] = 0;  // Null terminator.
+
+  return result;
+}
+
+#endif
 
 }  // namespace crbase

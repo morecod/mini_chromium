@@ -7,7 +7,6 @@
 
 #include <stddef.h>
 #include <stdint.h>
-#include <windows.h>
 
 #include <stack>
 #include <vector>
@@ -16,7 +15,14 @@
 #include "crbase/files/file_path.h"
 #include "crbase/macros.h"
 #include "crbase/time/time.h"
+#include "crbase/build_config.h"
 
+#if defined(MINI_CHROMIUM_OS_WIN)
+#include <windows.h>
+#elif defined(MINI_CHROMIUM_OS_POSIX)
+#include <sys/stat.h>
+#include <unistd.h>
+#endif
 
 namespace crbase {
 
@@ -50,21 +56,33 @@ class CRBASE_EXPORT FileEnumerator {
     int64_t GetSize() const;
     Time GetLastModifiedTime() const;
 
+#if defined(MINI_CHROMIUM_OS_WIN)
     // Note that the cAlternateFileName (used to hold the "short" 8.3 name)
     // of the WIN32_FIND_DATA will be empty. Since we don't use short file
     // names, we tell Windows to omit it which speeds up the query slightly.
-    const WIN32_FIND_DATAW& find_data() const { return find_data_; }
+    const WIN32_FIND_DATA& find_data() const { return find_data_; }
+#elif defined(MINI_CHROMIUM_OS_POSIX)
+    const struct stat& stat() const { return stat_; }
+#endif
 
    private:
     friend class FileEnumerator;
 
-    WIN32_FIND_DATAW find_data_;
+#if defined(MINI_CHROMIUM_OS_WIN)
+    WIN32_FIND_DATA find_data_;
+#elif defined(MINI_CHROMIUM_OS_POSIX)
+    struct stat stat_;
+    FilePath filename_;
+#endif
   };
 
   enum FileType {
     FILES                 = 1 << 0,
     DIRECTORIES           = 1 << 1,
     INCLUDE_DOT_DOT       = 1 << 2,
+#if defined(MINI_CHROMIUM_OS_POSIX)
+    SHOW_SYM_LINKS = 1 << 4,
+#endif
   };
 
   FileEnumerator(const FileEnumerator&) = delete;
@@ -113,10 +131,22 @@ class CRBASE_EXPORT FileEnumerator {
   // Returns true if the given path should be skipped in enumeration.
   bool ShouldSkip(const FilePath& path);
 
+#if defined(MINI_CHROMIUM_OS_WIN)
   // True when find_data_ is valid.
   bool has_find_data_;
   WIN32_FIND_DATAW find_data_;
   HANDLE find_handle_;
+#elif defined(MINI_CHROMIUM_OS_POSIX)
+  // Read the filenames in source into the vector of DirectoryEntryInfo's
+  static bool ReadDirectory(std::vector<FileInfo>* entries,
+    const FilePath& source, bool show_links);
+
+  // The files in the current directory
+  std::vector<FileInfo> directory_entries_;
+
+  // The next entry to use from the directory_entries_ vector
+  size_t current_directory_entry_;
+#endif
 
   FilePath root_path_;
   bool recursive_;

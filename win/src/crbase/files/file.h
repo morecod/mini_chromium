@@ -6,7 +6,6 @@
 #define MINI_CHROMIUM_SRC_CRBASE_FILES_FILE_H_
 
 #include <stdint.h>
-#include <windows.h>
 
 #include <string>
 
@@ -14,11 +13,24 @@
 #include "crbase/files/file_path.h"
 #include "crbase/files/scoped_file.h"
 #include "crbase/time/time.h"
+#include "crbase/build_config.h"
+
+#if defined(MINI_CHROMIUM_OS_WIN)
+#include <windows.h>
 #include "crbase/win/scoped_handle.h"
+#endif
+
+#if defined(MINI_CHROMIUM_OS_POSIX)
+#include <sys/stat.h>
+#endif
 
 namespace crbase {
 
+#if defined(MINI_CHROMIUM_OS_WIN)
 typedef HANDLE PlatformFile;
+#elif defined(MINI_CHROMIUM_OS_POSIX)
+typedef int PlatformFile;
+#endif
 
 // Thin wrapper around an OS-level file.
 // Note that this class does not provide any support for asynchronous IO, other
@@ -108,6 +120,11 @@ class CRBASE_EXPORT File {
   struct CRBASE_EXPORT Info {
     Info();
     ~Info();
+
+#if defined(MINI_CHROMIUM_OS_POSIX)
+    // Fills this struct with values from |stat_info|.
+    void FromStat(const stat_wrapper_t& stat_info);
+#endif
 
     // The size of the file in bytes.  Undefined when is_directory is true.
     int64_t size;
@@ -267,7 +284,11 @@ class CRBASE_EXPORT File {
 
   bool async() const { return async_; }
 
+#if defined(MINI_CHROMIUM_OS_WIN)
   static Error OSErrorToFileError(DWORD last_error);
+#elif defined(MINI_CHROMIUM_OS_POSIX)
+  static Error OSErrorToFileError(int saved_errno);
+#endif
 
   // Converts an error value to a human-readable form. Used for logging.
   static std::string ErrorToString(Error error);
@@ -283,7 +304,11 @@ class CRBASE_EXPORT File {
 
   void SetPlatformFile(PlatformFile file);
 
-  crbase::win::ScopedHandle file_;
+#if defined(MINI_CHROMIUM_OS_WIN)
+  win::ScopedHandle file_;
+#elif defined(MINI_CHROMIUM_OS_POSIX)
+  ScopedFD file_;
+#endif
 
   Error error_details_;
   bool created_;

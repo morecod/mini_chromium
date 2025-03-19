@@ -14,6 +14,7 @@
 #include "crbase/base_export.h"
 #include "crbase/files/file_path.h"
 #include "crbase/time/time.h"
+#include "crbase/build_config.h"
 
 namespace crbase {
 
@@ -91,6 +92,12 @@ class CRBASE_EXPORT SysInfo {
   // Return the smallest amount of memory (in bytes) which the VM system will
   // allocate.
   static size_t VMAllocationGranularity();
+
+#if defined(MINI_CHROMIUM_OS_POSIX)
+  // Returns the maximum SysV shared memory segment size, or zero if there is no
+  // limit.
+  static uint64_t MaxSharedMemorySize();
+#endif  // defined(OS_POSIX)
 
   // Returns true if this is a low-end device.
   // Low-end device refers to devices having less than 512M memory in the

@@ -10,6 +10,7 @@
 #include <string>
 
 #include "crbase/base_export.h"
+#include "crbase/build_config.h"
 
 namespace crbase {
 

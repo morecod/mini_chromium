@@ -19,6 +19,7 @@
 #include "crbase/synchronization/waitable_event.h"
 #include "crbase/threading/platform_thread.h"
 #include "crbase/threading/single_thread_task_runner.h"
+#include "crbase/build_config.h"
 
 namespace crbase {
 
@@ -85,6 +86,7 @@ class CRBASE_EXPORT Thread : PlatformThread::Delegate {
   // before it is destructed.
   ~Thread() override;
 
+#if defined(MINI_CHROMIUM_OS_WIN)
   // Causes the thread to initialize COM.  This must be called before calling
   // Start() or StartWithOptions().  If |use_mta| is false, the thread is also
   // started with a TYPE_UI message loop.  It is an error to call
@@ -94,6 +96,7 @@ class CRBASE_EXPORT Thread : PlatformThread::Delegate {
     CR_DCHECK(!message_loop_);
     com_status_ = use_mta ? MTA : STA;
   }
+#endif
 
   // Starts the thread.  Returns true if the thread was successfully started;
   // otherwise, returns false.  Upon successful return, the message_loop()
@@ -203,17 +206,21 @@ class CRBASE_EXPORT Thread : PlatformThread::Delegate {
   }
 
  private:
+#if defined(MINI_CHROMIUM_OS_WIN)
   enum ComStatus {
     NONE,
     STA,
     MTA,
   };
+#endif
 
   // PlatformThread::Delegate methods:
   void ThreadMain() override;
 
+#if defined(MINI_CHROMIUM_OS_WIN)
   // Whether this thread needs to initialize COM, and if so, in what mode.
   ComStatus com_status_;
+#endif
 
   // If true, we're in the middle of stopping, and shouldn't access
   // |message_loop_|. It may non-nullptr and invalid.

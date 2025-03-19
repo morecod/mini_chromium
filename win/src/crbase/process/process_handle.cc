@@ -2,14 +2,11 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#include "crbase/process/process_handle.h"
-
 #include <stdint.h>
-#include <windows.h>
-#include <tlhelp32.h>
 
 #include "crbase/logging.h"
-#include "crbase/win/scoped_handle.h"
+#include "crbase/process/process_handle.h"
+#include "crbase/build_config.h"
 
 namespace crbase {
 
@@ -42,33 +39,14 @@ uint32_t GetUniqueIdForProcess() {
   return g_unique_id;
 }
 
-ProcessId GetCurrentProcId() {
-  return ::GetCurrentProcessId();
+#if defined(MINI_CHROMIUM_OS_LINUX)
+
+void InitUniqueIdForProcessInPidNamespace(ProcessId pid_outside_of_namespace) {
+  g_unique_id = MangleProcessId(pid_outside_of_namespace);
+  g_procid = GetCurrentProcId();
+  g_have_unique_id = true;
 }
 
-ProcessHandle GetCurrentProcessHandle() {
-  return ::GetCurrentProcess();
-}
-
-ProcessId GetProcId(ProcessHandle process) {
-  // This returns 0 if we have insufficient rights to query the process handle.
-  return GetProcessId(process);
-}
-
-ProcessId GetParentProcessId(ProcessHandle process) {
-  ProcessId child_pid = GetProcId(process);
-  PROCESSENTRY32 process_entry;
-      process_entry.dwSize = sizeof(PROCESSENTRY32);
-
-  win::ScopedHandle snapshot(CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0));
-  if (snapshot.IsValid() && Process32First(snapshot.Get(), &process_entry)) {
-    do {
-      if (process_entry.th32ProcessID == child_pid)
-        return process_entry.th32ParentProcessID;
-    } while (Process32Next(snapshot.Get(), &process_entry));
-  }
-
-  return 0u;
-}
+#endif
 
 }  // namespace crbase

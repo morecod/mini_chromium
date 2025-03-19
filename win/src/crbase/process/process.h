@@ -9,8 +9,13 @@
 #include "crbase/files/file_path.h"
 #include "crbase/time/time.h"
 #include "crbase/process/process_handle.h"
+#include "crbase/build_config.h"
+
+#if defined(MINI_CHROMIUM_OS_WIN)
 #include "crbase/win/scoped_handle.h"
 #include "crbase/win/windows_version.h"
+#endif
+
 
 namespace crbase {
 
@@ -62,9 +67,11 @@ class CRBASE_EXPORT Process {
   // address space and duplicate handles).
   static Process OpenWithExtraPrivileges(ProcessId pid);
 
+#if defined(MINI_CHROMIUM_OS_WIN)
   // Returns a Process for the given |pid|, using some |desired_access|.
   // See ::OpenProcess documentation for valid |desired_access|.
   static Process OpenWithAccess(ProcessId pid, DWORD desired_access);
+#endif
 
   // Creates an object from a |handle| owned by someone else.
   // Don't use this for new code. It is only intended to ease the migration to
@@ -116,10 +123,7 @@ class CRBASE_EXPORT Process {
   //       2. The Handle() need has SYNCHRONIZE access.
   bool WaitForExitWithTimeout(TimeDelta timeout, int* exit_code);
 
-  // A process is backgrounded when it's priority is lower than normal.
-  // Return true if this process is backgrounded, false otherwise.
-  bool IsProcessBackgrounded() const;
-
+#if defined(MINI_CHROMIUM_OS_WIN)
   // Adjust this process token privileges.
   // Returns true if this process token privilege is set.
   // NOTE: |privilege_name| see from SE_XX_NAME
@@ -143,6 +147,11 @@ class CRBASE_EXPORT Process {
   // NOTE: the Handle() need has PROCESS_QUERY_INFORMATION or 
   //       PROCESS_VM_READ access right pre visita.
   bool GetCommandlineString(string16* cmd_line) const;
+#endif
+
+  // A process is backgrounded when it's priority is lower than normal.
+  // Return true if this process is backgrounded, false otherwise.
+  bool IsProcessBackgrounded() const;
 
   // Set a process as backgrounded. If value is true, the priority of the
   // process will be lowered. If value is false, the priority of the process
@@ -155,8 +164,10 @@ class CRBASE_EXPORT Process {
   int GetPriority() const;
 
  private:
+#if defined(MINI_CHROMIUM_OS_WIN)
   bool is_current_process_;
   win::ScopedHandle process_;
+#endif
 };
 
 }  // namespace crbase

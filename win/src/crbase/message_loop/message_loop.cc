@@ -17,6 +17,11 @@
 #include "crbase/threading/thread_local.h"
 #include "crbase/time/time.h"
 #include "crbase/tracing/tracked_objects.h"
+#include "crbase/build_config.h"
+
+#if defined(MINI_CHROMIUM_OS_POSIX)
+#include "crbase/message_loop/message_pump_libevent.h"
+#endif
 
 namespace crbase {
 
@@ -100,8 +105,11 @@ MessageLoop::~MessageLoop() {
   // TODO(stuartmorgan): Consider wiring up a Detach().
   CR_DCHECK(!run_loop_);
 
+#if defined(MINI_CHROMIUM_OS_WIN)
   if (in_high_res_mode_)
     Time::ActivateHighResolutionTimer(false);
+#endif
+
   // Clean up any unprocessed tasks, but take care: deleting a task could
   // result in the addition of more tasks (e.g., via DeleteSoon).  We set a
   // limit on the number of times we will allow a deleted task to generate more
@@ -155,7 +163,10 @@ bool MessageLoop::InitMessagePumpForUIFactory(MessagePumpFactory* factory) {
 
 // static
 std::unique_ptr<MessagePump> MessageLoop::CreateMessagePumpForType(Type type) {
-// TODO(rvargas): Get rid of the OS guards.
+  // TODO(rvargas): Get rid of the OS guards.
+#if defined(MINI_CHROMIUM_OS_LINUX)
+  typedef MessagePumpLibevent MessagePumpForUI;
+#endif
 
   #define MESSAGE_PUMP_UI std::unique_ptr<MessagePump>(new MessagePumpForUI())
 
@@ -307,10 +318,12 @@ std::unique_ptr<MessageLoop> MessageLoop::CreateUnbound(
 
 MessageLoop::MessageLoop(Type type, MessagePumpFactoryCallback pump_factory)
     : type_(type),
+#if defined(MINI_CHROMIUM_OS_WIN)
       pending_high_res_tasks_(0),
       in_high_res_mode_(false),
-      nestable_tasks_allowed_(true),
       os_modal_loop_(false),
+#endif
+      nestable_tasks_allowed_(true),
       pump_factory_(pump_factory),
       run_loop_(NULL),
       incoming_task_queue_(new internal::IncomingTaskQueue(this)),
@@ -357,11 +370,13 @@ void MessageLoop::SetThreadTaskRunnerHandle() {
 void MessageLoop::RunHandler() {
   CR_DCHECK_EQ(this, current());
 
+#if defined(MINI_CHROMIUM_OS_WIN)
   if (run_loop_->dispatcher_ && type() == TYPE_UI) {
     static_cast<MessagePumpForUI*>(pump_.get())->
         RunWithDispatcher(this, run_loop_->dispatcher_);
     return;
   }
+#endif
 
   pump_->Run(this);
 }
@@ -383,20 +398,22 @@ bool MessageLoop::ProcessNextDelayedNonNestableTask() {
 void MessageLoop::RunTask(const PendingTask& pending_task) {
   CR_DCHECK(nestable_tasks_allowed_);
 
+#if defined(MINI_CHROMIUM_OS_WIN)
   if (pending_task.is_high_res) {
     pending_high_res_tasks_--;
     CR_CHECK_GE(pending_high_res_tasks_, 0);
   }
+#endif
 
   // Execute the task and assume the worst: It is probably not reentrant.
   nestable_tasks_allowed_ = false;
 
   CR_FOR_EACH_OBSERVER(TaskObserver, task_observers_,
-                         WillProcessTask(pending_task));
+                       WillProcessTask(pending_task));
   ///task_annotator_.RunTask("MessageLoop::PostTask", pending_task);
   pending_task.task.Run();
   CR_FOR_EACH_OBSERVER(TaskObserver, task_observers_,
-                         DidProcessTask(pending_task));
+                       DidProcessTask(pending_task));
 
   nestable_tasks_allowed_ = true;
 }
@@ -455,8 +472,12 @@ void MessageLoop::ReloadWorkQueue() {
   // load. That reduces the number of locks-per-task significantly when our
   // queues get large.
   if (work_queue_.empty()) {
+#if defined(MINI_CHROMIUM_OS_WIN)
     pending_high_res_tasks_ +=
         incoming_task_queue_->ReloadWorkQueue(&work_queue_);
+#else
+    incoming_task_queue_->ReloadWorkQueue(&work_queue_);
+#endif
   }
 }
 
@@ -535,6 +556,7 @@ bool MessageLoop::DoIdleWork() {
 
   // When we return we will do a kernel wait for more tasks.
 
+#if defined(MINI_CHROMIUM_OS_WIN)
   // On Windows we activate the high resolution timer so that the wait
   // _if_ triggered by the timer happens with good resolution. If we don't
   // do this the default resolution is 15ms which might not be acceptable
@@ -544,6 +566,7 @@ bool MessageLoop::DoIdleWork() {
     in_high_res_mode_ = high_res;
     Time::ActivateHighResolutionTimer(in_high_res_mode_);
   }
+#endif
 
   return false;
 }
@@ -564,6 +587,22 @@ void MessageLoop::ReleaseSoonInternal(
 //------------------------------------------------------------------------------
 // MessageLoopForUI
 
+#if defined(MINI_CHROMIUM_OS_LINUX)
+bool MessageLoopForUI::WatchFileDescriptor(
+    int fd,
+    bool persistent,
+    MessagePumpLibevent::Mode mode,
+    MessagePumpLibevent::FileDescriptorWatcher *controller,
+    MessagePumpLibevent::Watcher *delegate) {
+  return static_cast<MessagePumpLibevent*>(pump_.get())->WatchFileDescriptor(
+      fd,
+      persistent,
+      mode,
+      controller,
+      delegate);
+}
+#endif
+
 //------------------------------------------------------------------------------
 // MessageLoopForIO
 
@@ -577,6 +616,7 @@ void MessageLoopForIO::RemoveIOObserver(
   ToPumpIO(pump_.get())->RemoveIOObserver(io_observer);
 }
 
+#if defined(MINI_CHROMIUM_OS_WIN)
 void MessageLoopForIO::RegisterIOHandler(HANDLE file, IOHandler* handler) {
   ToPumpIO(pump_.get())->RegisterIOHandler(file, handler);
 }
@@ -588,5 +628,19 @@ bool MessageLoopForIO::RegisterJobObject(HANDLE job, IOHandler* handler) {
 bool MessageLoopForIO::WaitForIOCompletion(DWORD timeout, IOHandler* filter) {
   return ToPumpIO(pump_.get())->WaitForIOCompletion(timeout, filter);
 }
+#elif defined(MINI_CHROMIUM_OS_POSIX)
+bool MessageLoopForIO::WatchFileDescriptor(int fd,
+                                           bool persistent,
+                                           Mode mode,
+                                           FileDescriptorWatcher* controller,
+                                           Watcher* delegate) {
+  return ToPumpIO(pump_.get())->WatchFileDescriptor(
+      fd,
+      persistent,
+      mode,
+      controller,
+      delegate);
+}
+#endif
 
 }  // namespace crbase

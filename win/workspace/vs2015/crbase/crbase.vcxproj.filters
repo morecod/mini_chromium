@@ -7,9 +7,6 @@
     <Filter Include="codes">
       <UniqueIdentifier>{bbcb5f9c-b6c3-4463-aed7-fce4cf3bc5a1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="containers">
-      <UniqueIdentifier>{f4bedb6d-8e8e-4a81-8994-35ea74bab450}</UniqueIdentifier>
-    </Filter>
     <Filter Include="crypto">
       <UniqueIdentifier>{18039319-4622-46bf-9b0f-0c505d98e336}</UniqueIdentifier>
     </Filter>
@@ -76,6 +73,9 @@
     <Filter Include="timer">
       <UniqueIdentifier>{b721be01-e6a7-4c2f-8230-eb058a3365c2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="third_party\superfasthash">
+      <UniqueIdentifier>{ae947c0c-2e40-4340-81f4-5153277c9f5e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\src\crbase\atomic\atomic_ref_count.h">
@@ -89,9 +89,6 @@
     </ClInclude>
     <ClInclude Include="..\..\..\src\crbase\codes\base64.h">
       <Filter>codes</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\crbase\containers\hash_tables.h">
-      <Filter>containers</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\crbase\crypto\sha1.h">
       <Filter>crypto</Filter>
@@ -538,6 +535,14 @@
     <ClInclude Include="..\..\..\src\crbase\codes\punycode.h">
       <Filter>codes</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\crbase\strings\escape.h">
+      <Filter>strings</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\crbase\atomic\atomicops_internals_portable.h">
+      <Filter>atomic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\crbase\hash.h" />
+    <ClInclude Include="..\..\..\src\crbase\scoped_generic.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\crbase\codes\base64.cc">
@@ -610,12 +615,6 @@
       <Filter>memory</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\crbase\memory\ref_counted.cc">
-      <Filter>memory</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\crbase\memory\shared_memory.cc">
-      <Filter>memory</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\crbase\memory\shared_memory_handle.cc">
       <Filter>memory</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\crbase\memory\singleton.cc">
@@ -723,9 +722,6 @@
     <ClCompile Include="..\..\..\src\crbase\threading\pending_task.cc">
       <Filter>threading</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\crbase\threading\platform_thread.cc">
-      <Filter>threading</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\src\crbase\threading\post_task_and_reply_impl.cc">
       <Filter>threading</Filter>
     </ClCompile>
@@ -747,9 +743,6 @@
     <ClCompile Include="..\..\..\src\crbase\threading\thread_id_name_manager.cc">
       <Filter>threading</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\crbase\threading\thread_local.cc">
-      <Filter>threading</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\src\crbase\threading\thread_local_storage.cc">
       <Filter>threading</Filter>
     </ClCompile>
@@ -768,25 +761,13 @@
     <ClCompile Include="..\..\..\src\crbase\threading\worker_pool_win.cc">
       <Filter>threading</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\crbase\process\kill.cc">
-      <Filter>process</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\crbase\process\launch.cc">
-      <Filter>process</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\src\crbase\process\memory.cc">
       <Filter>process</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\crbase\process\memory_win.cc">
       <Filter>process</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\crbase\process\process.cc">
-      <Filter>process</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\src\crbase\process\process_handle.cc">
-      <Filter>process</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\crbase\process\process_iterator.cc">
       <Filter>process</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\crbase\strings\nullable_string16.cc">
@@ -813,28 +794,16 @@
     <ClCompile Include="..\..\..\src\crbase\strings\stringprintf.cc">
       <Filter>strings</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\crbase\strings\sys_string_conversions.cc">
-      <Filter>strings</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\src\crbase\strings\utf_string_conversion_utils.cc">
       <Filter>strings</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\crbase\strings\utf_string_conversions.cc">
       <Filter>strings</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\crbase\synchronization\condition_variable.cc">
-      <Filter>synchronization</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\src\crbase\synchronization\lock.cc">
       <Filter>synchronization</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\crbase\synchronization\lock_impl_win.cc">
-      <Filter>synchronization</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\crbase\synchronization\waitable_event.cc">
-      <Filter>synchronization</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\crbase\synchronization\waitable_event_watcher.cc">
       <Filter>synchronization</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\crbase\third_party\double-conversion\bignum.cc">
@@ -902,5 +871,71 @@
     <ClCompile Include="..\..\..\src\crbase\codes\punycode.cc">
       <Filter>codes</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\crbase\strings\escape.cc">
+      <Filter>strings</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\crbase\hash.cc" />
+    <ClCompile Include="..\..\..\src\crbase\debug\stack_trace_win.cc">
+      <Filter>debug</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\crbase\debug\debugger_win.cc">
+      <Filter>debug</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\crbase\strings\sys_string_conversion_wins.cc">
+      <Filter>strings</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\crbase\synchronization\condition_variable_win.cc">
+      <Filter>synchronization</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\crbase\synchronization\waitable_event_win.cc">
+      <Filter>synchronization</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\crbase\synchronization\waitable_event_watcher_win.cc">
+      <Filter>synchronization</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\crbase\threading\platform_thread_win.cc">
+      <Filter>threading</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\crbase\threading\thread_local_win.cc">
+      <Filter>threading</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\crbase\third_party\superfasthash\superfasthash.c">
+      <Filter>third_party\superfasthash</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\crbase\memory\shared_memory_win.cc">
+      <Filter>memory</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\crbase\memory\shared_memory_handle_win.cc">
+      <Filter>memory</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\crbase\process\kill_win.cc">
+      <Filter>process</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\crbase\process\kill.cc">
+      <Filter>process</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\crbase\process\launch_win.cc">
+      <Filter>process</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\crbase\process\launch.cc">
+      <Filter>process</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\crbase\process\process_win.cc">
+      <Filter>process</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\crbase\process\process_handle_win.cc">
+      <Filter>process</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\crbase\process\process_iterator_win.cc">
+      <Filter>process</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\crbase\process\process_iterator.cc">
+      <Filter>process</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\src\crbase\third_party\superfasthash\LICENSE">
+      <Filter>third_party\superfasthash</Filter>
+    </None>
   </ItemGroup>
 </Project>

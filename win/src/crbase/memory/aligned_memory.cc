@@ -5,6 +5,7 @@
 #include "crbase/memory/aligned_memory.h"
 
 #include "crbase/logging.h"
+#include "crbase/build_config.h"
 
 namespace crbase {
 
@@ -13,8 +14,12 @@ void* AlignedAlloc(size_t size, size_t alignment) {
   CR_DCHECK_EQ(alignment & (alignment - 1), 0U);
   CR_DCHECK_EQ(alignment % sizeof(void*), 0U);
   void* ptr = NULL;
+#if defined(MINI_CHROMIUM_OS_WIN)
   ptr = _aligned_malloc(size, alignment);
-
+#else
+  if (posix_memalign(&ptr, alignment, size))
+    ptr = NULL;
+#endif
   // Since aligned allocations may fail for non-memory related reasons, force a
   // crash if we encounter a failed allocation; maintaining consistent behavior
   // with a normal allocation failure in Chrome.

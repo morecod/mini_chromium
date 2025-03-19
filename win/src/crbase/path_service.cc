@@ -4,24 +4,36 @@
 
 #include "crbase/path_service.h"
 
+#if defined(MINI_CHROMIUM_OS_WIN)
 #include <windows.h>
 #include <shellapi.h>
 #include <shlobj.h>
+#endif
+
+#include <unordered_map>
 
 #include "crbase/logging.h"
-#include "crbase/containers/hash_tables.h"
 #include "crbase/files/file_path.h"
 #include "crbase/files/file_util.h"
+#include "crbase/lazy_instance.h"
 #include "crbase/synchronization/lock.h"
+#include "crbase/build_config.h"
 
 namespace crbase {
 
 bool PathProvider(int key, FilePath* result);
+
+#if defined(MINI_CHROMIUM_OS_WIN)
 bool PathProviderWin(int key, FilePath* result);
+#elif defined(MINI_CHROMIUM_OS_POSIX)
+// PathProviderPosix is the default path provider on POSIX OSes other than
+// Mac and Android.
+bool PathProviderPosix(int key, FilePath* result);
+#endif
 
 namespace {
 
-typedef hash_map<int, FilePath> PathMap;
+typedef std::unordered_map<int, FilePath> PathMap;
 
 // We keep a linked list of providers.  In a debug build we ensure that no two
 // providers claim overlapping keys.
@@ -45,6 +57,7 @@ Provider base_provider = {
   true
 };
 
+#if defined(MINI_CHROMIUM_OS_WIN)
 Provider base_provider_win = {
   PathProviderWin,
   &base_provider,
@@ -54,6 +67,19 @@ Provider base_provider_win = {
 #endif
   true
 };
+#endif
+
+#if defined(MINI_CHROMIUM_OS_POSIX)
+Provider base_provider_posix = {
+  PathProviderPosix,
+  &base_provider,
+#ifndef NDEBUG
+  PATH_POSIX_START,
+  PATH_POSIX_END,
+#endif
+  true
+};
+#endif
 
 struct PathData {
   Lock lock;
@@ -63,20 +89,18 @@ struct PathData {
   bool cache_disabled;  // Don't use cache if true;
 
   PathData() : cache_disabled(false) {
+#if defined(MINI_CHROMIUM_OS_WIN)
     providers = &base_provider_win;
+#elif defined(MINI_CHROMIUM_OS_POSIX)
+    providers = &base_provider_posix;
+#endif
   }
 };
 
+static LazyInstance<PathData>::Leaky g_path_data = CR_LAZY_INSTANCE_INITIALIZER;
+
 static PathData* GetPathData() {
-  static PathData* g_path_data = NULL;
-  if (!g_path_data) {
-    PathData* new_pd = new PathData;
-    if (InterlockedCompareExchangePointer(
-            reinterpret_cast<PVOID*>(&g_path_data), new_pd, NULL)) {
-      delete new_pd;
-    }
-  }
-  return g_path_data;
+  return g_path_data.Pointer();
 }
 
 // Tries to find |key| in the cache. |path_data| should be locked by the caller!

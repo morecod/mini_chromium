@@ -54,13 +54,22 @@
 #include "crbase/base_export.h"
 #include "crbase/macros.h"
 #include "crbase/threading/thread_local_storage.h"
+#include "crbase/build_config.h"
+
+#if defined(MINI_CHROMIUM_OS_POSIX)
+#include <pthread.h>
+#endif
 
 namespace crbase {
 namespace internal {
 
 // Helper functions that abstract the cross-platform APIs.  Do not use directly.
 struct CRBASE_EXPORT ThreadLocalPlatform {
+#if defined(MINI_CHROMIUM_OS_WIN)
   typedef unsigned long SlotType;
+#elif defined(MINI_CHROMIUM_OS_POSIX)
+  typedef pthread_key_t SlotType;
+#endif
 
   static void AllocateSlot(SlotType* slot);
   static void FreeSlot(SlotType slot);

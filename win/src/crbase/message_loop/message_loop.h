@@ -25,9 +25,14 @@
 #include "crbase/synchronization/lock.h"
 #include "crbase/time/time.h"
 #include "crbase/tracing/tracking_info.h"
+#include "crbase/build_config.h"
 
 // TODO(sky): these includes should not be necessary. Nuke them.
+#if defined(MINI_CHROMIUM_OS_WIN)
 #include "crbase/message_loop/message_pump_win.h"
+#elif defined(MINI_CHROMIUM_OS_POSIX)
+#include "crbase/message_loop/message_pump_libevent.h"
+#endif
 
 namespace crbase {
 
@@ -364,9 +369,11 @@ class CRBASE_EXPORT MessageLoop : public MessagePump::Delegate {
     os_modal_loop_ = os_modal_loop;
   }
 
+#if defined(MINI_CHROMIUM_OS_WIN)
   bool os_modal_loop() const {
     return os_modal_loop_;
   }
+#endif
 
   // Can only be called from the thread that owns the MessageLoop.
   bool is_running() const;
@@ -460,6 +467,7 @@ class CRBASE_EXPORT MessageLoop : public MessagePump::Delegate {
   // this queue is only accessed (push/pop) by our current thread.
   TaskQueue work_queue_;
 
+#if defined(MINI_CHROMIUM_OS_WIN)
   // How many high resolution tasks are in the pending task queue. This value
   // increases by N every time we call ReloadWorkQueue() and decreases by 1
   // every time we call RunTask() if the task needs a high resolution timer.
@@ -467,6 +475,7 @@ class CRBASE_EXPORT MessageLoop : public MessagePump::Delegate {
   // Tracks if we have requested high resolution timers. Its only use is to
   // turn off the high resolution timer upon loop destruction.
   bool in_high_res_mode_;
+#endif
 
   // Contains delayed tasks, sorted by their 'delayed_run_time' property.
   DelayedTaskQueue delayed_work_queue_;
@@ -485,9 +494,11 @@ class CRBASE_EXPORT MessageLoop : public MessagePump::Delegate {
   // insider a (accidentally induced?) nested message pump.
   bool nestable_tasks_allowed_;
 
+#if defined(MINI_CHROMIUM_OS_WIN)
   // Should be set to true before calling Windows APIs like TrackPopupMenu, etc.
   // which enter a modal message loop.
   bool os_modal_loop_;
+#endif
 
   // pump_factory_.Run() is called to create a message pump for this loop
   // if type_ is TYPE_CUSTOM and pump_ is null.
@@ -548,6 +559,16 @@ class CRBASE_EXPORT MessageLoopForUI : public MessageLoop {
     MessageLoop* loop = MessageLoop::current();
     return loop && loop->type() == MessageLoop::TYPE_UI;
   }
+
+  #if defined(MINI_CHROMIUM_OS_LINUX) 
+  // Please see MessagePumpLibevent for definition.
+  bool WatchFileDescriptor(
+      int fd,
+      bool persistent,
+      MessagePumpLibevent::Mode mode,
+      MessagePumpLibevent::FileDescriptorWatcher* controller,
+      MessagePumpLibevent::Watcher* delegate);
+#endif
 };
 
 // Do not add any member variables to MessageLoopForUI!  This is important b/c
@@ -579,11 +600,23 @@ class CRBASE_EXPORT MessageLoopForIO : public MessageLoop {
     MessageLoop* loop = MessageLoop::current();
     return loop && loop->type() == MessageLoop::TYPE_IO;
   }
-
+  
+#if defined(MINI_CHROMIUM_OS_WIN)
   typedef MessagePumpForIO::IOHandler IOHandler;
   typedef MessagePumpForIO::IOContext IOContext;
   typedef MessagePumpForIO::IOObserver IOObserver;
+#elif defined(MINI_CHROMIUM_OS_POSIX)
+  typedef MessagePumpLibevent::Watcher Watcher;
+  typedef MessagePumpLibevent::FileDescriptorWatcher
+      FileDescriptorWatcher;
+  typedef MessagePumpLibevent::IOObserver IOObserver;
 
+  enum Mode {
+    WATCH_READ = MessagePumpLibevent::WATCH_READ,
+    WATCH_WRITE = MessagePumpLibevent::WATCH_WRITE,
+    WATCH_READ_WRITE = MessagePumpLibevent::WATCH_READ_WRITE
+  };
+#endif
   void AddIOObserver(IOObserver* io_observer);
   void RemoveIOObserver(IOObserver* io_observer);
 

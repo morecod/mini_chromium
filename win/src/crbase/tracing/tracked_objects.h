@@ -13,12 +13,12 @@
 #include <string>
 #include <utility>
 #include <vector>
+#include <unordered_map>
 
 #include "crbase/base_export.h"
 #include "crbase/macros.h"
 #include "crbase/lazy_instance.h"
 #include "crbase/atomic/atomicops.h"
-#include "crbase/containers/hash_tables.h"
 #include "crbase/tracing/location.h"
 #include "crbase/process/process_handle.h"
 ///#include "crbase/profiler/alternate_timer.h"
@@ -449,7 +449,7 @@ class CRBASE_EXPORT ThreadData {
     STATUS_LAST = PROFILING_ACTIVE
   };
 
-  typedef crbase::hash_map<Location, Births*, Location::Hash> BirthMap;
+  typedef std::unordered_map<Location, Births*, Location::Hash> BirthMap;
   typedef std::map<const Births*, DeathData> DeathMap;
 
   // Initialize the current thread context with a new instance of ThreadData.

@@ -7,8 +7,13 @@
 
 #include "crbase/base_export.h"
 #include "crbase/macros.h"
+#include "crbase/build_config.h"
 
+#if defined(MINI_CHROMIUM_OS_WIN)
 #include <windows.h>
+#elif defined(MINI_CHROMIUM_OS_POSIX)
+#include <pthread.h>
+#endif
 
 namespace crbase {
 namespace internal {

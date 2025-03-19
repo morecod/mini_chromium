@@ -11,7 +11,7 @@
 #include <string>
 
 #include "crbase/base_export.h"
-#include "crbase/containers/hash_tables.h"
+#include "crbase/hash.h"
 #include "crbase/build_config.h"
 
 namespace crbase {

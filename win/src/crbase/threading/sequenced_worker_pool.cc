@@ -31,7 +31,12 @@
 #include "crbase/time/time.h"
 #include "crbase/tracing/tracked_objects.h"
 #include "crbase/tracing/tracking_info.h"
+#include "crbase/build_config.h"
+
+#if defined(MINI_CHROMIUM_OS_WIN)
 #include "crbase/win/scoped_com_initializer.h"
+#endif
+
 
 namespace crbase {
 

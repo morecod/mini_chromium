@@ -37,32 +37,14 @@
 #include <stddef.h>
 #include <stdint.h>
 
+#include "crbase/base_export.h"
+#include "crbase/compiler_specific.h"
+#include "crbase/build_config.h"
+
 #if defined(_MSC_VER)
 #include <malloc.h>
 #else
 #include <stdlib.h>
-#endif
-
-#include "crbase/build_config.h"
-#include "crbase/base_export.h"
-
-// Specify memory alignment for structs, classes, etc.
-// Use like:
-//   class CR_ALIGNAS(16) MyClass { ... }
-//   CR_ALIGNAS(16) int array[4];
-#if defined(MINI_CHROMIUM_COMPILER_MSVC)
-#define CR_ALIGNAS(byte_alignment) __declspec(align(byte_alignment))
-#elif defined(MINI_CHROMIUM_COMPILER_GCC)
-#define CR_ALIGNAS(byte_alignment) __attribute__((aligned(byte_alignment)))
-#endif
-
-// Return the byte alignment of the given type (available at compile time).
-// Use like:
-//   CR_ALIGNOF(int32_t)  // this would be 4
-#if defined(MINI_CHROMIUM_COMPILER_MSVC)
-#define CR_ALIGNOF(type) __alignof(type)
-#elif defined(MINI_CHROMIUM_COMPILER_GCC)
-#define CR_ALIGNOF(type) __alignof__(type)
 #endif
 
 namespace crbase {
@@ -116,7 +98,11 @@ CR_DECL_ALIGNED_MEMORY(4096);
 CRBASE_EXPORT void* AlignedAlloc(size_t size, size_t alignment);
 
 inline void AlignedFree(void* ptr) {
+#if defined(MINI_CHROMIUM_OS_WIN)
   _aligned_free(ptr);
+#else
+  free(ptr);
+#endif
 }
 
 // Deleter for use with std::unique_ptr. E.g., use as

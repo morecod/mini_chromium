@@ -16,6 +16,7 @@
 #include "crbase/base_export.h"
 #include "crbase/strings/string16.h"
 #include "crbase/strings/string_piece.h"
+#include "crbase/build_config.h"
 
 namespace crbase {
 
@@ -32,6 +33,8 @@ CRBASE_EXPORT std::wstring SysNativeMBToWide(const StringPiece& native_mb);
 
 // Windows-specific ------------------------------------------------------------
 
+#if defined(MINI_CHROMIUM_OS_WIN)
+
 // Converts between 8-bit and wide strings, using the given code page. The
 // code page identifier is one accepted by the Windows function
 // MultiByteToWideChar().
@@ -39,6 +42,7 @@ CRBASE_EXPORT std::wstring SysMultiByteToWide(const StringPiece& mb,
                                               uint32_t code_page);
 CRBASE_EXPORT std::string SysWideToMultiByte(const StringPiece16& wide,
                                              uint32_t code_page);
+#endif 
 
 }  // namespace crbase
 

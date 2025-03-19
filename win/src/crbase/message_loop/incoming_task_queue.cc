@@ -10,6 +10,7 @@
 #include "crbase/message_loop/message_loop.h"
 #include "crbase/synchronization/waitable_event.h"
 #include "crbase/time/time.h"
+#include "crbase/build_config.h"
 
 namespace crbase {
 namespace internal {

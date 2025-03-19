@@ -10,6 +10,7 @@
 #include "crbase/macros.h"
 #include "crbase/synchronization/lock_impl.h"
 #include "crbase/threading/platform_thread.h"
+#include "crbase/build_config.h"
 
 namespace crbase {
 
@@ -63,9 +64,16 @@ class CRBASE_EXPORT Lock {
   void AssertAcquired() const;
 #endif  // CR_DCHECK_IS_ON()
 
+#if defined(MINI_CHROMIUM_OS_POSIX)
+  // The posix implementation of ConditionVariable needs to be able
+  // to see our lock and tweak our debugging counters, as it releases
+  // and acquires locks inside of pthread_cond_{timed,}wait.
+  friend class ConditionVariable;
+#elif defined(MINI_CHROMIUM_OS_WIN)
   // The Windows Vista implementation of ConditionVariable needs the
   // native handle of the critical section.
   friend class WinVistaCondVar;
+#endif
 
  private:
 #if CR_DCHECK_IS_ON()

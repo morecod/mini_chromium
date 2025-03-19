@@ -49,16 +49,24 @@
 #include <stdint.h>
 #include <time.h>
 
-// For FILETIME in FromFileTime, until it moves to a new converter class.
-// See TODO(iyengar) below.
-#include <windows.h>
-
 #include <iosfwd>
 #include <limits>
 
 #include "crbase/base_export.h"
 #include "crbase/bit_cast.h"
 #include "crbase/numerics/safe_math.h"
+#include "crbase/build_config.h"
+
+#if defined(MINI_CHROMIUM_OS_POSIX)
+#include <unistd.h>
+#include <sys/time.h>
+#endif
+
+#if defined(MINI_CHROMIUM_OS_WIN)
+// For FILETIME in FromFileTime, until it moves to a new converter class.
+// See TODO(iyengar) below.
+#include <windows.h>
+#endif
 
 namespace crbase {
 
@@ -96,7 +104,9 @@ class CRBASE_EXPORT TimeDelta {
   static TimeDelta FromSecondsD(double secs);
   static TimeDelta FromMillisecondsD(double ms);
   static TimeDelta FromMicroseconds(int64_t us);
+#if defined(MINI_CHROMIUM_OS_WIN)
   static TimeDelta FromQPCValue(LONGLONG qpc_value);
+#endif
 
   // Converts an integer value representing TimeDelta to a class. This is used
   // when deserializing a |TimeDelta| structure, using a value known to be
@@ -131,6 +141,10 @@ class CRBASE_EXPORT TimeDelta {
 
   // Returns true if the time delta is the maximum time delta.
   bool is_max() const { return delta_ == std::numeric_limits<int64_t>::max(); }
+
+#if defined(MINI_CHROMIUM_OS_POSIX)
+  struct timespec ToTimeSpec() const;
+#endif
 
   // Returns the time delta in some unit. The F versions return a floating
   // point value, the "regular" versions return a rounded-down value.
@@ -364,10 +378,20 @@ class CRBASE_EXPORT Time : public time_internal::TimeBase<Time> {
   // platform-dependent epoch.
   static const int64_t kTimeTToMicrosecondsOffset;
 
+
+#if defined(MINI_CHROMIUM_OS_WIN)
   // To avoid overflow in QPC to Microseconds calculations, since we multiply
   // by kMicrosecondsPerSecond, then the QPC value should not exceed
   // (2^63 - 1) / 1E6. If it exceeds that threshold, we divide then multiply.
   enum : int64_t{kQPCOverflowThreshold = 0x8637BD05AF7};
+#else
+  // On Mac & Linux, this value is the delta from the Windows epoch of 1601 to
+  // the Posix delta of 1970. This is used for migrating between the old
+  // 1970-based epochs to the new 1601-based ones. It should be removed from
+  // this global header and put in the platform-specific ones when we remove the
+  // migration code.
+  static const int64_t kWindowsEpochDeltaMicroseconds;
+#endif
 
   // Represents an exploded time that can be formatted nicely. This is kind of
   // like the Win32 SYSTEMTIME structure or the Unix "struct tm" with a few
@@ -425,6 +449,14 @@ class CRBASE_EXPORT Time : public time_internal::TimeBase<Time> {
   static Time FromDoubleT(double dt);
   double ToDoubleT() const;
 
+#if defined(MINI_CHROMIUM_OS_POSIX)
+  // Converts the timespec structure to time. MacOS X 10.8.3 (and tentatively,
+  // earlier versions) will have the |ts|'s tv_nsec component zeroed out,
+  // having a 1 second resolution, which agrees with
+  // https://developer.apple.com/legacy/library/#technotes/tn/tn1150.html#HFSPlusDates.
+  static Time FromTimeSpec(const timespec& ts);
+#endif
+
   // Converts to/from the Javascript convention for times, a number of
   // milliseconds since the epoch:
   // https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Date/getTime.
@@ -435,6 +467,12 @@ class CRBASE_EXPORT Time : public time_internal::TimeBase<Time> {
   // milliseconds since the epoch.
   int64_t ToJavaTime() const;
 
+#if defined(MINI_CHROMIUM_OS_POSIX)
+  static Time FromTimeVal(struct timeval t);
+  struct timeval ToTimeVal() const;
+#endif
+
+#if defined(MINI_CHROMIUM_OS_WIN)
   static Time FromFileTime(FILETIME ft);
   FILETIME ToFileTime() const;
 
@@ -459,6 +497,7 @@ class CRBASE_EXPORT Time : public time_internal::TimeBase<Time> {
   // This is provided for testing only, and is not tracked in a thread-safe
   // way.
   static bool IsHighResolutionTimerInUse();
+#endif
 
   // Converts an exploded structure representing either the local time or UTC
   // into a Time class.
@@ -604,10 +643,12 @@ class CRBASE_EXPORT TimeTicks : public time_internal::TimeBase<TimeTicks> {
   // clock will be used instead.
   static bool IsHighResolution();
 
+#if defined(MINI_CHROMIUM_OS_WIN)
   // Translates an absolute QPC timestamp into a TimeTicks value. The returned
   // value has the same origin as Now(). Do NOT attempt to use this if
   // IsHighResolution() returns false.
   static TimeTicks FromQPCValue(LONGLONG qpc_value);
+#endif
 
   // Get an estimate of the TimeTick value at the time of the UnixEpoch. Because
   // Time and TimeTicks respond differently to user-set time and NTP
@@ -625,9 +666,11 @@ class CRBASE_EXPORT TimeTicks : public time_internal::TimeBase<TimeTicks> {
   TimeTicks SnappedToNextTick(TimeTicks tick_phase,
                               TimeDelta tick_interval) const;
 
+#if defined(MINI_CHROMIUM_OS_WIN)
  protected:
   typedef DWORD (*TickFunctionType)(void);
   static TickFunctionType SetMockTickFunction(TickFunctionType ticker);
+#endif
 
  private:
   friend class time_internal::TimeBase<TimeTicks>;
@@ -651,13 +694,21 @@ class CRBASE_EXPORT ThreadTicks : public time_internal::TimeBase<ThreadTicks> {
 
   // Returns true if ThreadTicks::Now() is supported on this system.
   static bool IsSupported() {
+#if defined(MINI_CHROMIUM_OS_WIN)
     return IsSupportedWin();
+#elif (defined(_POSIX_THREAD_CPUTIME) && (_POSIX_THREAD_CPUTIME >= 0))
+    return true;
+#else
+    return false;
+#endif
   }
 
   // Waits until the initialization is completed. Needs to be guarded with a
   // call to IsSupported().
   static void WaitUntilInitialized() {
+#if defined(MINI_CHROMIUM_OS_WIN)
     WaitUntilInitializedWin();
+#endif
   }
 
   // Returns thread-specific CPU-time on systems that support this feature.
@@ -676,6 +727,7 @@ class CRBASE_EXPORT ThreadTicks : public time_internal::TimeBase<ThreadTicks> {
   // and testing.
   explicit ThreadTicks(int64_t us) : TimeBase(us) {}
 
+#if defined(MINI_CHROMIUM_OS_WIN)
   ///FRIEND_TEST_ALL_PREFIXES(TimeTicks, TSCTicksPerSecond);
 
   // Returns the frequency of the TSC in ticks per second, or 0 if it hasn't
@@ -686,6 +738,7 @@ class CRBASE_EXPORT ThreadTicks : public time_internal::TimeBase<ThreadTicks> {
 
   static bool IsSupportedWin();
   static void WaitUntilInitializedWin();
+#endif
 };
 
 // For logging use only.

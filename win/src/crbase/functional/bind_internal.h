@@ -14,8 +14,11 @@
 #include "crbase/memory/weak_ptr.h"
 #include "crbase/template_util.h"
 #include "crbase/tuple.h"
+#include "crbase/build_config.h"
 
+#if defined(MINI_CHROMIUM_OS_WIN)
 #include "crbase/functional/bind_internal_win.h"
+#endif
 
 namespace crbase {
 namespace internal {

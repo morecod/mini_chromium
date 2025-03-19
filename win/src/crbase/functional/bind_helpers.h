@@ -150,10 +150,10 @@
 #include <type_traits>
 #include <utility>
 
-#include "crbase/build_config.h"
 #include "crbase/functional/callback.h"
 #include "crbase/memory/weak_ptr.h"
 #include "crbase/template_util.h"
+#include "crbase/build_config.h"
 
 namespace crbase {
 namespace internal {

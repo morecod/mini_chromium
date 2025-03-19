@@ -5,12 +5,17 @@
 #ifndef MINI_CHROMIUM_SRC_CRBASE_PROCESS_MEMORY_H_
 #define MINI_CHROMIUM_SRC_CRBASE_PROCESS_MEMORY_H_
 
-#include <windows.h>
 #include <stddef.h>
 
 #include "crbase/base_export.h"
 #include "crbase/process/process_handle.h"
 #include "crbase/compiler_specific.h"
+#include "crbase/build_config.h"
+
+#if defined(MINI_CHROMIUM_OS_WIN)
+#include <windows.h>
+#endif
+
 
 namespace crbase {
 
@@ -33,9 +38,27 @@ CRBASE_EXPORT void EnableTerminationOnOutOfMemory();
 // Crash reporting classifies such crashes as OOM.
 CRBASE_EXPORT void TerminateBecauseOutOfMemory(size_t size);
 
+#if defined(MINI_CHROMIUM_OS_WIN)
 // Returns the module handle to which an address belongs. The reference count
 // of the module is not incremented.
 CRBASE_EXPORT HMODULE GetModuleFromAddress(void* address);
+#endif
+
+#if defined(MINI_CHROMIUM_OS_LINUX)
+CRBASE_EXPORT extern size_t g_oom_size;
+
+// The maximum allowed value for the OOM score.
+const int kMaxOomScore = 1000;
+
+// This adjusts /proc/<pid>/oom_score_adj so the Linux OOM killer will
+// prefer to kill certain process types over others. The range for the
+// adjustment is [-1000, 1000], with [0, 1000] being user accessible.
+// If the Linux system doesn't support the newer oom_score_adj range
+// of [0, 1000], then we revert to using the older oom_adj, and
+// translate the given value into [0, 15].  Some aliasing of values
+// may occur in that case, of course.
+CRBASE_EXPORT bool AdjustOOMScore(ProcessId process, int score);
+#endif
 
 // Special allocator functions for callers that want to check for OOM.
 // These will not abort if the allocation fails even if

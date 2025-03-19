@@ -13,6 +13,16 @@
 #include "crbase/macros.h"
 #include "crbase/memory/shared_memory_handle.h"
 #include "crbase/process/process_handle.h"
+#include "crbase/build_config.h"
+
+#if defined(MINI_CHROMIUM_OS_POSIX)
+#include <stdio.h>
+#include <sys/types.h>
+#include <semaphore.h>
+#include "crbase/file_descriptor_posix.h"
+#include "crbase/files/file_util.h"
+#include "crbase/files/scoped_file.h"
+#endif
 
 namespace crbase {
 
@@ -51,10 +61,12 @@ class CRBASE_EXPORT SharedMemory {
  public:
   SharedMemory();
 
+#if defined(MINI_CHROMIUM_OS_WIN)
   // Similar to the default constructor, except that this allows for
   // calling LockDeprecated() to acquire the named mutex before either Create or
   // Open are called on Windows.
   explicit SharedMemory(const std::wstring& name);
+#endif
 
   // Create a new SharedMemory object from an existing, open
   // shared memory file.
@@ -65,12 +77,14 @@ class CRBASE_EXPORT SharedMemory {
   // that |read_only| matches the permissions of the handle.
   SharedMemory(const SharedMemoryHandle& handle, bool read_only);
 
+#if defined(MINI_CHROMIUM_OS_WIN)
   // Create a new SharedMemory object from an existing, open
   // shared memory file that was created by a remote process and not shared
   // to the current process.
   SharedMemory(const SharedMemoryHandle& handle,
                bool read_only,
                ProcessHandle process);
+#endif
 
   // Closes any open files.
   ~SharedMemory();
@@ -91,6 +105,17 @@ class CRBASE_EXPORT SharedMemory {
   // Duplicates The underlying OS primitive. Returns NULLHandle() on failure.
   // The caller is responsible for destroying the duplicated OS primitive.
   static SharedMemoryHandle DuplicateHandle(const SharedMemoryHandle& handle);
+
+#if defined(MINI_CHROMIUM_OS_POSIX)
+  // This method requires that the SharedMemoryHandle is backed by a POSIX fd.
+  static int GetFdFromSharedMemoryHandle(const SharedMemoryHandle& handle);
+
+  // Gets the size of the shared memory region referred to by |handle|.
+  // Returns false on a failure to determine the size. On success, populates the
+  // output variable |size|.
+  static bool GetSizeFromSharedMemoryHandle(const SharedMemoryHandle& handle,
+                                            size_t* size);
+#endif
 
   // Creates a shared memory object as described by the options struct.
   // Returns true on success and false on failure.
@@ -222,6 +247,10 @@ class CRBASE_EXPORT SharedMemory {
   }
 
  private:
+#if defined(MINI_CHROMIUM_OS_POSIX)
+   bool PrepareMapFile(ScopedFILE fp, ScopedFD readonly);
+   bool FilePathForMemoryName(const std::string& mem_name, FilePath* path);
+#endif  // defined(MINI_CHROMIUM_OS_POSIX)
   enum ShareMode {
     SHARE_READONLY,
     SHARE_CURRENT_MODE,
@@ -231,11 +260,16 @@ class CRBASE_EXPORT SharedMemory {
                             bool close_self,
                             ShareMode);
 
+#if defined(MINI_CHROMIUM_OS_WIN)
   // If true indicates this came from an external source so needs extra checks
   // before being mapped.
   bool external_section_;
   std::wstring       name_;
   HANDLE             mapped_file_;
+#elif defined(MINI_CHROMIUM_OS_POSIX)
+  int                mapped_file_;
+  int                readonly_mapped_file_;
+#endif
   size_t             mapped_size_;
   void*              memory_;
   bool               read_only_;

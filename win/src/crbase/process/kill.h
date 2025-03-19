@@ -12,6 +12,7 @@
 #include "crbase/process/process.h"
 #include "crbase/process/process_handle.h"
 #include "crbase/time/time.h"
+#include "crbase/build_config.h"
 
 namespace crbase {
 
@@ -39,6 +40,12 @@ CRBASE_EXPORT bool KillProcesses(const FilePath::StringType& executable_name,
                                  int exit_code,
                                  const ProcessFilter* filter);
 
+#if defined(MINI_CHROMIUM_OS_POSIX)
+// Attempts to kill the process group identified by |process_group_id|. Returns
+// true on success.
+CRBASE_EXPORT bool KillProcessGroup(ProcessHandle process_group_id);
+#endif  // defined(OS_POSIX)
+
 // Get the termination status of the process by interpreting the
 // circumstances of the child process' death. |exit_code| is set to
 // the status returned by waitpid() on POSIX, and from
@@ -49,6 +56,26 @@ CRBASE_EXPORT bool KillProcesses(const FilePath::StringType& executable_name,
 // will no longer be available).
 CRBASE_EXPORT TerminationStatus GetTerminationStatus(ProcessHandle handle,
                                                      int* exit_code);
+
+#if defined(MINI_CHROMIUM_OS_POSIX)
+// Send a kill signal to the process and then wait for the process to exit
+// and get the termination status.
+//
+// This is used in situations where it is believed that the process is dead
+// or dying (because communication with the child process has been cut).
+// In order to avoid erroneously returning that the process is still running
+// because the kernel is still cleaning it up, this will wait for the process
+// to terminate. In order to avoid the risk of hanging while waiting for the
+// process to terminate, send a SIGKILL to the process before waiting for the
+// termination status.
+//
+// Note that it is not an option to call WaitForExitCode and then
+// GetTerminationStatus as the child will be reaped when WaitForExitCode
+// returns, and this information will be lost.
+//
+CRBASE_EXPORT TerminationStatus GetKnownDeadTerminationStatus(
+    ProcessHandle handle, int* exit_code);
+#endif  // defined(OS_POSIX)
 
 // Wait for all the processes based on the named executable to exit.  If filter
 // is non-null, then only processes selected by the filter are waited on.
@@ -85,6 +112,12 @@ CRBASE_EXPORT bool CleanupProcesses(const FilePath::StringType& executable_name,
 // SYNCHRONIZE permissions.
 //
 CRBASE_EXPORT void EnsureProcessTerminated(Process process);
+
+#if defined(MINI_CHROMIUM_OS_POSIX)
+// The nicer version of EnsureProcessTerminated() that is patient and will
+// wait for |pid| to finish and then reap it.
+CRBASE_EXPORT void EnsureProcessGetsReaped(ProcessId pid);
+#endif
 
 }  // namespace crbase
 

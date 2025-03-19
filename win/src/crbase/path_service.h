@@ -9,6 +9,7 @@
 
 #include "crbase/base_export.h"
 #include "crbase/base_paths.h"
+#include "crbase/build_config.h"
 
 namespace crbase {
 

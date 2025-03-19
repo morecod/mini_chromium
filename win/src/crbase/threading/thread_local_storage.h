@@ -10,6 +10,13 @@
 #include "crbase/base_export.h"
 #include "crbase/macros.h"
 #include "crbase/atomic/atomicops.h"
+#include "crbase/build_config.h"
+
+#if defined(MINI_CHROMIUM_OS_WIN)
+#include <windows.h>
+#elif defined(MINI_CHROMIUM_OS_POSIX)
+#include <pthread.h>
+#endif
 
 namespace crbase {
 
@@ -21,8 +28,18 @@ namespace internal {
 class CRBASE_EXPORT PlatformThreadLocalStorage {
  public:
 
+#if defined(MINI_CHROMIUM_OS_WIN)
   typedef unsigned long TLSKey;
   enum : unsigned { TLS_KEY_OUT_OF_INDEXES = TLS_OUT_OF_INDEXES };
+#elif defined(MINI_CHROMIUM_OS_POSIX)
+  typedef pthread_key_t TLSKey;
+  // The following is a "reserved key" which is used in our generic Chromium
+  // ThreadLocalStorage implementation.  We expect that an OS will not return
+  // such a key, but if it is returned (i.e., the OS tries to allocate it) we
+  // will just request another key.
+  enum { TLS_KEY_OUT_OF_INDEXES = 0x7FFFFFFF };
+#endif
+
 
   // The following methods need to be supported on each OS platform, so that
   // the Chromium ThreadLocalStore functionality can be constructed.
@@ -47,9 +64,17 @@ class CRBASE_EXPORT PlatformThreadLocalStorage {
   // Destructors may end up being called multiple times on a terminating
   // thread, as other destructors may re-set slots that were previously
   // destroyed.
+
+#if defined(MINI_CHROMIUM_OS_WIN)
   // Since Windows which doesn't support TLS destructor, the implementation
   // should use GetTLSValue() to retrieve the value of TLS slot.
   static void OnThreadExit();
+#elif defined(MINI_CHROMIUM_OS_POSIX)
+  // |Value| is the data stored in TLS slot, The implementation can't use
+  // GetTLSValue() to retrieve the value of slot as it has already been reset
+  // in Posix.
+  static void OnThreadExit(void* value);
+#endif
 };
 
 }  // namespace internal

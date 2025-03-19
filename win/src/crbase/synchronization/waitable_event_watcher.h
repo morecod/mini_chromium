@@ -6,10 +6,15 @@
 #define MINI_CHROMIUM_SRC_CRBASE_SYNCHRONIZATION_WAITABLE_EVENT_WATCHER_H_
 
 #include "crbase/base_export.h"
+#include "crbase/build_config.h"
+
+#if defined(MINI_CHROMIUM_OS_WIN)
 #include "crbase/win/object_watcher.h"
+#else
 #include "crbase/functional/callback.h"
 #include "crbase/message_loop/message_loop.h"
 #include "crbase/synchronization/waitable_event.h"
+#endif
 
 namespace crbase {
 
@@ -81,8 +86,19 @@ class CRBASE_EXPORT WaitableEventWatcher : public win::ObjectWatcher::Delegate {
   const EventCallback& callback() const { return callback_; }
 
  private:
+#if defined(MINI_CHROMIUM_OS_WIN)
   void OnObjectSignaled(HANDLE h) override;
   win::ObjectWatcher watcher_;
+#else
+  // Implementation of MessageLoop::DestructionObserver
+  void WillDestroyCurrentMessageLoop() override;
+
+  MessageLoop* message_loop_;
+  scoped_refptr<Flag> cancel_flag_;
+  AsyncWaiter* waiter_;
+  crbase::Closure internal_callback_;
+  scoped_refptr<WaitableEvent::WaitableEventKernel> kernel_;
+#endif
 
   WaitableEvent* event_;
   EventCallback callback_;

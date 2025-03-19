@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\src\crbase\atomic\atomicops.h" />
+    <ClInclude Include="..\..\..\src\crbase\atomic\atomicops_internals_portable.h" />
     <ClInclude Include="..\..\..\src\crbase\atomic\atomic_ref_count.h" />
     <ClInclude Include="..\..\..\src\crbase\atomic\atomic_sequence_num.h" />
     <ClInclude Include="..\..\..\src\crbase\at_exit.h" />
@@ -35,7 +36,6 @@
     <ClInclude Include="..\..\..\src\crbase\codes\punycode.h" />
     <ClInclude Include="..\..\..\src\crbase\command_line.h" />
     <ClInclude Include="..\..\..\src\crbase\compiler_specific.h" />
-    <ClInclude Include="..\..\..\src\crbase\containers\hash_tables.h" />
     <ClInclude Include="..\..\..\src\crbase\crypto\sha1.h" />
     <ClInclude Include="..\..\..\src\crbase\debug\alias.h" />
     <ClInclude Include="..\..\..\src\crbase\debug\debugger.h" />
@@ -58,6 +58,7 @@
     <ClInclude Include="..\..\..\src\crbase\functional\cancelable_callback.h" />
     <ClInclude Include="..\..\..\src\crbase\functional\critical_closure.h" />
     <ClInclude Include="..\..\..\src\crbase\guid.h" />
+    <ClInclude Include="..\..\..\src\crbase\hash.h" />
     <ClInclude Include="..\..\..\src\crbase\json\json_parser.h" />
     <ClInclude Include="..\..\..\src\crbase\json\json_reader.h" />
     <ClInclude Include="..\..\..\src\crbase\json\json_string_value_serializer.h" />
@@ -101,7 +102,9 @@
     <ClInclude Include="..\..\..\src\crbase\process\process_iterator.h" />
     <ClInclude Include="..\..\..\src\crbase\rand_util.h" />
     <ClInclude Include="..\..\..\src\crbase\run_loop.h" />
+    <ClInclude Include="..\..\..\src\crbase\scoped_generic.h" />
     <ClInclude Include="..\..\..\src\crbase\stl_util.h" />
+    <ClInclude Include="..\..\..\src\crbase\strings\escape.h" />
     <ClInclude Include="..\..\..\src\crbase\strings\nullable_string16.h" />
     <ClInclude Include="..\..\..\src\crbase\strings\pattern.h" />
     <ClInclude Include="..\..\..\src\crbase\strings\string16.h" />
@@ -204,7 +207,9 @@
     <ClCompile Include="..\..\..\src\crbase\crypto\sha1.cc" />
     <ClCompile Include="..\..\..\src\crbase\debug\alias.cc" />
     <ClCompile Include="..\..\..\src\crbase\debug\debugger.cc" />
+    <ClCompile Include="..\..\..\src\crbase\debug\debugger_win.cc" />
     <ClCompile Include="..\..\..\src\crbase\debug\stack_trace.cc" />
+    <ClCompile Include="..\..\..\src\crbase\debug\stack_trace_win.cc" />
     <ClCompile Include="..\..\..\src\crbase\environment.cc" />
     <ClCompile Include="..\..\..\src\crbase\files\file.cc" />
     <ClCompile Include="..\..\..\src\crbase\files\file_enumerator.cc" />
@@ -219,6 +224,7 @@
     <ClCompile Include="..\..\..\src\crbase\functional\callback_helpers.cc" />
     <ClCompile Include="..\..\..\src\crbase\functional\callback_internal.cc" />
     <ClCompile Include="..\..\..\src\crbase\guid.cc" />
+    <ClCompile Include="..\..\..\src\crbase\hash.cc" />
     <ClCompile Include="..\..\..\src\crbase\import_libs.cc" />
     <ClCompile Include="..\..\..\src\crbase\json\json_parser.cc" />
     <ClCompile Include="..\..\..\src\crbase\json\json_reader.cc" />
@@ -230,8 +236,8 @@
     <ClCompile Include="..\..\..\src\crbase\logging.cc" />
     <ClCompile Include="..\..\..\src\crbase\memory\aligned_memory.cc" />
     <ClCompile Include="..\..\..\src\crbase\memory\ref_counted.cc" />
-    <ClCompile Include="..\..\..\src\crbase\memory\shared_memory.cc" />
-    <ClCompile Include="..\..\..\src\crbase\memory\shared_memory_handle.cc" />
+    <ClCompile Include="..\..\..\src\crbase\memory\shared_memory_win.cc" />
+    <ClCompile Include="..\..\..\src\crbase\memory\shared_memory_handle_win.cc" />
     <ClCompile Include="..\..\..\src\crbase\memory\singleton.cc" />
     <ClCompile Include="..\..\..\src\crbase\memory\weak_ptr.cc" />
     <ClCompile Include="..\..\..\src\crbase\message_loop\incoming_task_queue.cc" />
@@ -243,15 +249,20 @@
     <ClCompile Include="..\..\..\src\crbase\path_service.cc" />
     <ClCompile Include="..\..\..\src\crbase\pickle.cc" />
     <ClCompile Include="..\..\..\src\crbase\process\kill.cc" />
+    <ClCompile Include="..\..\..\src\crbase\process\kill_win.cc" />
     <ClCompile Include="..\..\..\src\crbase\process\launch.cc" />
+    <ClCompile Include="..\..\..\src\crbase\process\launch_win.cc" />
     <ClCompile Include="..\..\..\src\crbase\process\memory.cc" />
     <ClCompile Include="..\..\..\src\crbase\process\memory_win.cc" />
-    <ClCompile Include="..\..\..\src\crbase\process\process.cc" />
-    <ClCompile Include="..\..\..\src\crbase\process\process_handle.cc" />
+    <ClCompile Include="..\..\..\src\crbase\process\process_handle_win.cc" />
     <ClCompile Include="..\..\..\src\crbase\process\process_iterator.cc" />
+    <ClCompile Include="..\..\..\src\crbase\process\process_win.cc" />
+    <ClCompile Include="..\..\..\src\crbase\process\process_handle.cc" />
+    <ClCompile Include="..\..\..\src\crbase\process\process_iterator_win.cc" />
     <ClCompile Include="..\..\..\src\crbase\rand_util.cc" />
     <ClCompile Include="..\..\..\src\crbase\rand_util_win.cc" />
     <ClCompile Include="..\..\..\src\crbase\run_loop.cc" />
+    <ClCompile Include="..\..\..\src\crbase\strings\escape.cc" />
     <ClCompile Include="..\..\..\src\crbase\strings\nullable_string16.cc" />
     <ClCompile Include="..\..\..\src\crbase\strings\pattern.cc" />
     <ClCompile Include="..\..\..\src\crbase\strings\stringprintf.cc" />
@@ -260,15 +271,15 @@
     <ClCompile Include="..\..\..\src\crbase\strings\string_split.cc" />
     <ClCompile Include="..\..\..\src\crbase\strings\string_util.cc" />
     <ClCompile Include="..\..\..\src\crbase\strings\string_util_constants.cc" />
-    <ClCompile Include="..\..\..\src\crbase\strings\sys_string_conversions.cc" />
+    <ClCompile Include="..\..\..\src\crbase\strings\sys_string_conversion_wins.cc" />
     <ClCompile Include="..\..\..\src\crbase\strings\utf_offset_string_conversions.cc" />
     <ClCompile Include="..\..\..\src\crbase\strings\utf_string_conversions.cc" />
     <ClCompile Include="..\..\..\src\crbase\strings\utf_string_conversion_utils.cc" />
-    <ClCompile Include="..\..\..\src\crbase\synchronization\condition_variable.cc" />
+    <ClCompile Include="..\..\..\src\crbase\synchronization\condition_variable_win.cc" />
     <ClCompile Include="..\..\..\src\crbase\synchronization\lock.cc" />
     <ClCompile Include="..\..\..\src\crbase\synchronization\lock_impl_win.cc" />
-    <ClCompile Include="..\..\..\src\crbase\synchronization\waitable_event.cc" />
-    <ClCompile Include="..\..\..\src\crbase\synchronization\waitable_event_watcher.cc" />
+    <ClCompile Include="..\..\..\src\crbase\synchronization\waitable_event_win.cc" />
+    <ClCompile Include="..\..\..\src\crbase\synchronization\waitable_event_watcher_win.cc" />
     <ClCompile Include="..\..\..\src\crbase\system_info\cpu.cc" />
     <ClCompile Include="..\..\..\src\crbase\sys_info.cc" />
     <ClCompile Include="..\..\..\src\crbase\sys_info_win.cc" />
@@ -283,8 +294,9 @@
     <ClCompile Include="..\..\..\src\crbase\third_party\icu\icu_utf.cc" />
     <ClCompile Include="..\..\..\src\crbase\third_party\modp_b64\modp_b64.cc" />
     <ClCompile Include="..\..\..\src\crbase\third_party\nspr\prtime.cc" />
+    <ClCompile Include="..\..\..\src\crbase\third_party\superfasthash\superfasthash.c" />
     <ClCompile Include="..\..\..\src\crbase\threading\pending_task.cc" />
-    <ClCompile Include="..\..\..\src\crbase\threading\platform_thread.cc" />
+    <ClCompile Include="..\..\..\src\crbase\threading\platform_thread_win.cc" />
     <ClCompile Include="..\..\..\src\crbase\threading\post_task_and_reply_impl.cc" />
     <ClCompile Include="..\..\..\src\crbase\threading\sequenced_task_runner.cc" />
     <ClCompile Include="..\..\..\src\crbase\threading\sequenced_worker_pool.cc" />
@@ -293,7 +305,7 @@
     <ClCompile Include="..\..\..\src\crbase\threading\thread.cc" />
     <ClCompile Include="..\..\..\src\crbase\threading\thread_checker.cc" />
     <ClCompile Include="..\..\..\src\crbase\threading\thread_id_name_manager.cc" />
-    <ClCompile Include="..\..\..\src\crbase\threading\thread_local.cc" />
+    <ClCompile Include="..\..\..\src\crbase\threading\thread_local_win.cc" />
     <ClCompile Include="..\..\..\src\crbase\threading\thread_local_storage.cc" />
     <ClCompile Include="..\..\..\src\crbase\threading\thread_local_storage_win.cc" />
     <ClCompile Include="..\..\..\src\crbase\threading\thread_restrictions.cc" />
@@ -329,6 +341,9 @@
     <ClCompile Include="..\..\..\src\crbase\win\win_util.cc" />
     <ClCompile Include="..\..\..\src\crbase\win\wmi.cc" />
     <ClCompile Include="..\..\..\src\crbase\win\wrapped_window_proc.cc" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\src\crbase\third_party\superfasthash\LICENSE" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{9DD56123-00D1-4C71-A78C-A67BF29F71A9}</ProjectGuid>

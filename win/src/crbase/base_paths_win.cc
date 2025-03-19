@@ -128,14 +128,6 @@ bool PathProviderWin(int key, FilePath* result) {
         return false;
       cur = FilePath(system_buffer);
       break;
-    case crbase::DIR_SOURCE_ROOT: {
-      FilePath executableDir;
-      // On Windows, unit tests execute two levels deep from the source root.
-      // For example:  chrome/{Debug|Release}/ui_tests.exe
-      PathService::Get(crbase::DIR_EXE, &executableDir);
-      cur = executableDir.DirName().DirName();
-      break;
-    }
     case crbase::DIR_APP_SHORTCUTS: {
       if (win::GetVersion() < win::Version::WIN8)
         return false;

@@ -11,6 +11,7 @@
 #include <string>
 
 #include "crbase/base_export.h"
+#include "crbase/build_config.h"
 
 namespace crbase {
 
@@ -52,6 +53,10 @@ CRBASE_EXPORT void RandBytes(void* output, size_t output_length);
 // Do not use for security-sensitive purposes.
 // See crypto/ for cryptographically secure random number generation APIs.
 CRBASE_EXPORT std::string RandBytesAsString(size_t length);
+
+#if defined(MINI_CHROMIUM_OS_POSIX)
+CRBASE_EXPORT int GetUrandomFD();
+#endif
 
 }  // namespace crbase
 

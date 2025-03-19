@@ -11,6 +11,7 @@
 
 #include <limits>
 
+#include "crbase/logging.h"
 #include "crbase/numerics/safe_conversions.h"
 #include "crbase/numerics/safe_math.h"
 #include "crbase/strings/utf_string_conversions.h"
@@ -41,13 +42,13 @@ struct IntToStringT {
     CHR* i = end;
     do {
       --i;
-      assert(i != outbuf);
+      CR_DCHECK(i != outbuf);
       *i = static_cast<CHR>((res % 10) + '0');
       res /= 10;
     } while (res != 0);
     if (IsValueNegative(value)) {
       --i;
-      assert(i != outbuf);
+      CR_DCHECK(i != outbuf);
       *i = static_cast<CHR>('-');
     }
     return STR(i, end);

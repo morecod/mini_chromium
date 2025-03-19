@@ -85,12 +85,12 @@ DWORD __stdcall ThreadFunc(void* params) {
   // thread name mapping.
   PlatformThreadHandle::Handle platform_handle;
   BOOL did_dup = DuplicateHandle(GetCurrentProcess(),
-                                GetCurrentThread(),
-                                GetCurrentProcess(),
-                                &platform_handle,
-                                0,
-                                FALSE,
-                                DUPLICATE_SAME_ACCESS);
+                                 GetCurrentThread(),
+                                 GetCurrentProcess(),
+                                 &platform_handle,
+                                 0,
+                                 FALSE,
+                                 DUPLICATE_SAME_ACCESS);
 
   win::ScopedHandle scoped_platform_handle;
 
