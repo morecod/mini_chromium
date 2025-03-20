@@ -17,6 +17,9 @@ namespace win {
 // construction and destruction of this class.
 class ScopedPropVariant {
  public:
+  ScopedPropVariant(const ScopedPropVariant&) = delete;
+  ScopedPropVariant& operator=(const ScopedPropVariant&) = delete;
+
   ScopedPropVariant() {
     PropVariantInit(&pv_);
   }
@@ -50,7 +53,7 @@ class ScopedPropVariant {
   bool operator==(const ScopedPropVariant&) const = delete;
   bool operator!=(const ScopedPropVariant&) const = delete;
 
-  CR_DISALLOW_COPY_AND_ASSIGN(ScopedPropVariant)
+  ///CR_DISALLOW_COPY_AND_ASSIGN(ScopedPropVariant)
 };
 
 }  // namespace win

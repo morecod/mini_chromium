@@ -785,13 +785,6 @@ bool CopyFile(const FilePath& from_path, const FilePath& to_path) {
   return true;
 }
 
-bool SetNonBlocking(int fd) {
-  unsigned long nonblocking = 1;
-  if (ioctlsocket(fd, FIONBIO, &nonblocking) == 0)
-    return true;
-  return false;
-}
-
 // -----------------------------------------------------------------------------
 
 namespace internal {

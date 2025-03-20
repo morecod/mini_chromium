@@ -12,29 +12,29 @@
 
 #include <stddef.h>  // For size_t.
 
-// Put this in the declarations for a class to be uncopyable.
-#define CR_DISALLOW_COPY(TypeName) \
-  TypeName(const TypeName&) = delete;
-
-// Put this in the declarations for a class to be unassignable.
-#define CR_DISALLOW_ASSIGN(TypeName) \
-  void operator=(const TypeName&) = delete;
-
-// A macro to disallow the copy constructor and operator= functions
-// This should be used in the private: declarations for a class
-#define CR_DISALLOW_COPY_AND_ASSIGN(TypeName) \
-  TypeName(const TypeName&) = delete;           \
-  void operator=(const TypeName&) = delete;
-
-// A macro to disallow all the implicit constructors, namely the
-// default constructor, copy constructor and operator= functions.
-//
-// This should be used in the private: declarations for a class
-// that wants to prevent anyone from instantiating it. This is
-// especially useful for classes containing only static methods.
-#define CR_DISALLOW_IMPLICIT_CONSTRUCTORS(TypeName) \
-  TypeName() = delete;                              \
-  CR_DISALLOW_COPY_AND_ASSIGN(TypeName)
+///// Put this in the declarations for a class to be uncopyable.
+///#define CR_DISALLOW_COPY(TypeName) \
+///  TypeName(const TypeName&) = delete;
+///
+///// Put this in the declarations for a class to be unassignable.
+///#define CR_DISALLOW_ASSIGN(TypeName) \
+///  void operator=(const TypeName&) = delete;
+///
+///// A macro to disallow the copy constructor and operator= functions
+///// This should be used in the private: declarations for a class
+///#define CR_DISALLOW_COPY_AND_ASSIGN(TypeName) \
+///  TypeName(const TypeName&) = delete;           \
+///  void operator=(const TypeName&) = delete;
+///
+///// A macro to disallow all the implicit constructors, namely the
+///// default constructor, copy constructor and operator= functions.
+/////
+///// This should be used in the private: declarations for a class
+///// that wants to prevent anyone from instantiating it. This is
+///// especially useful for classes containing only static methods.
+///#define CR_DISALLOW_IMPLICIT_CONSTRUCTORS(TypeName) \
+///  TypeName() = delete;                              \
+///  CR_DISALLOW_COPY_AND_ASSIGN(TypeName)
 
 // The arraysize(arr) macro returns the # of elements in an array arr.  The
 // expression is a compile-time constant, and therefore can be used in defining
@@ -47,5 +47,17 @@
 // use its type.
 template <typename T, size_t N> char(&CrArraySizeHelper(T(&array)[N]))[N] {};
 #define cr_arraysize(ar) (sizeof(CrArraySizeHelper(ar)))
+
+// Used to explicitly mark the return value of a function as unused. If you are
+// really sure you don't want to do anything with the return value of a function
+// that has been marked WARN_UNUSED_RESULT, wrap it with this. Example:
+//
+//   std:unique_ptr<MyType> my_var = ...;
+//   if (TakeOwnership(my_var.get()) == SUCCESS)
+//     cr_ignore_result(my_var.release());
+//
+template<typename T>
+inline void cr_ignore_result(const T&) {
+}
 
 #endif  // MINI_CHROMIUM_SRC_CRBASE_MACROS_H_

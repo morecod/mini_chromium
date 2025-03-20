@@ -48,24 +48,33 @@ class ThreadTestHelper;
 // add the AssertIOAllowed checks in the helper functions.
 
 class CRBASE_EXPORT ThreadRestrictions {
- public:
+ public: 
+  ThreadRestrictions() = delete;
+  ThreadRestrictions(const ThreadRestrictions&) = delete;
+  ThreadRestrictions& operator=(const ThreadRestrictions&) = delete;
+
   // Constructing a ScopedAllowIO temporarily allows IO for the current
   // thread.  Doing this is almost certainly always incorrect.
   class CRBASE_EXPORT ScopedAllowIO {
    public:
+    ScopedAllowIO(const ScopedAllowIO&) = delete;
+    ScopedAllowIO& operator=(const ScopedAllowIO&) = delete;
+
     ScopedAllowIO() { previous_value_ = SetIOAllowed(true); }
     ~ScopedAllowIO() { SetIOAllowed(previous_value_); }
    private:
     // Whether IO is allowed when the ScopedAllowIO was constructed.
     bool previous_value_;
 
-    CR_DISALLOW_COPY_AND_ASSIGN(ScopedAllowIO)
+    ///CR_DISALLOW_COPY_AND_ASSIGN(ScopedAllowIO)
   };
 
   // Constructing a ScopedAllowSingleton temporarily allows accessing for the
   // current thread.  Doing this is almost always incorrect.
   class CRBASE_EXPORT ScopedAllowSingleton {
    public:
+    ScopedAllowSingleton(const ScopedAllowSingleton&) = delete;
+    ScopedAllowSingleton& operator=(const ScopedAllowSingleton&) = delete;
     ScopedAllowSingleton() { previous_value_ = SetSingletonAllowed(true); }
     ~ScopedAllowSingleton() { SetSingletonAllowed(previous_value_); }
    private:
@@ -73,7 +82,7 @@ class CRBASE_EXPORT ThreadRestrictions {
     // constructed.
     bool previous_value_;
 
-    CR_DISALLOW_COPY_AND_ASSIGN(ScopedAllowSingleton)
+    ///CR_DISALLOW_COPY_AND_ASSIGN(ScopedAllowSingleton)
   };
 
 #if ENABLE_CR_THREAD_RESTRICTIONS
@@ -137,7 +146,10 @@ class CRBASE_EXPORT ThreadRestrictions {
   // can use this through friend. If you find yourself needing to use this, find
   // another way. Talk to jam or brettw.
   class CRBASE_EXPORT ScopedAllowWait {
-   public:
+   public: 
+    ScopedAllowWait(const ScopedAllowWait&) = delete;
+    ScopedAllowWait& operator=(const ScopedAllowWait&) = delete;
+
     ScopedAllowWait() { previous_value_ = SetWaitAllowed(true); }
     ~ScopedAllowWait() { SetWaitAllowed(previous_value_); }
    private:
@@ -145,12 +157,12 @@ class CRBASE_EXPORT ThreadRestrictions {
     // constructed.
     bool previous_value_;
 
-    CR_DISALLOW_COPY_AND_ASSIGN(ScopedAllowWait)
+    ///CR_DISALLOW_COPY_AND_ASSIGN(ScopedAllowWait)
   };
 
-  CR_DISALLOW_IMPLICIT_CONSTRUCTORS(ThreadRestrictions)
+  ///CR_DISALLOW_IMPLICIT_CONSTRUCTORS(ThreadRestrictions)
 };
 
-}  // namespace base
+}  // namespace crbase
 
 #endif  // MINI_CHROMIUM_SRC_CRBASE_THREADING_THREAD_RESTRICTIONS_H_

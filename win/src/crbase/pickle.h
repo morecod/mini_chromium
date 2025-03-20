@@ -31,6 +31,8 @@ class CRBASE_EXPORT PickleIterator {
   // result could not be extracted. It is not possible to read from the iterator
   // after that.
   bool ReadBool(bool* result);
+  bool ReadInt8(int8_t* result);
+  bool ReadUInt8(uint8_t* result);
   bool ReadInt(int* result);
   bool ReadLong(long* result);
   bool ReadUInt16(uint16_t* result);
@@ -176,6 +178,8 @@ class CRBASE_EXPORT Pickle {
   bool WriteLongUsingDangerousNonPortableLessPersistableForm(long value) {
     return WritePOD(value);
   }
+  bool WriteInt8(int8_t value) { return WritePOD(value); }
+  bool WriteUInt8(uint8_t value) { return WritePOD(value); }
   bool WriteUInt16(uint16_t value) { return WritePOD(value); }
   bool WriteUInt32(uint32_t value) { return WritePOD(value); }
   bool WriteInt64(int64_t value) { return WritePOD(value); }

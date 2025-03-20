@@ -47,8 +47,8 @@ struct CRBASE_EXPORT LaunchOptions {
   // pre_exec_delegate below)
   class CRBASE_EXPORT PreExecDelegate {
    public:
-    PreExecDelegate(const PreExecDelegate&) = deleted;
-    PreExecDelegate& operator=(const PreExecDelegate&) = deleted;
+    PreExecDelegate(const PreExecDelegate&) = delete;
+    PreExecDelegate& operator=(const PreExecDelegate&) = delete;
     PreExecDelegate() {}
     virtual ~PreExecDelegate() {}
 

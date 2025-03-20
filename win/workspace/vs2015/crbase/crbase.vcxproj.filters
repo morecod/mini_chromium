@@ -76,6 +76,9 @@
     <Filter Include="third_party\superfasthash">
       <UniqueIdentifier>{ae947c0c-2e40-4340-81f4-5153277c9f5e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="posix">
+      <UniqueIdentifier>{102d3cdb-1472-4bb6-b00e-e69c33b3522d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\src\crbase\atomic\atomic_ref_count.h">
@@ -543,6 +546,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\src\crbase\hash.h" />
     <ClInclude Include="..\..\..\src\crbase\scoped_generic.h" />
+    <ClInclude Include="..\..\..\src\crbase\posix\eintr_wrapper.h">
+      <Filter>posix</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\crbase\codes\base64.cc">

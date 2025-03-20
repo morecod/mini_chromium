@@ -64,6 +64,9 @@ class ChannelFactory;
 // message loop pointer to proxy it to the ipc thread.
 class CRIPC_EXPORT SyncChannel : public ChannelProxy {
  public:
+  SyncChannel(const SyncChannel&) = delete;
+  SyncChannel& operator=(const SyncChannel&) = delete;
+
   enum RestrictDispatchGroup {
     kRestrictDispatchGroup_None = 0,
   };
@@ -247,7 +250,7 @@ class CRIPC_EXPORT SyncChannel : public ChannelProxy {
   std::vector<crbase::scoped_refptr<SyncMessageFilter>>
       pre_init_sync_message_filters_;
 
-  CR_DISALLOW_COPY_AND_ASSIGN(SyncChannel)
+  ///CR_DISALLOW_COPY_AND_ASSIGN(SyncChannel)
 };
 
 }  // namespace cripc

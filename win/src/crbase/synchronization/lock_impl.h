@@ -25,6 +25,9 @@ class CRBASE_EXPORT LockImpl {
  public:
   typedef CRITICAL_SECTION NativeHandle;
 
+  LockImpl(const LockImpl&) = delete;
+  LockImpl& operator=(const LockImpl&) = delete;
+
   LockImpl();
   ~LockImpl();
 
@@ -46,8 +49,6 @@ class CRBASE_EXPORT LockImpl {
 
  private:
   NativeHandle native_handle_;
-
-  CR_DISALLOW_COPY_AND_ASSIGN(LockImpl)
 };
 
 }  // namespace internal

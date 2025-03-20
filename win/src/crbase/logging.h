@@ -12,10 +12,10 @@
 #include <sstream>
 #include <string>
 
-#include "crbase/build_config.h"
 #include "crbase/base_export.h"
 #include "crbase/debug/debugger.h"
 #include "crbase/macros.h"
+#include "crbase/build_config.h"
 
 //
 // Optional message capabilities
@@ -99,8 +99,12 @@
 
 namespace crbase_logging {
 
+#if defined(MINI_CHROMIUM_OS_WIN)
 // TODO(avi): do we want to do a unification of character types here?
 typedef wchar_t PathChar;
+#else
+typedef char PathChar;
+#endif
 
 // Where to record logging output? A flat file and/or system debug log
 // via OutputDebugString.
@@ -114,7 +118,11 @@ enum LoggingDestination {
   // On Windows, use a file next to the exe; on POSIX platforms, where
   // it may not even be possible to locate the executable on disk, use
   // stderr.
+#if defined(MINI_CHROMIUM_OS_WIN)
   LOG_DEFAULT = LOG_TO_FILE,
+#elif defined(MINI_CHROMIUM_OS_POSIX)
+  LOG_DEFAULT = LOG_TO_SYSTEM_DEBUG_LOG,
+#endif
 };
 
 // Indicates that the log file should be locked when being written to.
@@ -366,7 +374,7 @@ private:
 
 #else
 
-#if defined(_PREFAST_)
+#if defined(_PREFAST_) && defined(MINI_CHROMIUM_OS_WIN)
 // Use __analysis_assume to tell the VC++ static analysis engine that
 // assert conditions are true, to suppress warnings.  The LAZY_STREAM
 // parameter doesn't reference 'condition' in /analyze builds because
@@ -684,6 +692,7 @@ private:
   const char *file_;
   const int line_;
 
+#if defined(MINI_CHROMIUM_OS_WIN)
   // Stores the current value of GetLastError in the constructor and restores
   // it in the destructor by calling SetLastError.
   // This is useful since the LogMessage class uses a lot of Win32 calls
@@ -701,6 +710,7 @@ private:
   };
 
   SaveLastError last_error_;
+#endif
 };
 
 // A non-macro interface to the log facility; (useful
@@ -720,13 +730,18 @@ public:
   void operator&(std::ostream &) {}
 };
 
+#if defined(MINI_CHROMIUM_OS_WIN)
 typedef unsigned long SystemErrorCode;
+#elif defined(MINI_CHROMIUM_OS_POSIX)
+typedef int SystemErrorCode;
+#endif
 
 // Alias for ::GetLastError() on Windows and errno on POSIX. Avoids having to
 // pull in windows.h just for GetLastError() and DWORD.
 CRBASE_EXPORT SystemErrorCode GetLastSystemErrorCode();
 CRBASE_EXPORT std::string SystemErrorCodeToString(SystemErrorCode error_code);
 
+#if defined(MINI_CHROMIUM_OS_WIN)
 // Appends a formatted system message of the GetLastError() type.
 class CRBASE_EXPORT Win32ErrorLogMessage {
 public:
@@ -745,6 +760,28 @@ private:
   SystemErrorCode err_;
   LogMessage log_message_;
 };
+#elif defined(MINI_CHROMIUM_OS_POSIX)
+// Appends a formatted system message of the errno type
+class CRBASE_EXPORT ErrnoLogMessage {
+ public:
+  ErrnoLogMessage(const ErrnoLogMessage&) = delete;
+  ErrnoLogMessage& operator=(const ErrnoLogMessage&) = delete;
+
+  ErrnoLogMessage(const char* file,
+                  int line,
+                  LogSeverity severity,
+                  SystemErrorCode err);
+
+  // Appends the error message before destructing the encapsulated class.
+  ~ErrnoLogMessage();
+
+  std::ostream& stream() { return log_message_.stream(); }
+
+ private:
+  SystemErrorCode err_;
+  LogMessage log_message_;
+};
+#endif
 
 // Closes the log file explicitly if open.
 // NOTE: Since the log file is opened as necessary by the action of logging
@@ -765,11 +802,13 @@ CRBASE_EXPORT void RawLog(int level, const char *message);
                            "Check failed: " #condition "\n");                  \
   } while (0)
 
+#if defined(MINI_CHROMIUM_OS_WIN)
 // Returns true if logging to file is enabled.
 CRBASE_EXPORT bool IsLoggingToFileEnabled();
 
 // Returns the default log file path.
 CRBASE_EXPORT std::wstring GetLogFileFullPath();
+#endif
 
 } // namespace crbase_logging
 

@@ -17,6 +17,9 @@ namespace win {
 
 class WindowsService {
  public:
+  WindowsService(const WindowsService&) = delete;
+  WindowsService& operator=(const WindowsService&) = delete;
+
   WindowsService(const crbase::StringPiece16& service_name);
   virtual ~WindowsService();
 
@@ -93,7 +96,7 @@ class WindowsService {
  private:
   std::wstring service_name_;
 
-  CR_DISALLOW_COPY_AND_ASSIGN(WindowsService)
+  ///CR_DISALLOW_COPY_AND_ASSIGN(WindowsService)
 };
 
 }  // namespace win

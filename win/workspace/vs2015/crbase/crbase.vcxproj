@@ -94,6 +94,7 @@
     <ClInclude Include="..\..\..\src\crbase\observer_list_threadsafe.h" />
     <ClInclude Include="..\..\..\src\crbase\path_service.h" />
     <ClInclude Include="..\..\..\src\crbase\pickle.h" />
+    <ClInclude Include="..\..\..\src\crbase\posix\eintr_wrapper.h" />
     <ClInclude Include="..\..\..\src\crbase\process\kill.h" />
     <ClInclude Include="..\..\..\src\crbase\process\launch.h" />
     <ClInclude Include="..\..\..\src\crbase\process\memory.h" />

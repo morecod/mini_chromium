@@ -19,7 +19,7 @@
 namespace crbase {
 class SingleThreadTaskRunner;
 class WaitableEvent;
-}
+}  // namespace crbase
 
 namespace cripc {
 class SyncChannel;
@@ -31,6 +31,9 @@ class SyncChannel;
 // be used to send simultaneous synchronous messages from different threads.
 class CRIPC_EXPORT SyncMessageFilter : public MessageFilter, public Sender {
  public:
+  SyncMessageFilter(const SyncMessageFilter&) = delete;
+  SyncMessageFilter& operator=(const SyncMessageFilter&) = delete;
+
   // MessageSender implementation.
   bool Send(Message* message) override;
 
@@ -80,7 +83,7 @@ class CRIPC_EXPORT SyncMessageFilter : public MessageFilter, public Sender {
 
   crbase::WaitableEvent* shutdown_event_;
 
-  CR_DISALLOW_COPY_AND_ASSIGN(SyncMessageFilter)
+  ///CR_DISALLOW_COPY_AND_ASSIGN(SyncMessageFilter)
 };
 
 }  // namespace cripc

@@ -8,7 +8,7 @@
 #include <stddef.h>
 ///#include <winsock2.h>
 
-///typedef void* WSAEVENT;
+typedef void* WSAEVENT;
 
 namespace crnet {
 
@@ -16,7 +16,7 @@ namespace crnet {
 static const size_t kBluetoothAddressSize = 6;
 
 // Assert that the (manual-reset) event object is not signaled.
-///void AssertEventNotSignaled(WSAEVENT hEvent);
+void AssertEventNotSignaled(WSAEVENT hEvent);
 
 // If the (manual-reset) event object is signaled, resets it and returns true.
 // Otherwise, does nothing and returns false.  Called after a Winsock function
@@ -26,7 +26,7 @@ static const size_t kBluetoothAddressSize = 6;
 // the event object is already signaled at this point, so we call this method
 // to avoid a context switch in common cases.  This is just a performance
 // optimization.  The code still works if this function simply returns false.
-///bool ResetEventIfSignaled(WSAEVENT hEvent);
+bool ResetEventIfSignaled(WSAEVENT hEvent);
 
 }  // namespace crnet
 

@@ -86,6 +86,14 @@ bool PickleIterator::ReadBool(bool* result) {
   return ReadBuiltinType(result);
 }
 
+bool PickleIterator::ReadInt8(int8_t* result) {
+  return ReadBuiltinType(result);
+}
+
+bool PickleIterator::ReadUInt8(uint8_t* result) {
+  return ReadBuiltinType(result);
+}
+
 bool PickleIterator::ReadInt(int* result) {
   return ReadBuiltinType(result);
 }

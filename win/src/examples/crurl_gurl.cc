@@ -15,6 +15,7 @@ int main(int argc, char* argv[]) {
   cout << url.host() << endl;   // "www.xn--google-gw7is51dpz5aa.xn--ihva"
   cout << url.path() << endl;   // "/1.txt"
   cout << url.port() << endl;   // "888"
+
   std::system("pause");
   return 0;
 }

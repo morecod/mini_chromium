@@ -280,6 +280,8 @@ std::ostream& operator<<(std::ostream& os, Time time) {
 // time of the Unix epoch.
 class UnixEpochSingleton {
  public:
+  UnixEpochSingleton(const UnixEpochSingleton&) = delete;
+  UnixEpochSingleton& operator=(const UnixEpochSingleton&) = delete;
   UnixEpochSingleton()
       : unix_epoch_(TimeTicks::Now() - (Time::Now() - Time::UnixEpoch())) {}
 
@@ -293,7 +295,7 @@ class UnixEpochSingleton {
  private:
   const TimeTicks unix_epoch_;
 
-  CR_DISALLOW_COPY_AND_ASSIGN(UnixEpochSingleton)
+  ///CR_DISALLOW_COPY_AND_ASSIGN(UnixEpochSingleton)
 };
 
 // Static

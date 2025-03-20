@@ -157,6 +157,9 @@ class CRBASE_EXPORT RegKey {
 // Iterates the entries found in a particular folder on the registry.
 class CRBASE_EXPORT RegistryValueIterator {
  public:
+  RegistryValueIterator(const RegistryValueIterator&) = delete;
+  RegistryValueIterator& operator=(const RegistryValueIterator&) = delete;
+
   // Construct a Registry Value Iterator with default WOW64 access.
   RegistryValueIterator(HKEY root_key, const wchar_t* folder_key);
 
@@ -205,11 +208,14 @@ class CRBASE_EXPORT RegistryValueIterator {
   DWORD value_size_;
   DWORD type_;
 
-  CR_DISALLOW_COPY_AND_ASSIGN(RegistryValueIterator)
+  ///CR_DISALLOW_COPY_AND_ASSIGN(RegistryValueIterator)
 };
 
 class CRBASE_EXPORT RegistryKeyIterator {
  public:
+  RegistryKeyIterator(const RegistryKeyIterator&) = delete;
+  RegistryKeyIterator& operator=(const RegistryKeyIterator&) = delete;
+
   // Construct a Registry Key Iterator with default WOW64 access.
   RegistryKeyIterator(HKEY root_key, const wchar_t* folder_key);
 
@@ -250,7 +256,7 @@ class CRBASE_EXPORT RegistryKeyIterator {
 
   wchar_t name_[MAX_PATH];
 
-  CR_DISALLOW_COPY_AND_ASSIGN(RegistryKeyIterator)
+  ///CR_DISALLOW_COPY_AND_ASSIGN(RegistryKeyIterator)
 };
 
 }  // namespace win

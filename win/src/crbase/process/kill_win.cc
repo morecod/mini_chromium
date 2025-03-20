@@ -40,6 +40,8 @@ static const int kWaitInterval = 2000;
 
 class TimerExpiredTask : public win::ObjectWatcher::Delegate {
  public:
+  TimerExpiredTask(const TimerExpiredTask&) = delete;
+  TimerExpiredTask& operator=(const TimerExpiredTask&) = delete;
   explicit TimerExpiredTask(Process process);
   ~TimerExpiredTask() override;
 
@@ -56,7 +58,7 @@ class TimerExpiredTask : public win::ObjectWatcher::Delegate {
 
   win::ObjectWatcher watcher_;
 
-  CR_DISALLOW_COPY_AND_ASSIGN(TimerExpiredTask)
+  ///CR_DISALLOW_COPY_AND_ASSIGN(TimerExpiredTask)
 };
 
 TimerExpiredTask::TimerExpiredTask(Process process) : process_(process.Pass()) {

@@ -20,21 +20,52 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\crnet\base\address_family.cc" />
+    <ClCompile Include="..\..\..\src\crnet\base\address_list.cc" />
+    <ClCompile Include="..\..\..\src\crnet\base\io_buffer.cc" />
     <ClCompile Include="..\..\..\src\crnet\base\ip_address.cc" />
     <ClCompile Include="..\..\..\src\crnet\base\ip_address_number.cc" />
     <ClCompile Include="..\..\..\src\crnet\base\ip_endpoint.cc" />
     <ClCompile Include="..\..\..\src\crnet\base\ip_pattern.cc" />
+    <ClCompile Include="..\..\..\src\crnet\base\net_errors.cc" />
+    <ClCompile Include="..\..\..\src\crnet\base\net_errors_win.cc" />
+    <ClCompile Include="..\..\..\src\crnet\base\net_util.cc" />
+    <ClCompile Include="..\..\..\src\crnet\base\sockaddr_storage.cc" />
+    <ClCompile Include="..\..\..\src\crnet\base\winsock_init.cc" />
+    <ClCompile Include="..\..\..\src\crnet\base\winsock_util.cc" />
+    <ClCompile Include="..\..\..\src\crnet\socket\server_socket.cc" />
+    <ClCompile Include="..\..\..\src\crnet\socket\socket_descriptor.cc" />
+    <ClCompile Include="..\..\..\src\crnet\socket\stream_socket.cc" />
+    <ClCompile Include="..\..\..\src\crnet\socket\tcp_client_socket.cc" />
+    <ClCompile Include="..\..\..\src\crnet\socket\tcp_server_socket.cc" />
+    <ClCompile Include="..\..\..\src\crnet\socket\tcp_socket_win.cc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\src\crnet\base\address_family.h" />
+    <ClInclude Include="..\..\..\src\crnet\base\address_list.h" />
+    <ClInclude Include="..\..\..\src\crnet\base\completion_callback.h" />
+    <ClInclude Include="..\..\..\src\crnet\base\io_buffer.h" />
     <ClInclude Include="..\..\..\src\crnet\base\ip_address.h" />
     <ClInclude Include="..\..\..\src\crnet\base\ip_address_number.h" />
     <ClInclude Include="..\..\..\src\crnet\base\ip_endpoint.h" />
     <ClInclude Include="..\..\..\src\crnet\base\ip_pattern.h" />
+    <ClInclude Include="..\..\..\src\crnet\base\net_errors.h" />
+    <ClInclude Include="..\..\..\src\crnet\base\net_error_list.h" />
     <ClInclude Include="..\..\..\src\crnet\base\net_export.h" />
+    <ClInclude Include="..\..\..\src\crnet\base\net_util.h" />
+    <ClInclude Include="..\..\..\src\crnet\base\sockaddr_storage.h" />
     <ClInclude Include="..\..\..\src\crnet\base\sys_addrinfo.h" />
     <ClInclude Include="..\..\..\src\crnet\base\sys_byteorder.h" />
+    <ClInclude Include="..\..\..\src\crnet\base\winsock_init.h" />
     <ClInclude Include="..\..\..\src\crnet\base\winsock_util.h" />
+    <ClInclude Include="..\..\..\src\crnet\socket\connection_attempts.h" />
+    <ClInclude Include="..\..\..\src\crnet\socket\server_socket.h" />
+    <ClInclude Include="..\..\..\src\crnet\socket\socket.h" />
+    <ClInclude Include="..\..\..\src\crnet\socket\socket_descriptor.h" />
+    <ClInclude Include="..\..\..\src\crnet\socket\stream_socket.h" />
+    <ClInclude Include="..\..\..\src\crnet\socket\tcp_client_socket.h" />
+    <ClInclude Include="..\..\..\src\crnet\socket\tcp_server_socket.h" />
+    <ClInclude Include="..\..\..\src\crnet\socket\tcp_socket.h" />
+    <ClInclude Include="..\..\..\src\crnet\socket\tcp_socket_win.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{A8A01B7E-0ECC-4393-B685-2BD5B14005AD}</ProjectGuid>
@@ -109,7 +140,7 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32_LEAN_AND_MEAN;NOMINMAX;WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>$(ProjectDir)..\..\..\src\;</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -124,7 +155,7 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32_LEAN_AND_MEAN;NOMINMAX;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>$(ProjectDir)..\..\..\src\;</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -141,7 +172,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32_LEAN_AND_MEAN;NOMINMAX;WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>$(ProjectDir)..\..\..\src\;</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
@@ -160,7 +191,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32_LEAN_AND_MEAN;NOMINMAX;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>$(ProjectDir)..\..\..\src\;</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
