@@ -32,6 +32,8 @@
     <ClCompile Include="..\..\..\src\crnet\base\sockaddr_storage.cc" />
     <ClCompile Include="..\..\..\src\crnet\base\winsock_init.cc" />
     <ClCompile Include="..\..\..\src\crnet\base\winsock_util.cc" />
+    <ClCompile Include="..\..\..\src\crnet\server\stream_connection.cc" />
+    <ClCompile Include="..\..\..\src\crnet\server\stream_server.cc" />
     <ClCompile Include="..\..\..\src\crnet\socket\server_socket.cc" />
     <ClCompile Include="..\..\..\src\crnet\socket\socket_descriptor.cc" />
     <ClCompile Include="..\..\..\src\crnet\socket\stream_socket.cc" />
@@ -57,6 +59,8 @@
     <ClInclude Include="..\..\..\src\crnet\base\sys_byteorder.h" />
     <ClInclude Include="..\..\..\src\crnet\base\winsock_init.h" />
     <ClInclude Include="..\..\..\src\crnet\base\winsock_util.h" />
+    <ClInclude Include="..\..\..\src\crnet\server\stream_connection.h" />
+    <ClInclude Include="..\..\..\src\crnet\server\stream_server.h" />
     <ClInclude Include="..\..\..\src\crnet\socket\connection_attempts.h" />
     <ClInclude Include="..\..\..\src\crnet\socket\server_socket.h" />
     <ClInclude Include="..\..\..\src\crnet\socket\socket.h" />

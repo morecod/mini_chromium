@@ -393,4 +393,4 @@ int TCPClientSocket::OpenSocket(AddressFamily family) {
 ///  }
 ///}
 
-}  // namespace CRnet
+}  // namespace crnet

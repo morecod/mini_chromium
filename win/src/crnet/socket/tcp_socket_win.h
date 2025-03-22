@@ -127,8 +127,8 @@ class CRNET_EXPORT TCPSocketWin
   int DoConnect();
   void DoConnectComplete(int result);
 
-  void LogConnectBegin(const AddressList& addresses);
-  void LogConnectEnd(int net_error);
+  ///void LogConnectBegin(const AddressList& addresses);
+  ///void LogConnectEnd(int net_error);
 
   int DoRead(IOBuffer* buf, int buf_len, const CompletionCallback& callback);
   void DidCompleteConnect();
@@ -164,7 +164,7 @@ class CRNET_EXPORT TCPSocketWin
   // The OS error that a connect attempt last completed with.
   int connect_os_error_;
 
-  bool logging_multiple_connect_attempts_;
+  ///bool logging_multiple_connect_attempts_;
 
   ///BoundNetLog net_log_;
 

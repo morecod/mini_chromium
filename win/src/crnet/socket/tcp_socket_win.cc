@@ -306,8 +306,8 @@ TCPSocketWin::TCPSocketWin()
       waiting_connect_(false),
       waiting_read_(false),
       waiting_write_(false),
-      connect_os_error_(0),
-      logging_multiple_connect_attempts_(false) {
+      connect_os_error_(0)/*,
+      logging_multiple_connect_attempts_(false)*/ {
   ///net_log_.BeginEvent(NetLog::TYPE_SOCKET_ALIVE,
   ///                    source.ToEventParametersCallback());
   EnsureWinsockInit();
@@ -456,8 +456,8 @@ int TCPSocketWin::Connect(const IPEndPoint& address,
   // the same way as TCPSocketPosix.
   CR_DCHECK(!peer_address_ && !core_.get());
 
-  if (!logging_multiple_connect_attempts_)
-    LogConnectBegin(AddressList(address));
+  ///if (!logging_multiple_connect_attempts_)
+  ///  LogConnectBegin(AddressList(address));
 
   peer_address_.reset(new IPEndPoint(address));
 

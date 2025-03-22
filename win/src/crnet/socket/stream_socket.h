@@ -160,6 +160,6 @@ class CRNET_EXPORT_PRIVATE StreamSocket : public Socket {
   };
 };
 
-}  // namespace net
+}  // namespace crnet
 
 #endif  // MINI_CHROMIUM_CRNET_SOCKET_STREAM_SOCKET_H_
