@@ -41,7 +41,7 @@ class GameServer : public crnet::StreamServer::Delegate {
 void GameServer::SetUp() {
   std::unique_ptr<crnet::TCPServerSocket> server_socket(
       new crnet::TCPServerSocket());
-  server_socket->ListenWithAddressAndPort("127.0.0.1", 8090, 1);
+  server_socket->ListenWithAddressAndPort("127.0.0.1", 3838, 1);
   server_.reset(new crnet::StreamServer(std::move(server_socket), this));
 
   crnet::IPEndPoint ip;
@@ -67,14 +67,15 @@ void GameServer::OnClose(int connection_id) {
 ////////////////////////////////////////////////////////////////////////////////
 
 int main(int argc, char* argv) {
+#if defined(MINI_CHROMIUM_OS_WIN)
   ::DefWindowProc(NULL, 0, 0, 0);
+#endif
 
   InitLogging();
 
   crbase::AtExitManager at_exit_manager;
   crbase::MessageLoop message_loop(crbase::MessageLoop::TYPE_IO);
   
-
   GameServer server;
   server.SetUp();
 

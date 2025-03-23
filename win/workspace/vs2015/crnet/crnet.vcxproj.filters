@@ -10,6 +10,9 @@
     <Filter Include="server">
       <UniqueIdentifier>{29782671-098f-44c7-adea-0ab7b5924ed5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="udp">
+      <UniqueIdentifier>{4dd43860-002d-4cba-ab74-99f83aeb0036}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\crnet\base\address_family.cc">
@@ -74,6 +77,15 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\crnet\server\stream_server.cc">
       <Filter>server</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\crnet\udp\udp_client_socket.cc">
+      <Filter>udp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\crnet\udp\udp_server_socket.cc">
+      <Filter>udp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\crnet\udp\udp_socket_win.cc">
+      <Filter>udp</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -160,6 +172,33 @@
     </ClInclude>
     <ClInclude Include="..\..\..\src\crnet\server\stream_server.h">
       <Filter>server</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\crnet\udp\udp_socket_win.h">
+      <Filter>udp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\crnet\udp\datagram_client_socket.h">
+      <Filter>udp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\crnet\udp\datagram_server_socket.h">
+      <Filter>udp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\crnet\udp\udp_client_socket.h">
+      <Filter>udp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\crnet\udp\udp_server_socket.h">
+      <Filter>udp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\crnet\udp\udp_socket.h">
+      <Filter>udp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\crnet\udp\datagram_socket.h">
+      <Filter>udp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\crnet\base\rand_callback.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\crnet\udp\diff_serv_code_point.h">
+      <Filter>udp</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

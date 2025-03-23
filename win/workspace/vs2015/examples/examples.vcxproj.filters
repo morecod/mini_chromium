@@ -2,6 +2,6 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="..\..\..\src\examples\crurl_gurl.cc" />
-    <ClCompile Include="..\..\..\src\examples\crnet_game_server.cc" />
+    <ClCompile Include="..\..\..\src\examples\crnet_tcp_server.cc" />
   </ItemGroup>
 </Project>

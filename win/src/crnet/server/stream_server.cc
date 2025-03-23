@@ -33,6 +33,7 @@ StreamServer::StreamServer(std::unique_ptr<ServerSocket> server_socket,
       last_id_(0),
       weak_ptr_factory_(this) {
   CR_DCHECK(server_socket_);
+  CR_DCHECK(delegate);
   // Start accepting connections in next run loop in case when delegate is not
   // ready to get callbacks.
   crbase::ThreadTaskRunnerHandle::Get()->PostTask(
