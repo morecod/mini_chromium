@@ -140,7 +140,7 @@ bool PathService::Get(int key, FilePath* result) {
   PathData* path_data = GetPathData();
   CR_DCHECK(path_data != NULL);
   CR_DCHECK(result != NULL);
-  CR_DCHECK(key >= DIR_CURRENT);
+  CR_DCHECK_GE(key, DIR_CURRENT);
 
   // special case the current directory because it can never be cached
   if (key == DIR_CURRENT)
@@ -166,7 +166,7 @@ bool PathService::Get(int key, FilePath* result) {
   while (provider) {
     if (provider->func(key, &path))
       break;
-    CR_DCHECK(path.empty()); // << "provider should not have modified path";
+    CR_DCHECK(path.empty()) << "provider should not have modified path";
     provider = provider->next;
   }
 
@@ -202,7 +202,7 @@ bool PathService::OverrideAndCreateIfNeeded(int key,
                                             bool create) {
   PathData* path_data = GetPathData();
   CR_DCHECK(path_data);
-  CR_DCHECK(key > DIR_CURRENT); // << "invalid path key";
+  CR_DCHECK_GT(key, DIR_CURRENT) << "invalid path key";
 
   FilePath file_path = path;
 
@@ -259,7 +259,7 @@ void PathService::RegisterProvider(ProviderFunc func, int key_start,
                                    int key_end) {
   PathData* path_data = GetPathData();
   CR_DCHECK(path_data);
-  CR_DCHECK(key_end > key_start);
+  CR_DCHECK_GT(key_end, key_start);
 
   Provider* p;
 
@@ -276,8 +276,8 @@ void PathService::RegisterProvider(ProviderFunc func, int key_start,
 #ifndef NDEBUG
   Provider *iter = path_data->providers;
   while (iter) {
-    CR_DCHECK(key_start >= iter->key_end || key_end <= iter->key_start);
-    //  << "path provider collision";
+    CR_DCHECK(key_start >= iter->key_end || key_end <= iter->key_start)
+      << "path provider collision";
     iter = iter->next;
   }
 #endif
