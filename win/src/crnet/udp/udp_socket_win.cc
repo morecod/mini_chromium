@@ -387,14 +387,14 @@ int UDPSocketWin::GetLocalAddress(IPEndPoint* address) const {
 
 int UDPSocketWin::Read(IOBuffer* buf,
                        int buf_len,
-                       const CompletionCallback& callback) {
-  return RecvFrom(buf, buf_len, NULL, callback);
+                       CompletionOnceCallback callback) {
+  return RecvFrom(buf, buf_len, NULL, std::move(callback));
 }
 
 int UDPSocketWin::RecvFrom(IOBuffer* buf,
                            int buf_len,
                            IPEndPoint* address,
-                           const CompletionCallback& callback) {
+                           CompletionOnceCallback callback) {
   CR_DCHECK(CalledOnValidThread());
   CR_DCHECK_NE(INVALID_SOCKET, socket_);
   CR_CHECK(read_callback_.is_null());
@@ -407,28 +407,28 @@ int UDPSocketWin::RecvFrom(IOBuffer* buf,
   if (nread != ERR_IO_PENDING)
     return nread;
 
-  read_callback_ = callback;
+  read_callback_ = std::move(callback);
   recv_from_address_ = address;
   return ERR_IO_PENDING;
 }
 
 int UDPSocketWin::Write(IOBuffer* buf,
                         int buf_len,
-                        const CompletionCallback& callback) {
-  return SendToOrWrite(buf, buf_len, NULL, callback);
+                        CompletionOnceCallback callback) {
+  return SendToOrWrite(buf, buf_len, NULL, std::move(callback));
 }
 
 int UDPSocketWin::SendTo(IOBuffer* buf,
                          int buf_len,
                          const IPEndPoint& address,
-                         const CompletionCallback& callback) {
-  return SendToOrWrite(buf, buf_len, &address, callback);
+                         CompletionOnceCallback callback) {
+  return SendToOrWrite(buf, buf_len, &address, std::move(callback));
 }
 
 int UDPSocketWin::SendToOrWrite(IOBuffer* buf,
                                 int buf_len,
                                 const IPEndPoint* address,
-                                const CompletionCallback& callback) {
+                                CompletionOnceCallback callback) {
   CR_DCHECK(CalledOnValidThread());
   CR_DCHECK_NE(INVALID_SOCKET, socket_);
   CR_CHECK(write_callback_.is_null());
@@ -443,7 +443,7 @@ int UDPSocketWin::SendToOrWrite(IOBuffer* buf,
 
   if (address)
     send_to_address_.reset(new IPEndPoint(*address));
-  write_callback_ = callback;
+  write_callback_ = std::move(callback);
   return ERR_IO_PENDING;
 }
 
@@ -583,9 +583,7 @@ void UDPSocketWin::DoReadCallback(int rv) {
   CR_DCHECK(!read_callback_.is_null());
 
   // since Run may result in Read being called, clear read_callback_ up front.
-  CompletionCallback c = read_callback_;
-  read_callback_.Reset();
-  c.Run(rv);
+  std::move(read_callback_).Run(rv);
 }
 
 void UDPSocketWin::DoWriteCallback(int rv) {
@@ -593,9 +591,7 @@ void UDPSocketWin::DoWriteCallback(int rv) {
   CR_DCHECK(!write_callback_.is_null());
 
   // since Run may result in Write being called, clear write_callback_ up front.
-  CompletionCallback c = write_callback_;
-  write_callback_.Reset();
-  c.Run(rv);
+  std::move(write_callback_).Run(rv);
 }
 
 void UDPSocketWin::DidCompleteRead() {

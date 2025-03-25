@@ -44,11 +44,11 @@ AtExitManager::~AtExitManager() {
 // static
 void AtExitManager::RegisterCallback(AtExitCallbackType func, void* param) {
   CR_DCHECK(func);
-  RegisterTask(crbase::Bind(func, param));
+  RegisterTask(crbase::BindOnce(func, param));
 }
 
 // static
-void AtExitManager::RegisterTask(crbase::Closure task) {
+void AtExitManager::RegisterTask(crbase::OnceClosure task) {
   if (!g_top_manager) {
     CR_NOTREACHED() 
         << "Tried to RegisterCallback without an AtExitManager";
@@ -56,7 +56,7 @@ void AtExitManager::RegisterTask(crbase::Closure task) {
   }
 
   AutoLock lock(g_top_manager->lock_);
-  g_top_manager->stack_.push(task);
+  g_top_manager->stack_.push(std::move(task));
 }
 
 // static
@@ -66,13 +66,19 @@ void AtExitManager::ProcessCallbacksNow() {
         << "Tried to ProcessCallbacksNow without an AtExitManager";
     return;
   }
+  
+  // Callbacks may try to add new callbacks, so run them without holding
+  // |lock_|. This is an error and caught by the DCHECK in RegisterTask(), but
+  // handle it gracefully in release builds so we don't deadlock.
+  std::stack<OnceClosure> tasks;
+  {
+    AutoLock lock(g_top_manager->lock_);
+    tasks.swap(g_top_manager->stack_);
+  }
 
-  AutoLock lock(g_top_manager->lock_);
-
-  while (!g_top_manager->stack_.empty()) {
-    crbase::Closure task = g_top_manager->stack_.top();
-    task.Run();
-    g_top_manager->stack_.pop();
+  while (!tasks.empty()) {
+    std::move(tasks.top()).Run();
+    tasks.pop();
   }
 }
 

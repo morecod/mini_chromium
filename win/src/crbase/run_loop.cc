@@ -64,8 +64,8 @@ void RunLoop::Quit() {
   }
 }
 
-Closure RunLoop::QuitClosure() {
-  return Bind(&RunLoop::Quit, weak_factory_.GetWeakPtr());
+RepeatingClosure RunLoop::QuitClosure() {
+  return BindRepeating(&RunLoop::Quit, weak_factory_.GetWeakPtr());
 }
 
 bool RunLoop::BeforeRun() {

@@ -10,7 +10,7 @@
 #include "crbase/base_export.h"
 #include "crbase/memory/ref_counted.h"
 #include "crbase/time/time.h"
-#include "crbase/functional/callback_forward.h"
+#include "crbase/functional/callback.h"
 
 namespace crbase {
 
@@ -65,7 +65,7 @@ class CRBASE_EXPORT TaskRunner
   //
   // Equivalent to PostDelayedTask(from_here, task, 0).
   bool PostTask(const tracked_objects::Location& from_here,
-                const Closure& task);
+                OnceClosure task);
 
   // Like PostTask, but tries to run the posted task only after
   // |delay_ms| has passed.
@@ -73,7 +73,7 @@ class CRBASE_EXPORT TaskRunner
   // It is valid for an implementation to ignore |delay_ms|; that is,
   // to have PostDelayedTask behave the same as PostTask.
   virtual bool PostDelayedTask(const tracked_objects::Location& from_here,
-                               const Closure& task,
+                               OnceClosure task,
                                TimeDelta delay) = 0;
 
   // Returns true if the current thread is a thread on which a task
@@ -126,8 +126,8 @@ class CRBASE_EXPORT TaskRunner
   //     and the reply will cancel itself safely because it is bound to a
   //     WeakPtr<>.
   bool PostTaskAndReply(const tracked_objects::Location& from_here,
-                        const Closure& task,
-                        const Closure& reply);
+                        OnceClosure task,
+                        OnceClosure reply);
 
  protected:
   friend struct TaskRunnerTraits;

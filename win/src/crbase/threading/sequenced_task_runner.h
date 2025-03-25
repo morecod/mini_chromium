@@ -109,11 +109,11 @@ class CRBASE_EXPORT SequencedTaskRunner : public TaskRunner {
   // below.
 
   bool PostNonNestableTask(const tracked_objects::Location& from_here,
-                           const Closure& task);
+                           OnceClosure task);
 
   virtual bool PostNonNestableDelayedTask(
       const tracked_objects::Location& from_here,
-      const Closure& task,
+      OnceClosure task,
       TimeDelta delay) = 0;
 
   // Submits a non-nestable task to delete the given object.  Returns

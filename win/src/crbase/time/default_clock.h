@@ -16,7 +16,7 @@ class CRBASE_EXPORT DefaultClock : public Clock {
   ~DefaultClock() override;
 
   // Simply returns Time::Now().
-  Time Now() override;
+  Time Now() const override;
 };
 
 }  // namespace crbase

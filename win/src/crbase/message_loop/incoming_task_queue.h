@@ -38,7 +38,7 @@ class CRBASE_EXPORT IncomingTaskQueue
   // returns false. In all cases, the ownership of |task| is transferred to the
   // called method.
   bool AddToIncomingQueue(const tracked_objects::Location& from_here,
-                          const Closure& task,
+                          OnceClosure task,
                           TimeDelta delay,
                           bool nestable);
 

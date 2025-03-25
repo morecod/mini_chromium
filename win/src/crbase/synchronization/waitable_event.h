@@ -158,7 +158,7 @@ class CRBASE_EXPORT WaitableEvent {
 
     bool Dequeue(Waiter* waiter, void* tag);
 
-    base::Lock lock_;
+    crbase::Lock lock_;
     const bool manual_reset_;
     bool signaled_;
     std::list<Waiter*> waiters_;

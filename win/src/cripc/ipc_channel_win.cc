@@ -363,11 +363,11 @@ bool ChannelWin::Connect() {
     // initialization signal.
     crbase::MessageLoopForIO::current()->PostTask(
         CR_FROM_HERE,
-        crbase::Bind(&ChannelWin::OnIOCompleted,
-                     weak_factory_.GetWeakPtr(),
-                     &input_state_.context,
-                     0,
-                     0));
+        crbase::BindOnce(&ChannelWin::OnIOCompleted,
+                         weak_factory_.GetWeakPtr(),
+                         &input_state_.context,
+                         0,
+                         0));
   }
 
   if (!waiting_connect_)

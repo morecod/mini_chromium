@@ -25,37 +25,35 @@ namespace {
 class PostTaskAndReplyRelay {
  public:
   PostTaskAndReplyRelay(const tracked_objects::Location& from_here,
-                        const Closure& task,
-                        const Closure& reply)
+                        OnceClosure task,
+                        OnceClosure reply)
       : from_here_(from_here),
-        origin_task_runner_(ThreadTaskRunnerHandle::Get()) {
-    task_ = task;
-    reply_ = reply;
+        origin_task_runner_(ThreadTaskRunnerHandle::Get()),
+        task_(std::move(task)),
+        reply_(std::move(reply)) {
   }
 
   ~PostTaskAndReplyRelay() {
     CR_DCHECK(origin_task_runner_->BelongsToCurrentThread());
-    task_.Reset();
-    reply_.Reset();
   }
 
   void Run() {
-    task_.Run();
+    std::move(task_).Run();
     origin_task_runner_->PostTask(
-        from_here_, Bind(&PostTaskAndReplyRelay::RunReplyAndSelfDestruct,
-                         crbase::Unretained(this)));
+        from_here_, BindOnce(&PostTaskAndReplyRelay::RunReplyAndSelfDestruct,
+                             crbase::Unretained(this)));
   }
 
  private:
   void RunReplyAndSelfDestruct() {
     CR_DCHECK(origin_task_runner_->BelongsToCurrentThread());
 
-    // Force |task_| to be released before |reply_| is to ensure that no one
-    // accidentally depends on |task_| keeping one of its arguments alive while
-    // |reply_| is executing.
-    task_.Reset();
+    // Ensure |task_| has already been released before |reply_| to ensure that
+    // no one accidentally depends on |task_| keeping one of its arguments alive
+    // while |reply_| is executing.
+    CR_DCHECK(!task_);
 
-    reply_.Run();
+    std::move(reply_).Run();
 
     // Cue mission impossible theme.
     delete this;
@@ -63,8 +61,8 @@ class PostTaskAndReplyRelay {
 
   tracked_objects::Location from_here_;
   scoped_refptr<SingleThreadTaskRunner> origin_task_runner_;
-  Closure reply_;
-  Closure task_;
+  OnceClosure reply_;
+  OnceClosure task_;
 };
 
 }  // namespace
@@ -73,15 +71,15 @@ namespace internal {
 
 bool PostTaskAndReplyImpl::PostTaskAndReply(
     const tracked_objects::Location& from_here,
-    const Closure& task,
-    const Closure& reply) {
+    OnceClosure task,
+    OnceClosure reply) {
   // TODO(tzik): Use DCHECK here once the crash is gone. http://crbug.com/541319
   CR_CHECK(!task.is_null()) << from_here.ToString();
   CR_CHECK(!reply.is_null()) << from_here.ToString();
   PostTaskAndReplyRelay* relay =
-      new PostTaskAndReplyRelay(from_here, task, reply);
-  if (!PostTask(from_here, Bind(&PostTaskAndReplyRelay::Run,
-                                Unretained(relay)))) {
+      new PostTaskAndReplyRelay(from_here, std::move(task), std::move(reply));
+  if (!PostTask(from_here, BindOnce(&PostTaskAndReplyRelay::Run,
+                                    Unretained(relay)))) {
     delete relay;
     return false;
   }

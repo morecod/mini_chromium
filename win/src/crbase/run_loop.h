@@ -61,7 +61,7 @@ class CRBASE_EXPORT RunLoop {
   //   RunLoop run_loop;
   //   PostTask(run_loop.QuitClosure());
   //   run_loop.Run();
-  Closure QuitClosure();
+  RepeatingClosure QuitClosure();
 
  private:
   friend class MessageLoop;

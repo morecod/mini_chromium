@@ -9,9 +9,9 @@
 namespace crbase {
 
 PendingTask::PendingTask(const tracked_objects::Location& posted_from,
-                         const Closure& task)
+                         OnceClosure task)
     : TrackingInfo(posted_from, TimeTicks()),
-      task(task),
+      task(std::move(task)),
       posted_from(posted_from),
       sequence_num(0),
       nestable(true),
@@ -19,16 +19,20 @@ PendingTask::PendingTask(const tracked_objects::Location& posted_from,
 }
 
 PendingTask::PendingTask(const tracked_objects::Location& posted_from,
-                         const Closure& task,
+                         OnceClosure task,
                          TimeTicks delayed_run_time,
                          bool nestable)
     : TrackingInfo(posted_from, delayed_run_time),
-      task(task),
+      task(std::move(task)),
       posted_from(posted_from),
       sequence_num(0),
       nestable(nestable),
       is_high_res(false) {
 }
+
+PendingTask::PendingTask(PendingTask&& other) = default;
+
+PendingTask& PendingTask::operator=(PendingTask&& other) = default;
 
 PendingTask::~PendingTask() {
 }
@@ -47,10 +51,6 @@ bool PendingTask::operator<(const PendingTask& other) const {
   // If the times happen to match, then we use the sequence number to decide.
   // Compare the difference to support integer roll-over.
   return (sequence_num - other.sequence_num) > 0;
-}
-
-void TaskQueue::Swap(TaskQueue* queue) {
-  c.swap(queue->c);  // Calls std::deque::swap.
 }
 
 }  // namespace crbase

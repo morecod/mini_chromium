@@ -16,7 +16,7 @@
 #include "crbase/threading/non_thread_safe.h"
 #include "crbase/win/object_watcher.h"
 #include "crnet/base/address_family.h"
-#include "crnet/base/completion_callback.h"
+#include "crnet/base/completion_once_callback.h"
 #include "crnet/base/net_export.h"
 ///#include "net/log/net_log.h"
 
@@ -52,16 +52,17 @@ class CRNET_EXPORT TCPSocketWin
   int Listen(int backlog);
   int Accept(std::unique_ptr<TCPSocketWin>* socket,
              IPEndPoint* address,
-             const CompletionCallback& callback);
+             CompletionOnceCallback callback);
 
-  int Connect(const IPEndPoint& address, const CompletionCallback& callback);
+  int Connect(const IPEndPoint& address, 
+              CompletionOnceCallback callback);
   bool IsConnected() const;
   bool IsConnectedAndIdle() const;
 
   // Multiple outstanding requests are not supported.
   // Full duplex mode (reading and writing at the same time) is supported.
-  int Read(IOBuffer* buf, int buf_len, const CompletionCallback& callback);
-  int Write(IOBuffer* buf, int buf_len, const CompletionCallback& callback);
+  int Read(IOBuffer* buf, int buf_len, CompletionOnceCallback callback);
+  int Write(IOBuffer* buf, int buf_len, CompletionOnceCallback callback);
 
   int GetLocalAddress(IPEndPoint* address) const;
   int GetPeerAddress(IPEndPoint* address) const;
@@ -130,7 +131,7 @@ class CRNET_EXPORT TCPSocketWin
   ///void LogConnectBegin(const AddressList& addresses);
   ///void LogConnectEnd(int net_error);
 
-  int DoRead(IOBuffer* buf, int buf_len, const CompletionCallback& callback);
+  int DoRead(IOBuffer* buf, int buf_len, CompletionOnceCallback callback);
   void DidCompleteConnect();
   void DidCompleteWrite();
   void DidSignalRead();
@@ -142,7 +143,7 @@ class CRNET_EXPORT TCPSocketWin
 
   std::unique_ptr<TCPSocketWin>* accept_socket_;
   IPEndPoint* accept_address_;
-  CompletionCallback accept_callback_;
+  CompletionOnceCallback accept_callback_;
 
   // The various states that the socket could be in.
   bool waiting_connect_;
@@ -155,10 +156,10 @@ class CRNET_EXPORT TCPSocketWin
   crbase::scoped_refptr<Core> core_;
 
   // External callback; called when connect or read is complete.
-  CompletionCallback read_callback_;
+  CompletionOnceCallback read_callback_;
 
   // External callback; called when write is complete.
-  CompletionCallback write_callback_;
+  CompletionOnceCallback write_callback_;
 
   std::unique_ptr<IPEndPoint> peer_address_;
   // The OS error that a connect attempt last completed with.

@@ -11,7 +11,7 @@
 #include <memory>
 
 #include "crbase/macros.h"
-#include "crnet/base/completion_callback.h"
+#include "crnet/base/completion_once_callback.h"
 #include "crnet/base/net_export.h"
 
 namespace crnet {
@@ -45,7 +45,7 @@ class CRNET_EXPORT ServerSocket {
   // Accepts connection. Callback is called when new connection is
   // accepted.
   virtual int Accept(std::unique_ptr<StreamSocket>* socket,
-                     const CompletionCallback& callback) = 0;
+                     CompletionOnceCallback callback) = 0;
 
  private:
   ///DISALLOW_COPY_AND_ASSIGN(ServerSocket);

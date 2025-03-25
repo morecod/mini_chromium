@@ -30,7 +30,7 @@ bool SyncMessageFilter::Send(Message* message) {
     }
     io_task_runner_->PostTask(
         CR_FROM_HERE,
-        crbase::Bind(&SyncMessageFilter::SendOnIOThread, this, message));
+        crbase::BindOnce(&SyncMessageFilter::SendOnIOThread, this, message));
     return true;
   }
 
@@ -53,7 +53,7 @@ bool SyncMessageFilter::Send(Message* message) {
     if (io_task_runner_.get()) {
       io_task_runner_->PostTask(
           CR_FROM_HERE,
-          crbase::Bind(&SyncMessageFilter::SendOnIOThread, this, message));
+          crbase::BindOnce(&SyncMessageFilter::SendOnIOThread, this, message));
     } else {
       pending_messages_.push_back(message);
     }

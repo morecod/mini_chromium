@@ -71,14 +71,14 @@ int UDPClientSocket::Connect(const IPEndPoint& address) {
 
 int UDPClientSocket::Read(IOBuffer* buf,
                           int buf_len,
-                          const CompletionCallback& callback) {
-  return socket_.Read(buf, buf_len, callback);
+                          CompletionOnceCallback callback) {
+  return socket_.Read(buf, buf_len, std::move(callback));
 }
 
 int UDPClientSocket::Write(IOBuffer* buf,
                           int buf_len,
-                          const CompletionCallback& callback) {
-  return socket_.Write(buf, buf_len, callback);
+                          CompletionOnceCallback callback) {
+  return socket_.Write(buf, buf_len, std::move(callback));
 }
 
 void UDPClientSocket::Close() {

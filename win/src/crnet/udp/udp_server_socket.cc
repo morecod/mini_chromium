@@ -56,15 +56,15 @@ int UDPServerSocket::Listen(const IPEndPoint& address) {
 int UDPServerSocket::RecvFrom(IOBuffer* buf,
                               int buf_len,
                               IPEndPoint* address,
-                              const CompletionCallback& callback) {
-  return socket_.RecvFrom(buf, buf_len, address, callback);
+                              CompletionOnceCallback callback) {
+  return socket_.RecvFrom(buf, buf_len, address, std::move(callback));
 }
 
 int UDPServerSocket::SendTo(IOBuffer* buf,
                             int buf_len,
                             const IPEndPoint& address,
-                            const CompletionCallback& callback) {
-  return socket_.SendTo(buf, buf_len, address, callback);
+                            CompletionOnceCallback callback) {
+  return socket_.SendTo(buf, buf_len, address, std::move(callback));
 }
 
 int UDPServerSocket::SetReceiveBufferSize(int32_t size) {

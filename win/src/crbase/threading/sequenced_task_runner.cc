@@ -10,22 +10,22 @@ namespace crbase {
 
 bool SequencedTaskRunner::PostNonNestableTask(
     const tracked_objects::Location& from_here,
-    const Closure& task) {
-  return PostNonNestableDelayedTask(from_here, task, TimeDelta());
+    OnceClosure task) {
+  return PostNonNestableDelayedTask(from_here, std::move(task), TimeDelta());
 }
 
 bool SequencedTaskRunner::DeleteSoonInternal(
     const tracked_objects::Location& from_here,
     void(*deleter)(const void*),
     const void* object) {
-  return PostNonNestableTask(from_here, Bind(deleter, object));
+  return PostNonNestableTask(from_here, BindOnce(deleter, object));
 }
 
 bool SequencedTaskRunner::ReleaseSoonInternal(
     const tracked_objects::Location& from_here,
     void(*releaser)(const void*),
     const void* object) {
-  return PostNonNestableTask(from_here, Bind(releaser, object));
+  return PostNonNestableTask(from_here, BindOnce(releaser, object));
 }
 
 }  // namespace crbase

@@ -19,18 +19,21 @@ namespace crbase {
 // for use by classes that queue and execute tasks.
 struct CRBASE_EXPORT PendingTask : public TrackingInfo {
   PendingTask(const tracked_objects::Location& posted_from,
-              const Closure& task);
+              OnceClosure task);
   PendingTask(const tracked_objects::Location& posted_from,
-              const Closure& task,
+              OnceClosure task,
               TimeTicks delayed_run_time,
               bool nestable);
+  PendingTask(PendingTask&& other);
   ~PendingTask();
+
+  PendingTask& operator=(PendingTask&& other);
 
   // Used to support sorting.
   bool operator<(const PendingTask& other) const;
 
   // The task to run.
-  Closure task;
+  OnceClosure task;
 
   // The site this PendingTask was posted from.
   tracked_objects::Location posted_from;
@@ -45,15 +48,10 @@ struct CRBASE_EXPORT PendingTask : public TrackingInfo {
   bool is_high_res;
 };
 
-// Wrapper around std::queue specialized for PendingTask which adds a Swap
-// helper method.
-class CRBASE_EXPORT TaskQueue : public std::queue<PendingTask> {
- public:
-  void Swap(TaskQueue* queue);
-};
+using TaskQueue = std::queue<PendingTask>;
 
 // PendingTasks are sorted by their |delayed_run_time| property.
-typedef std::priority_queue<PendingTask> DelayedTaskQueue;
+using DelayedTaskQueue = std::priority_queue<crbase::PendingTask>;
 
 }  // namespace crbase
 

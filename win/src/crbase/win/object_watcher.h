@@ -102,7 +102,7 @@ class CRBASE_EXPORT ObjectWatcher : public MessageLoop::DestructionObserver {
   void WillDestroyCurrentMessageLoop() override;
 
   // Internal state.
-  Closure callback_;
+  RepeatingClosure callback_;
   HANDLE object_;             // The object being watched
   HANDLE wait_object_;        // Returned by RegisterWaitForSingleObject
   MessageLoop* origin_loop_;  // Used to get back to the origin thread

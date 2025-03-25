@@ -195,8 +195,8 @@ void EnsureProcessTerminated(Process process) {
 
   MessageLoop::current()->PostDelayedTask(
       CR_FROM_HERE,
-      Bind(&TimerExpiredTask::TimedOut,
-           Owned(new TimerExpiredTask(process.Pass()))),
+      BindOnce(&TimerExpiredTask::TimedOut,
+               Owned(new TimerExpiredTask(process.Pass()))),
       TimeDelta::FromMilliseconds(kWaitInterval));
 }
 

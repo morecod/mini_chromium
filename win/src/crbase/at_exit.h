@@ -46,7 +46,7 @@ class CRBASE_EXPORT AtExitManager {
   static void RegisterCallback(AtExitCallbackType func, void* param);
 
   // Registers the specified task to be called at exit.
-  static void RegisterTask(crbase::Closure task);
+  static void RegisterTask(crbase::OnceClosure task);
 
   // Calls the functions registered with RegisterCallback in LIFO order. It
   // is possible to register new callbacks after calling this function.
@@ -61,7 +61,7 @@ class CRBASE_EXPORT AtExitManager {
 
  private:
   crbase::Lock lock_;
-  std::stack<crbase::Closure> stack_;
+  std::stack<crbase::OnceClosure> stack_;
   AtExitManager* next_manager_;  // Stack of managers to allow shadowing.
 };
 }  // namespace crbase

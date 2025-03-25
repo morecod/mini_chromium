@@ -34,10 +34,10 @@ class CRBASE_EXPORT MessageLoopTaskRunner : public SingleThreadTaskRunner {
 
   // SingleThreadTaskRunner implementation
   bool PostDelayedTask(const tracked_objects::Location& from_here,
-                       const crbase::Closure& task,
+                       OnceClosure task,
                        crbase::TimeDelta delay) override;
   bool PostNonNestableDelayedTask(const tracked_objects::Location& from_here,
-                                  const crbase::Closure& task,
+                                  OnceClosure task,
                                   crbase::TimeDelta delay) override;
   bool RunsTasksOnCurrentThread() const override;
 

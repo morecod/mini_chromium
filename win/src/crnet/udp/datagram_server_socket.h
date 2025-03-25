@@ -7,7 +7,7 @@
 
 #include <stdint.h>
 
-#include "crnet/base/completion_callback.h"
+#include "crnet/base/completion_once_callback.h"
 #include "crnet/base/ip_address_number.h"
 #include "crnet/udp/datagram_socket.h"
 #include "crnet/udp/diff_serv_code_point.h"
@@ -42,7 +42,7 @@ class CRNET_EXPORT DatagramServerSocket : public DatagramSocket {
   virtual int RecvFrom(IOBuffer* buf,
                        int buf_len,
                        IPEndPoint* address,
-                       const CompletionCallback& callback) = 0;
+                       CompletionOnceCallback callback) = 0;
 
   // Send to a socket with a particular destination.
   // |buf| is the buffer to send
@@ -56,7 +56,7 @@ class CRNET_EXPORT DatagramServerSocket : public DatagramSocket {
   virtual int SendTo(IOBuffer* buf,
                      int buf_len,
                      const IPEndPoint& address,
-                     const CompletionCallback& callback) = 0;
+                     CompletionOnceCallback callback) = 0;
 
   // Set the receive buffer size (in bytes) for the socket.
   // Returns a net error code.

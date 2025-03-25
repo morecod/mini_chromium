@@ -2,10 +2,11 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#ifndef MINI_CHROMIUM_SRC_CRIPC_IPC_SYNC_CHANNEL_H_
-#define MINI_CHROMIUM_SRC_CRIPC_IPC_SYNC_CHANNEL_H_
+#ifndef MINI_CHROMIUM_CRIPC_IPC_SYNC_CHANNEL_H_
+#define MINI_CHROMIUM_CRIPC_IPC_SYNC_CHANNEL_H_
 
 #include <deque>
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -13,20 +14,20 @@
 #include "crbase/memory/ref_counted.h"
 #include "crbase/synchronization/lock.h"
 #include "crbase/synchronization/waitable_event_watcher.h"
-
 #include "cripc/ipc_channel_handle.h"
 #include "cripc/ipc_channel_proxy.h"
 #include "cripc/ipc_sync_message.h"
 #include "cripc/ipc_sync_message_filter.h"
 
 namespace crbase {
+class RunLoop;
 class WaitableEvent;
-}  // namespace crbase
+};  // namespace crbase
 
 namespace cripc {
 
-class SyncMessage;
 class ChannelFactory;
+class SyncMessage;
 
 // This is similar to ChannelProxy, with the added feature of supporting sending
 // synchronous messages.
@@ -64,12 +65,12 @@ class ChannelFactory;
 // message loop pointer to proxy it to the ipc thread.
 class CRIPC_EXPORT SyncChannel : public ChannelProxy {
  public:
-  SyncChannel(const SyncChannel&) = delete;
-  SyncChannel& operator=(const SyncChannel&) = delete;
-
   enum RestrictDispatchGroup {
     kRestrictDispatchGroup_None = 0,
   };
+
+  SyncChannel(const SyncChannel&) = delete;
+  SyncChannel& operator=(const SyncChannel&) = delete;
 
   // Creates and initializes a sync channel. If create_pipe_now is specified,
   // the channel will be initialized synchronously.
@@ -86,7 +87,7 @@ class CRIPC_EXPORT SyncChannel : public ChannelProxy {
   static std::unique_ptr<SyncChannel> Create(
       std::unique_ptr<ChannelFactory> factory,
       Listener* listener,
-      const crbase::scoped_refptr<crbase::SingleThreadTaskRunner>&
+      const crbase::scoped_refptr<crbase::SingleThreadTaskRunner>& 
           ipc_task_runner,
       bool create_pipe_now,
       crbase::WaitableEvent* shutdown_event);
@@ -96,7 +97,7 @@ class CRIPC_EXPORT SyncChannel : public ChannelProxy {
   // added before any messages are sent or received.
   static std::unique_ptr<SyncChannel> Create(
       Listener* listener,
-      const crbase::scoped_refptr<crbase::SingleThreadTaskRunner>&
+      const crbase::scoped_refptr<crbase::SingleThreadTaskRunner>& 
           ipc_task_runner,
       crbase::WaitableEvent* shutdown_event);
 
@@ -137,24 +138,24 @@ class CRIPC_EXPORT SyncChannel : public ChannelProxy {
    public:
     SyncContext(
         Listener* listener,
-                const crbase::scoped_refptr<crbase::SingleThreadTaskRunner>&
-                    ipc_task_runner,
+        const crbase::scoped_refptr<crbase::SingleThreadTaskRunner>& 
+            ipc_task_runner,
         crbase::WaitableEvent* shutdown_event);
 
     // Adds information about an outgoing sync message to the context so that
     // we know how to deserialize the reply.
-    void Push(SyncMessage* sync_msg);
+    bool Push(SyncMessage* sync_msg);
 
     // Cleanly remove the top deserializer (and throw it away).  Returns the
     // result of the Send call for that message.
     bool Pop();
 
-    // Returns an event that's set when the send is complete, timed out or the
-    // process shut down.
+    // Returns a Mojo Event that signals when a sync send is complete or timed
+    // out or the process shut down.
     crbase::WaitableEvent* GetSendDoneEvent();
 
-    // Returns an event that's set when an incoming message that's not the reply
-    // needs to get dispatched (by calling SyncContext::DispatchMessages).
+    // Returns a Mojo Event that signals when an incoming message that's not the
+    // pending reply needs to get dispatched (by calling DispatchMessages.)
     crbase::WaitableEvent* GetDispatchEvent();
 
     void DispatchMessages();
@@ -163,10 +164,6 @@ class CRIPC_EXPORT SyncChannel : public ChannelProxy {
     // synchronous send.  If it is, the thread is unblocked and true is
     // returned. Otherwise the function returns false.
     bool TryToUnblockListener(const Message* msg);
-
-    // Called on the IPC thread when a sync send that runs a nested message loop
-    // times out.
-    void OnSendTimeout(int message_id);
 
     crbase::WaitableEvent* shutdown_event() { return shutdown_event_; }
 
@@ -182,7 +179,8 @@ class CRIPC_EXPORT SyncChannel : public ChannelProxy {
       return restrict_dispatch_group_;
     }
 
-    crbase::WaitableEventWatcher::EventCallback MakeWaitableEventCallback();
+    void OnSendDoneEventSignaled(crbase::RunLoop* nested_loop,
+                                 crbase::WaitableEvent* event);
 
    private:
     ~SyncContext() override;
@@ -200,10 +198,11 @@ class CRIPC_EXPORT SyncChannel : public ChannelProxy {
     // Cancels all pending Send calls.
     void CancelPendingSends();
 
-    void OnWaitableEventSignaled(crbase::WaitableEvent* event);
+    void OnShutdownEventSignaled(crbase::WaitableEvent* event);
 
     typedef std::deque<PendingSyncMsg> PendingSyncMessageQueue;
     PendingSyncMessageQueue deserializers_;
+    bool reject_new_deserializers_ = false;
     crbase::Lock deserializers_lock_;
 
     crbase::scoped_refptr<ReceivedSyncMsgQueue> received_sync_msgs_;
@@ -217,22 +216,22 @@ class CRIPC_EXPORT SyncChannel : public ChannelProxy {
  private:
   SyncChannel(
       Listener* listener,
-              const crbase::scoped_refptr<crbase::SingleThreadTaskRunner>&
-                  ipc_task_runner,
+      const crbase::scoped_refptr<crbase::SingleThreadTaskRunner>& 
+          ipc_task_runner,
       crbase::WaitableEvent* shutdown_event);
 
-  void OnWaitableEventSignaled(crbase::WaitableEvent* arg);
+  void OnDispatchEventSignaled(crbase::WaitableEvent* event);
 
   SyncContext* sync_context() {
     return reinterpret_cast<SyncContext*>(context());
   }
 
   // Both these functions wait for a reply, timeout or process shutdown.  The
-  // latter one also runs a nested message loop in the meantime.
-  static void WaitForReply(
-      SyncContext* context, crbase::WaitableEvent* pump_messages_event);
+  // latter one also runs a nested run loop in the meantime.
+  static void WaitForReply(SyncContext* context,
+                           bool pump_messages);
 
-  // Runs a nested message loop until a reply arrives, times out, or the process
+  // Runs a nested run loop until a reply arrives, times out, or the process
   // shuts down.
   static void WaitForReplyWithNestedMessageLoop(SyncContext* context);
 
@@ -247,12 +246,12 @@ class CRIPC_EXPORT SyncChannel : public ChannelProxy {
   crbase::WaitableEventWatcher::EventCallback dispatch_watcher_callback_;
 
   // Tracks SyncMessageFilters created before complete channel initialization.
-  std::vector<crbase::scoped_refptr<SyncMessageFilter>>
+  std::vector<crbase::scoped_refptr<SyncMessageFilter>> 
       pre_init_sync_message_filters_;
 
-  ///CR_DISALLOW_COPY_AND_ASSIGN(SyncChannel)
+  ///DISALLOW_COPY_AND_ASSIGN(SyncChannel);
 };
 
 }  // namespace cripc
 
-#endif  // MINI_CHROMIUM_SRC_CRIPC_IPC_SYNC_CHANNEL_H_
+#endif  // MINI_CHROMIUM_CRIPC_IPC_SYNC_CHANNEL_H_

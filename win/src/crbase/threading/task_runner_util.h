@@ -2,12 +2,14 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#ifndef MINI_CHROMIUM_SRC_CRBASE_TRACING_TASK_RUNNER_UTIL_H_
-#define MINI_CHROMIUM_SRC_CRBASE_TRACING_TASK_RUNNER_UTIL_H_
+#ifndef MINI_CHROMIUM_CRBASE_THREADING_TASK_RUNNER_UTIL_H_
+#define MINI_CHROMIUM_CRBASE_THREADING_TASK_RUNNER_UTIL_H_
+
+#include <utility>
 
 #include "crbase/functional/bind.h"
 #include "crbase/functional/bind_helpers.h"
-#include "crbase/functional/callback_internal.h"
+#include "crbase/functional/callback.h"
 #include "crbase/logging.h"
 #include "crbase/threading/task_runner.h"
 
@@ -18,21 +20,15 @@ namespace internal {
 // Adapts a function that produces a result via a return value to
 // one that returns via an output parameter.
 template <typename ReturnType>
-void ReturnAsParamAdapter(const Callback<ReturnType(void)>& func,
-                          ReturnType* result) {
-  *result = func.Run();
+void ReturnAsParamAdapter(OnceCallback<ReturnType()> func, ReturnType* result) {
+  *result = std::move(func).Run();
 }
 
 // Adapts a T* result to a callblack that expects a T.
 template <typename TaskReturnType, typename ReplyArgType>
-void ReplyAdapter(const Callback<void(ReplyArgType)>& callback,
+void ReplyAdapter(OnceCallback<void(ReplyArgType)> callback,
                   TaskReturnType* result) {
-  // TODO(ajwong): Remove this conditional and add a DCHECK to enforce that
-  // |reply| must be non-null in PostTaskAndReplyWithResult() below after
-  // current code that relies on this API softness has been removed.
-  // http://crbug.com/162712
-  if (!callback.is_null())
-    callback.Run(CallbackForward(*result));
+  std::move(callback).Run(std::move(*result));
 }
 
 }  // namespace internal
@@ -48,24 +44,41 @@ void ReplyAdapter(const Callback<void(ReplyArgType)>& callback,
 //
 // PostTaskAndReplyWithResult(
 //     target_thread_.task_runner(),
-//     CR_FROM_HERE,
-//     Bind(&DoWorkAndReturn),
-//     Bind(&Callback));
+//     FROM_HERE,
+//     BindOnce(&DoWorkAndReturn),
+//     BindOnce(&Callback));
 template <typename TaskReturnType, typename ReplyArgType>
-bool PostTaskAndReplyWithResult(
-    TaskRunner* task_runner,
-    const tracked_objects::Location& from_here,
-    const Callback<TaskReturnType(void)>& task,
-    const Callback<void(ReplyArgType)>& reply) {
+bool PostTaskAndReplyWithResult(TaskRunner* task_runner,
+                                const tracked_objects::Location& from_here,
+                                OnceCallback<TaskReturnType()> task,
+                                OnceCallback<void(ReplyArgType)> reply) {
+  CR_DCHECK(task);
+  CR_DCHECK(reply);
   TaskReturnType* result = new TaskReturnType();
   return task_runner->PostTaskAndReply(
       from_here,
-      crbase::Bind(&internal::ReturnAsParamAdapter<TaskReturnType>, task,
-                    result),
-    crbase::Bind(&internal::ReplyAdapter<TaskReturnType, ReplyArgType>, reply,
-               crbase::Owned(result)));
+      BindOnce(&internal::ReturnAsParamAdapter<TaskReturnType>, std::move(task),
+               result),
+      BindOnce(&internal::ReplyAdapter<TaskReturnType, ReplyArgType>,
+               std::move(reply), Owned(result)));
+}
+
+// Callback version of PostTaskAndReplyWithResult above.
+// Though RepeatingCallback is convertible to OnceCallback, we need this since
+// we cannot use template deduction and object conversion at once on the
+// overload resolution.
+// TODO(crbug.com/714018): Update all callers of the Callback version to use
+// OnceCallback.
+template <typename TaskReturnType, typename ReplyArgType>
+bool PostTaskAndReplyWithResult(TaskRunner* task_runner,
+                                const tracked_objects::Location& from_here,
+                                Callback<TaskReturnType()> task,
+                                Callback<void(ReplyArgType)> reply) {
+  return PostTaskAndReplyWithResult(
+      task_runner, from_here, OnceCallback<TaskReturnType()>(std::move(task)),
+      OnceCallback<void(ReplyArgType)>(std::move(reply)));
 }
 
 }  // namespace crbase
 
-#endif  // MINI_CHROMIUM_SRC_CRBASE_TRACING_TASK_RUNNER_UTIL_H_
+#endif  // MINI_CHROMIUM_CRBASE_THREADING_TASK_RUNNER_UTIL_H_

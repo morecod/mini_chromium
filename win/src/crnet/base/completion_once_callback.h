@@ -2,8 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#ifndef MINI_CHROMIUM_CRNET_BASE_COMPLETION_CALLBACK_H__
-#define MINI_CHROMIUM_CRNET_BASE_COMPLETION_CALLBACK_H__
+#ifndef MINI_CHROMIUM_CRNET_BASE_COMPLETION_ONCE_CALLBACK_H_
+#define MINI_CHROMIUM_CRNET_BASE_COMPLETION_ONCE_CALLBACK_H_
 
 #include <stdint.h>
 
@@ -14,15 +14,16 @@ namespace crnet {
 
 // A callback specialization that takes a single int parameter. Usually this is
 // used to report a byte count or network error code.
-typedef crbase::Callback<void(int)> CompletionCallback;
+typedef crbase::OnceCallback<void(int)> CompletionOnceCallback;
 
 // 64bit version of callback specialization that takes a single int64_t
 // parameter. Usually this is used to report a file offset, size or network
 // error code.
-typedef crbase::Callback<void(int64_t)> Int64CompletionCallback;
+typedef crbase::OnceCallback<void(int64_t)> Int64CompletionOnceCallback;
 
-typedef crbase::CancelableCallback<void(int)> CancelableCompletionCallback;
+using CancelableCompletionOnceCallback =
+    crbase::CancelableOnceCallback<void(int)>;
 
 }  // namespace crnet
 
-#endif  // MINI_CHROMIUM_CRNET_BASE_COMPLETION_CALLBACK_H__
+#endif  // MINI_CHROMIUM_CRNET_BASE_COMPLETION_ONCE_CALLBACK_H_

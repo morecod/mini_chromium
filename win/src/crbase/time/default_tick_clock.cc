@@ -8,7 +8,7 @@ namespace crbase {
 
 DefaultTickClock::~DefaultTickClock() {}
 
-TimeTicks DefaultTickClock::NowTicks() {
+TimeTicks DefaultTickClock::NowTicks() const {
   return TimeTicks::Now();
 }
 

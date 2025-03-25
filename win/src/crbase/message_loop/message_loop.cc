@@ -90,7 +90,7 @@ MessageLoop::MessageLoop(Type type)
 }
 
 MessageLoop::MessageLoop(std::unique_ptr<MessagePump> pump)
-    : MessageLoop(TYPE_CUSTOM, Bind(&ReturnPump, Passed(&pump))) {
+    : MessageLoop(TYPE_CUSTOM, BindOnce(&ReturnPump, Passed(&pump))) {
   BindToCurrentThread();
 }
 
@@ -199,28 +199,28 @@ void MessageLoop::RemoveDestructionObserver(
 
 void MessageLoop::PostTask(
     const tracked_objects::Location& from_here,
-    const Closure& task) {
-  task_runner_->PostTask(from_here, task);
+    OnceClosure task) {
+  task_runner_->PostTask(from_here, std::move(task));
 }
 
 void MessageLoop::PostDelayedTask(
     const tracked_objects::Location& from_here,
-    const Closure& task,
+    OnceClosure task,
     TimeDelta delay) {
-  task_runner_->PostDelayedTask(from_here, task, delay);
+  task_runner_->PostDelayedTask(from_here, std::move(task), delay);
 }
 
 void MessageLoop::PostNonNestableTask(
     const tracked_objects::Location& from_here,
-    const Closure& task) {
-  task_runner_->PostNonNestableTask(from_here, task);
+    OnceClosure task) {
+  task_runner_->PostNonNestableTask(from_here, std::move(task));
 }
 
 void MessageLoop::PostNonNestableDelayedTask(
     const tracked_objects::Location& from_here,
-    const Closure& task,
+    OnceClosure task,
     TimeDelta delay) {
-  task_runner_->PostNonNestableDelayedTask(from_here, task, delay);
+  task_runner_->PostNonNestableDelayedTask(from_here, std::move(task), delay);
 }
 
 void MessageLoop::Run() {
@@ -262,8 +262,8 @@ static void QuitCurrentWhenIdle() {
 }
 
 // static
-Closure MessageLoop::QuitWhenIdleClosure() {
-  return Bind(&QuitCurrentWhenIdle);
+RepeatingClosure MessageLoop::QuitWhenIdleClosure() {
+  return BindRepeating(&QuitCurrentWhenIdle);
 }
 
 void MessageLoop::SetNestableTasksAllowed(bool allowed) {
@@ -313,7 +313,8 @@ bool MessageLoop::IsIdleForTesting() {
 // static
 std::unique_ptr<MessageLoop> MessageLoop::CreateUnbound(
     Type type, MessagePumpFactoryCallback pump_factory) {
-  return std::unique_ptr<MessageLoop>(new MessageLoop(type, pump_factory));
+  return std::unique_ptr<MessageLoop>(
+      new MessageLoop(type, std::move(pump_factory)));
 }
 
 MessageLoop::MessageLoop(Type type, MessagePumpFactoryCallback pump_factory)
@@ -324,7 +325,7 @@ MessageLoop::MessageLoop(Type type, MessagePumpFactoryCallback pump_factory)
       os_modal_loop_(false),
 #endif
       nestable_tasks_allowed_(true),
-      pump_factory_(pump_factory),
+      pump_factory_(std::move(pump_factory)),
       run_loop_(NULL),
       incoming_task_queue_(new internal::IncomingTaskQueue(this)),
       unbound_task_runner_(
@@ -337,7 +338,7 @@ MessageLoop::MessageLoop(Type type, MessagePumpFactoryCallback pump_factory)
 void MessageLoop::BindToCurrentThread() {
   CR_DCHECK(!pump_);
   if (!pump_factory_.is_null())
-    pump_ = pump_factory_.Run();
+    pump_ = std::move(pump_factory_).Run();
   else
     pump_ = CreateMessagePumpForType(type_);
 
@@ -388,18 +389,26 @@ bool MessageLoop::ProcessNextDelayedNonNestableTask() {
   if (deferred_non_nestable_work_queue_.empty())
     return false;
 
-  PendingTask pending_task = deferred_non_nestable_work_queue_.front();
-  deferred_non_nestable_work_queue_.pop();
+  while (!deferred_non_nestable_work_queue_.empty()) {
+    PendingTask pending_task =
+      std::move(deferred_non_nestable_work_queue_.front());
+    deferred_non_nestable_work_queue_.pop();
 
-  RunTask(pending_task);
-  return true;
+    if (!pending_task.task.IsCancelled()) {
+      RunTask(&pending_task);
+      return true;
+    }
+
+  }
+
+  return false;
 }
 
-void MessageLoop::RunTask(const PendingTask& pending_task) {
+void MessageLoop::RunTask(PendingTask* pending_task) {
   CR_DCHECK(nestable_tasks_allowed_);
 
 #if defined(MINI_CHROMIUM_OS_WIN)
-  if (pending_task.is_high_res) {
+  if (pending_task->is_high_res) {
     pending_high_res_tasks_--;
     CR_CHECK_GE(pending_high_res_tasks_, 0);
   }
@@ -409,18 +418,18 @@ void MessageLoop::RunTask(const PendingTask& pending_task) {
   nestable_tasks_allowed_ = false;
 
   CR_FOR_EACH_OBSERVER(TaskObserver, task_observers_,
-                       WillProcessTask(pending_task));
+                       WillProcessTask(*pending_task));
   ///task_annotator_.RunTask("MessageLoop::PostTask", pending_task);
-  pending_task.task.Run();
+  std::move(pending_task->task).Run();
   CR_FOR_EACH_OBSERVER(TaskObserver, task_observers_,
-                       DidProcessTask(pending_task));
+                       DidProcessTask(*pending_task));
 
   nestable_tasks_allowed_ = true;
 }
 
-bool MessageLoop::DeferOrRunPendingTask(const PendingTask& pending_task) {
+bool MessageLoop::DeferOrRunPendingTask(PendingTask pending_task) {
   if (pending_task.nestable || run_loop_->run_depth_ == 1) {
-    RunTask(pending_task);
+    RunTask(&pending_task);
     // Show that we ran a task (Note: a new one might arrive as a
     // consequence!).
     return true;
@@ -428,25 +437,25 @@ bool MessageLoop::DeferOrRunPendingTask(const PendingTask& pending_task) {
 
   // We couldn't run the task now because we're in a nested message loop
   // and the task isn't nestable.
-  deferred_non_nestable_work_queue_.push(pending_task);
+  deferred_non_nestable_work_queue_.push(std::move(pending_task));
   return false;
 }
 
-void MessageLoop::AddToDelayedWorkQueue(const PendingTask& pending_task) {
+void MessageLoop::AddToDelayedWorkQueue(PendingTask pending_task) {
   // Move to the delayed work queue.
-  delayed_work_queue_.push(pending_task);
+  delayed_work_queue_.push(std::move(pending_task));
 }
 
 bool MessageLoop::DeletePendingTasks() {
   bool did_work = !work_queue_.empty();
   while (!work_queue_.empty()) {
-    PendingTask pending_task = work_queue_.front();
+    PendingTask pending_task = std::move(work_queue_.front());
     work_queue_.pop();
     if (!pending_task.delayed_run_time.is_null()) {
       // We want to delete delayed tasks in the same order in which they would
       // normally be deleted in case of any funny dependencies between delayed
       // tasks.
-      AddToDelayedWorkQueue(pending_task);
+      AddToDelayedWorkQueue(std::move(pending_task));
     }
   }
   did_work |= !deferred_non_nestable_work_queue_.empty();
@@ -498,15 +507,17 @@ bool MessageLoop::DoWork() {
 
     // Execute oldest task.
     do {
-      PendingTask pending_task = work_queue_.front();
+      PendingTask pending_task = std::move(work_queue_.front());
       work_queue_.pop();
-      if (!pending_task.delayed_run_time.is_null()) {
-        AddToDelayedWorkQueue(pending_task);
+      if (pending_task.task.IsCancelled()) {
+        // do nothing~
+      } else if (!pending_task.delayed_run_time.is_null()) {
+        AddToDelayedWorkQueue(std::move(pending_task));
         // If we changed the topmost task, then it is time to reschedule.
         if (delayed_work_queue_.top().task.Equals(pending_task.task))
           pump_->ScheduleDelayedWork(pending_task.delayed_run_time);
       } else {
-        if (DeferOrRunPendingTask(pending_task))
+        if (DeferOrRunPendingTask(std::move(pending_task)))
           return true;
       }
     } while (!work_queue_.empty());
@@ -538,13 +549,14 @@ bool MessageLoop::DoDelayedWork(TimeTicks* next_delayed_work_time) {
     }
   }
 
-  PendingTask pending_task = delayed_work_queue_.top();
+  PendingTask pending_task = std::move(
+      const_cast<PendingTask&>(delayed_work_queue_.top()));
   delayed_work_queue_.pop();
 
   if (!delayed_work_queue_.empty())
     *next_delayed_work_time = delayed_work_queue_.top().delayed_run_time;
 
-  return DeferOrRunPendingTask(pending_task);
+  return DeferOrRunPendingTask(std::move(pending_task));
 }
 
 bool MessageLoop::DoIdleWork() {
@@ -574,14 +586,14 @@ bool MessageLoop::DoIdleWork() {
 void MessageLoop::DeleteSoonInternal(const tracked_objects::Location& from_here,
                                      void(*deleter)(const void*),
                                      const void* object) {
-  PostNonNestableTask(from_here, Bind(deleter, object));
+  PostNonNestableTask(from_here, BindOnce(deleter, object));
 }
 
 void MessageLoop::ReleaseSoonInternal(
     const tracked_objects::Location& from_here,
     void(*releaser)(const void*),
     const void* object) {
-  PostNonNestableTask(from_here, Bind(releaser, object));
+  PostNonNestableTask(from_here, BindOnce(releaser, object));
 }
 
 //------------------------------------------------------------------------------

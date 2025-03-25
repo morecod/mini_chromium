@@ -92,8 +92,8 @@ bool ObjectWatcher::StartWatchingInternal(HANDLE object, Delegate* delegate,
 
   // DoneWaiting can be synchronously called from RegisterWaitForSingleObject,
   // so set up all state now.
-  callback_ = crbase::Bind(&ObjectWatcher::Signal, weak_factory_.GetWeakPtr(),
-                           delegate);
+  callback_ = crbase::BindRepeating(
+      &ObjectWatcher::Signal, weak_factory_.GetWeakPtr(), delegate);
   object_ = object;
   origin_loop_ = MessageLoop::current();
 

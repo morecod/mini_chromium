@@ -2,44 +2,64 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#ifndef MINI_CHROMIUM_SRC_CRBASE_MEMORY_REF_COUNTED_H_
-#define MINI_CHROMIUM_SRC_CRBASE_MEMORY_REF_COUNTED_H_
+#ifndef MINI_CHROMIUM_CRBASE_MEMORY_REF_COUNTED_H_
+#define MINI_CHROMIUM_CRBASE_MEMORY_REF_COUNTED_H_
+
+#include <stddef.h>
 
 #include <cassert>
 #include <iosfwd>
+#include <type_traits>
 
-#include "crbase/base_export.h"
-#include "crbase/macros.h"
 #include "crbase/atomic/atomic_ref_count.h"
-#ifndef NDEBUG
+#include "crbase/base_export.h"
+#include "crbase/compiler_specific.h"
 #include "crbase/logging.h"
-#endif
+#include "crbase/macros.h"
+///#include "base/sequence_checker.h"
+///#include "base/threading/thread_collision_warner.h"
+#include "crbase/build_config.h"
 
 namespace crbase {
 
+template <class T>
+class scoped_refptr;
+
+template <typename T>
+scoped_refptr<T> AdoptRef(T* t);
+
 namespace subtle {
+
+enum AdoptRefTag { kAdoptRefTag };
+enum StartRefCountFromZeroTag { kStartRefCountFromZeroTag };
+enum StartRefCountFromOneTag { kStartRefCountFromOneTag };
 
 class CRBASE_EXPORT RefCountedBase {
  public:
+  bool HasOneRef() const { return ref_count_ == 1; }
+
   RefCountedBase(const RefCountedBase&) = delete;
   RefCountedBase& operator=(const RefCountedBase&) = delete;
 
-  bool HasOneRef() const { return ref_count_ == 1; }
-
  protected:
-  RefCountedBase()
-      : ref_count_(0)
-  #ifndef NDEBUG
-      , in_dtor_(false)
-  #endif
-      {
+  explicit RefCountedBase(StartRefCountFromZeroTag) {
+///#if DCHECK_IS_ON()
+///    sequence_checker_.DetachFromSequence();
+///#endif
+  }
+
+  explicit RefCountedBase(StartRefCountFromOneTag) : ref_count_(1) {
+#if CR_DCHECK_IS_ON()
+    needs_adopt_ref_ = true;
+///    sequence_checker_.DetachFromSequence();
+#endif
   }
 
   ~RefCountedBase() {
-  #ifndef NDEBUG
-    CR_DCHECK(in_dtor_)
+#if CR_DCHECK_IS_ON()
+    CR_DCHECK(in_dtor_) 
         << "RefCounted object deleted without calling Release()";
-  #endif
+#endif
   }
 
   void AddRef() const {
@@ -47,45 +67,86 @@ class CRBASE_EXPORT RefCountedBase {
     // Current thread books the critical section "AddRelease"
     // without release it.
     // DFAKE_SCOPED_LOCK_THREAD_LOCKED(add_release_);
-  #ifndef NDEBUG
+#if CR_DCHECK_IS_ON()
     CR_DCHECK(!in_dtor_);
-  #endif
+    CR_DCHECK(!needs_adopt_ref_)
+        << "This RefCounted object is created with non-zero reference count."
+        << " The first reference to such a object has to be made by AdoptRef or"
+        << " MakeRefCounted.";
+    ///if (ref_count_ >= 1) {
+    ///  DCHECK(CalledOnValidSequence());
+    ///}
+#endif
+
     ++ref_count_;
   }
 
   // Returns true if the object should self-delete.
   bool Release() const {
+    --ref_count_;
+
     // TODO(maruel): Add back once it doesn't assert 500 times/sec.
     // Current thread books the critical section "AddRelease"
     // without release it.
     // DFAKE_SCOPED_LOCK_THREAD_LOCKED(add_release_);
-  #ifndef NDEBUG
+
+#if CR_DCHECK_IS_ON()
     CR_DCHECK(!in_dtor_);
-  #endif
-    if (--ref_count_ == 0) {
-  #ifndef NDEBUG
+    if (ref_count_ == 0)
       in_dtor_ = true;
-  #endif
-      return true;
-    }
-    return false;
+
+    ///if (ref_count_ >= 1)
+    ///  DCHECK(CalledOnValidSequence());
+    ///if (ref_count_ == 1)
+    ///  sequence_checker_.DetachFromSequence();
+#endif
+
+    return ref_count_ == 0;
   }
 
  private:
-  mutable int ref_count_;
-#ifndef NDEBUG
-  mutable bool in_dtor_;
+  template <typename U>
+  friend scoped_refptr<U> crbase::AdoptRef(U*);
+
+  void Adopted() const {
+#if CR_DCHECK_IS_ON()
+    CR_DCHECK(needs_adopt_ref_);
+    needs_adopt_ref_ = false;
 #endif
+  }
+
+///#if DCHECK_IS_ON()
+///  bool CalledOnValidSequence() const;
+///#endif
+
+  mutable size_t ref_count_ = 0;
+
+#if CR_DCHECK_IS_ON()
+  mutable bool needs_adopt_ref_ = false;
+  mutable bool in_dtor_ = false;
+  ///mutable SequenceChecker sequence_checker_;
+#endif
+
+  ///DFAKE_MUTEX(add_release_);
+
+  ///DISALLOW_COPY_AND_ASSIGN(RefCountedBase);
 };
 
 class CRBASE_EXPORT RefCountedThreadSafeBase {
  public:
-  RefCountedThreadSafeBase(const RefCountedThreadSafeBase&) = delete;
-  RefCountedThreadSafeBase& operator=(const RefCountedThreadSafeBase&) = delete;
   bool HasOneRef() const;
 
+  RefCountedThreadSafeBase(const RefCountedThreadSafeBase&) = delete;
+  RefCountedThreadSafeBase& operator=(const RefCountedThreadSafeBase&) = delete;
+
  protected:
-  RefCountedThreadSafeBase();
+  explicit RefCountedThreadSafeBase(StartRefCountFromZeroTag) {}
+  explicit RefCountedThreadSafeBase(StartRefCountFromOneTag) : ref_count_(1) {
+#if CR_DCHECK_IS_ON()
+    needs_adopt_ref_ = true;
+#endif
+  }
+
   ~RefCountedThreadSafeBase();
 
   void AddRef() const;
@@ -94,17 +155,51 @@ class CRBASE_EXPORT RefCountedThreadSafeBase {
   bool Release() const;
 
  private:
-  mutable AtomicRefCount ref_count_;
-#ifndef NDEBUG
-  mutable bool in_dtor_;
+  template <typename U>
+  friend scoped_refptr<U> crbase::AdoptRef(U*);
+
+  void Adopted() const {
+#if CR_DCHECK_IS_ON()
+    CR_DCHECK(needs_adopt_ref_);
+    needs_adopt_ref_ = false;
 #endif
+  }
+
+  mutable AtomicRefCount ref_count_ = 0;
+#if CR_DCHECK_IS_ON()
+  mutable bool needs_adopt_ref_ = false;
+  mutable bool in_dtor_ = false;
+#endif
+
+  ///DISALLOW_COPY_AND_ASSIGN(RefCountedThreadSafeBase);
 };
 
 }  // namespace subtle
 
+// ScopedAllowCrossThreadRefCountAccess disables the check documented on
+// RefCounted below for rare pre-existing use cases where thread-safety was
+// guaranteed through other means (e.g. explicit sequencing of calls across
+// execution sequences when bouncing between threads in order). New callers
+// should refrain from using this (callsites handling thread-safety through
+// locks should use RefCountedThreadSafe per the overhead of its atomics being
+// negligible compared to locks anyways and callsites doing explicit sequencing
+// should properly std::move() the ref to avoid hitting this check).
+// TODO(tzik): Cleanup existing use cases and remove
+// ScopedAllowCrossThreadRefCountAccess.
+class CRBASE_EXPORT ScopedAllowCrossThreadRefCountAccess final {
+ public:
+#if CR_DCHECK_IS_ON()
+  ScopedAllowCrossThreadRefCountAccess();
+  ~ScopedAllowCrossThreadRefCountAccess();
+#else
+  ScopedAllowCrossThreadRefCountAccess() {}
+  ~ScopedAllowCrossThreadRefCountAccess() {}
+#endif
+};
+
 //
 // A base class for reference counted classes.  Otherwise, known as a cheap
-// knock-off of WebKit's RefCounted<T> class.  To use this guy just extend your
+// knock-off of WebKit's RefCounted<T> class.  To use this, just extend your
 // class from it like so:
 //
 //   class MyFoo : public base::RefCounted<MyFoo> {
@@ -116,13 +211,48 @@ class CRBASE_EXPORT RefCountedThreadSafeBase {
 //
 // You should always make your destructor non-public, to avoid any code deleting
 // the object accidently while there are references to it.
+//
+//
+// The ref count manipulation to RefCounted is NOT thread safe and has DCHECKs
+// to trap unsafe cross thread usage. A subclass instance of RefCounted can be
+// passed to another execution sequence only when its ref count is 1. If the ref
+// count is more than 1, the RefCounted class verifies the ref updates are made
+// on the same execution sequence as the previous ones.
+//
+//
+// The reference count starts from zero by default, and we intended to migrate
+// to start-from-one ref count. Put REQUIRE_ADOPTION_FOR_REFCOUNTED_TYPE() to
+// the ref counted class to opt-in.
+//
+// If an object has start-from-one ref count, the first scoped_refptr need to be
+// created by base::AdoptRef() or base::MakeRefCounted(). We can use
+// base::MakeRefCounted() to create create both type of ref counted object.
+//
+// The motivations to use start-from-one ref count are:
+//  - Start-from-one ref count doesn't need the ref count increment for the
+//    first reference.
+//  - It can detect an invalid object acquisition for a being-deleted object
+//    that has zero ref count. That tends to happen on custom deleter that
+//    delays the deletion.
+//    TODO(tzik): Implement invalid acquisition detection.
+//  - Behavior parity to Blink's WTF::RefCounted, whose count starts from one.
+//    And start-from-one ref count is a step to merge WTF::RefCounted into
+//    base::RefCounted.
+//
+#define REQUIRE_ADOPTION_FOR_REFCOUNTED_TYPE()               \
+  static constexpr ::crbase::subtle::StartRefCountFromOneTag \
+      kRefCountPreference = ::crbase::subtle::kStartRefCountFromOneTag;
+
 template <class T>
 class RefCounted : public subtle::RefCountedBase {
  public:
-  RefCounted<T>(const RefCounted<T>&) = delete;
-  RefCounted<T>& operator=(const RefCounted<T>&) = delete;
+  static constexpr subtle::StartRefCountFromZeroTag kRefCountPreference =
+      subtle::kStartRefCountFromZeroTag;
 
-  RefCounted() {}
+  RefCounted() : subtle::RefCountedBase(T::kRefCountPreference) {}
+
+  RefCounted(const RefCounted&) = delete;
+  RefCounted& operator=(const RefCounted&) = delete;
 
   void AddRef() const {
     subtle::RefCountedBase::AddRef();
@@ -135,7 +265,10 @@ class RefCounted : public subtle::RefCountedBase {
   }
 
  protected:
-  ~RefCounted() {}
+  ~RefCounted() = default;
+
+ private:
+  ///DISALLOW_COPY_AND_ASSIGN(RefCounted);
 };
 
 // Forward declaration.
@@ -166,13 +299,20 @@ struct DefaultRefCountedThreadSafeTraits {
 //    private:
 //     friend class base::RefCountedThreadSafe<MyFoo>;
 //     ~MyFoo();
+//
+// We can use REQUIRE_ADOPTION_FOR_REFCOUNTED_TYPE() with RefCountedThreadSafe
+// too. See the comment above the RefCounted definition for details.
 template <class T, typename Traits = DefaultRefCountedThreadSafeTraits<T> >
 class RefCountedThreadSafe : public subtle::RefCountedThreadSafeBase {
  public:
+  static constexpr subtle::StartRefCountFromZeroTag kRefCountPreference =
+      subtle::kStartRefCountFromZeroTag;
+
+  explicit RefCountedThreadSafe()
+      : subtle::RefCountedThreadSafeBase(T::kRefCountPreference) {}
+
   RefCountedThreadSafe(const RefCountedThreadSafe&) = delete;
   RefCountedThreadSafe& operator=(const RefCountedThreadSafe&) = delete;
-
-  RefCountedThreadSafe() {}
 
   void AddRef() const {
     subtle::RefCountedThreadSafeBase::AddRef();
@@ -185,11 +325,13 @@ class RefCountedThreadSafe : public subtle::RefCountedThreadSafeBase {
   }
 
  protected:
-  ~RefCountedThreadSafe() {}
+  ~RefCountedThreadSafe() = default;
 
  private:
   friend struct DefaultRefCountedThreadSafeTraits<T>;
   static void DeleteInternal(const T* x) { delete x; }
+
+  ///DISALLOW_COPY_AND_ASSIGN(RefCountedThreadSafe);
 };
 
 //
@@ -207,8 +349,45 @@ class RefCountedData
 
  private:
   friend class crbase::RefCountedThreadSafe<crbase::RefCountedData<T> >;
-  ~RefCountedData() {}
+  ~RefCountedData() = default;
 };
+
+// Creates a scoped_refptr from a raw pointer without incrementing the reference
+// count. Use this only for a newly created object whose reference count starts
+// from 1 instead of 0.
+template <typename T>
+scoped_refptr<T> AdoptRef(T* obj) {
+  using Tag = typename std::decay<decltype(T::kRefCountPreference)>::type;
+  static_assert(std::is_same<subtle::StartRefCountFromOneTag, Tag>::value,
+                "Use AdoptRef only for the reference count starts from one.");
+
+  CR_DCHECK(obj);
+  CR_DCHECK(obj->HasOneRef());
+  obj->Adopted();
+  return scoped_refptr<T>(obj, subtle::kAdoptRefTag);
+}
+
+namespace subtle {
+
+template <typename T>
+scoped_refptr<T> AdoptRefIfNeeded(T* obj, StartRefCountFromZeroTag) {
+  return scoped_refptr<T>(obj);
+}
+
+template <typename T>
+scoped_refptr<T> AdoptRefIfNeeded(T* obj, StartRefCountFromOneTag) {
+  return AdoptRef(obj);
+}
+
+}  // namespace subtle
+
+// Constructs an instance of T, which is a ref counted type, and wraps the
+// object into a scoped_refptr.
+template <typename T, typename... Args>
+scoped_refptr<T> MakeRefCounted(Args&&... args) {
+  T* obj = new T(std::forward<Args>(args)...);
+  return subtle::AdoptRefIfNeeded(obj, T::kRefCountPreference);
+}
 
 //
 // A smart pointer class for reference counted objects.  Use this class instead
@@ -218,6 +397,9 @@ class RefCountedData
 //
 //   class MyFoo : public RefCounted<MyFoo> {
 //    ...
+//    private:
+//     friend class RefCounted<MyFoo>;  // Allow destruction by RefCounted<>.
+//     ~MyFoo();                        // Destructor must be private/protected.
 //   };
 //
 //   void some_function() {
@@ -229,7 +411,7 @@ class RefCountedData
 //   void some_other_function() {
 //     scoped_refptr<MyFoo> foo = new MyFoo();
 //     ...
-//     foo = NULL;  // explicitly releases |foo|
+//     foo = nullptr;  // explicitly releases |foo|
 //     ...
 //     if (foo)
 //       foo->Method(param);
@@ -244,7 +426,7 @@ class RefCountedData
 //     scoped_refptr<MyFoo> b;
 //
 //     b.swap(a);
-//     // now, |b| references the MyFoo object, and |a| references NULL.
+//     // now, |b| references the MyFoo object, and |a| references nullptr.
 //   }
 //
 // To make both |a| and |b| in the above example reference the same MyFoo
@@ -263,8 +445,7 @@ class scoped_refptr {
  public:
   typedef T element_type;
 
-  scoped_refptr() : ptr_(NULL) {
-  }
+  scoped_refptr() {}
 
   scoped_refptr(T* p) : ptr_(p) {
     if (ptr_)
@@ -278,7 +459,9 @@ class scoped_refptr {
   }
 
   // Copy conversion constructor.
-  template <typename U>
+  template <typename U,
+            typename = typename std::enable_if<
+                std::is_convertible<U*, T*>::value>::type>
   scoped_refptr(const scoped_refptr<U>& r) : ptr_(r.get()) {
     if (ptr_)
       AddRef(ptr_);
@@ -289,7 +472,9 @@ class scoped_refptr {
   scoped_refptr(scoped_refptr&& r) : ptr_(r.get()) { r.ptr_ = nullptr; }
 
   // Move conversion constructor.
-  template <typename U>
+  template <typename U,
+            typename = typename std::enable_if<
+                std::is_convertible<U*, T*>::value>::type>
   scoped_refptr(scoped_refptr<U>&& r) : ptr_(r.get()) {
     r.ptr_ = nullptr;
   }
@@ -302,16 +487,12 @@ class scoped_refptr {
   T* get() const { return ptr_; }
 
   T& operator*() const {
-#ifndef NDEBUG
-    CR_DCHECK(ptr_ != NULL);
-#endif
+    assert(ptr_ != nullptr);
     return *ptr_;
   }
 
   T* operator->() const {
-#ifndef NDEBUG
-    CR_DCHECK(ptr_ != NULL);
-#endif
+    assert(ptr_ != nullptr);
     return ptr_;
   }
 
@@ -346,30 +527,13 @@ class scoped_refptr {
     return *this;
   }
 
-  void swap(T** pp) {
-    T* p = ptr_;
-    ptr_ = *pp;
-    *pp = p;
-  }
-
   void swap(scoped_refptr<T>& r) {
-    swap(&r.ptr_);
+    T* tmp = ptr_;
+    ptr_ = r.ptr_;
+    r.ptr_ = tmp;
   }
 
- private:
-  template <typename U> friend class scoped_refptr;
-
-  // Allow scoped_refptr<T> to be used in boolean expressions, but not
-  // implicitly convertible to a real bool (which is dangerous).
-  //
-  // Note that this trick is only safe when the == and != operators
-  // are declared explicitly, as otherwise "refptr1 == refptr2"
-  // will compile but do the wrong thing (i.e., convert to Testable
-  // and then do the comparison).
-  typedef T* scoped_refptr::*Testable;
-
- public:
-  operator Testable() const { return ptr_ ? &scoped_refptr::ptr_ : nullptr; }
+  explicit operator bool() const { return ptr_ != nullptr; }
 
   template <typename U>
   bool operator==(const scoped_refptr<U>& rhs) const {
@@ -387,9 +551,18 @@ class scoped_refptr {
   }
 
  protected:
-  T* ptr_;
+  T* ptr_ = nullptr;
 
  private:
+  template <typename U>
+  friend scoped_refptr<U> crbase::AdoptRef(U*);
+
+  scoped_refptr(T* p, crbase::subtle::AdoptRefTag) : ptr_(p) {}
+
+  // Friend required for move constructors that set r.ptr_ to null.
+  template <typename U>
+  friend class scoped_refptr;
+
   // Non-inline helpers to allow:
   //     class Opaque;
   //     extern template class scoped_refptr<Opaque>;
@@ -398,11 +571,13 @@ class scoped_refptr {
   static void Release(T* ptr);
 };
 
+// static
 template <typename T>
 void scoped_refptr<T>::AddRef(T* ptr) {
   ptr->AddRef();
 }
 
+// static
 template <typename T>
 void scoped_refptr<T>::Release(T* ptr) {
   ptr->Release();
@@ -415,8 +590,6 @@ scoped_refptr<T> make_scoped_refptr(T* t) {
   return scoped_refptr<T>(t);
 }
 
-// Temporary operator overloads to facilitate the transition. See
-// https://crbug.com/110610.
 template <typename T, typename U>
 bool operator==(const scoped_refptr<T>& lhs, const U* rhs) {
   return lhs.get() == rhs;
@@ -425,6 +598,16 @@ bool operator==(const scoped_refptr<T>& lhs, const U* rhs) {
 template <typename T, typename U>
 bool operator==(const T* lhs, const scoped_refptr<U>& rhs) {
   return lhs == rhs.get();
+}
+
+template <typename T>
+bool operator==(const scoped_refptr<T>& lhs, std::nullptr_t null) {
+  return !static_cast<bool>(lhs);
+}
+
+template <typename T>
+bool operator==(std::nullptr_t null, const scoped_refptr<T>& rhs) {
+  return !static_cast<bool>(rhs);
 }
 
 template <typename T, typename U>
@@ -437,12 +620,21 @@ bool operator!=(const T* lhs, const scoped_refptr<U>& rhs) {
   return !operator==(lhs, rhs);
 }
 
-}  // namespace crbase
+template <typename T>
+bool operator!=(const scoped_refptr<T>& lhs, std::nullptr_t null) {
+  return !operator==(lhs, null);
+}
 
 template <typename T>
-std::ostream& operator<<(std::ostream& out,
-                         const crbase::scoped_refptr<T>& p) {
+bool operator!=(std::nullptr_t null, const scoped_refptr<T>& rhs) {
+  return !operator==(null, rhs);
+}
+
+template <typename T>
+std::ostream& operator<<(std::ostream& out, const scoped_refptr<T>& p) {
   return out << p.get();
 }
 
-#endif  // MINI_CHROMIUM_SRC_CRBASE_MEMORY_REF_COUNTED_H_
+}  // namespace crbase
+
+#endif  // MINI_CHROMIUM_CRBASE_MEMORY_REF_COUNTED_H_

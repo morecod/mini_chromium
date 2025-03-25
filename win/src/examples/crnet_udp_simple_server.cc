@@ -122,7 +122,7 @@ void UDPSimpleServer::StartReading() {
   int result = socket_->RecvFrom(
       read_buffer_.get(), static_cast<int>(read_buffer_->size()), 
       &client_address_,
-      crbase::Bind(&UDPSimpleServer::OnReadComplete, crbase::Unretained(this)));
+      crbase::BindOnce(&UDPSimpleServer::OnReadComplete, crbase::Unretained(this)));
   if (result == crnet::ERR_IO_PENDING) {
     synchronous_read_count_ = 0;
     return;
@@ -134,8 +134,8 @@ void UDPSimpleServer::StartReading() {
     // Schedule the processing through the message loop to 1) prevent infinite
     // recursion and 2) avoid blocking the thread for too long.
     crbase::ThreadTaskRunnerHandle::Get()->PostTask(
-        CR_FROM_HERE, crbase::Bind(&UDPSimpleServer::OnReadComplete,
-                                    weak_factory_.GetWeakPtr(), result));
+        CR_FROM_HERE, crbase::BindOnce(&UDPSimpleServer::OnReadComplete,
+                                       weak_factory_.GetWeakPtr(), result));
   } else {
     OnReadComplete(result);
   }

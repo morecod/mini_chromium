@@ -12,7 +12,7 @@
 #include "crbase/compiler_specific.h"
 #include "crbase/macros.h"
 #include "crnet/base/address_list.h"
-#include "crnet/base/completion_callback.h"
+#include "crnet/base/completion_once_callback.h"
 #include "crnet/base/net_export.h"
 ///#include "crnet/log/net_log.h"
 #include "crnet/socket/connection_attempts.h"
@@ -45,7 +45,7 @@ class CRNET_EXPORT TCPClientSocket : public StreamSocket {
   int Bind(const IPEndPoint& address);
 
   // StreamSocket implementation.
-  int Connect(const CompletionCallback& callback) override;
+  int Connect(CompletionOnceCallback callback) override;
   void Disconnect() override;
   bool IsConnected() const override;
   bool IsConnectedAndIdle() const override;
@@ -66,10 +66,10 @@ class CRNET_EXPORT TCPClientSocket : public StreamSocket {
   // Full duplex mode (reading and writing at the same time) is supported.
   int Read(IOBuffer* buf,
            int buf_len,
-           const CompletionCallback& callback) override;
+           CompletionOnceCallback callback) override;
   int Write(IOBuffer* buf,
             int buf_len,
-            const CompletionCallback& callback) override;
+            CompletionOnceCallback callback) override;
   int SetReceiveBufferSize(int32_t size) override;
   int SetSendBufferSize(int32_t size) override;
 
@@ -99,9 +99,9 @@ class CRNET_EXPORT TCPClientSocket : public StreamSocket {
   void DoDisconnect();
 
   void DidCompleteConnect(int result);
-  void DidCompleteRead(const CompletionCallback& callback, int result);
-  void DidCompleteWrite(const CompletionCallback& callback, int result);
-  void DidCompleteReadWrite(const CompletionCallback& callback, int result);
+  void DidCompleteRead(CompletionOnceCallback callback, int result);
+  void DidCompleteWrite(CompletionOnceCallback callback, int result);
+  void DidCompleteReadWrite(CompletionOnceCallback callback, int result);
 
   int OpenSocket(AddressFamily family);
 
@@ -122,7 +122,7 @@ class CRNET_EXPORT TCPClientSocket : public StreamSocket {
   int current_address_index_;
 
   // External callback; called when connect is complete.
-  CompletionCallback connect_callback_;
+  CompletionOnceCallback connect_callback_;
 
   // The next state for the Connect() state machine.
   ConnectState next_connect_state_;

@@ -38,10 +38,10 @@ class CRNET_EXPORT_PRIVATE UDPClientSocket : public DatagramClientSocket {
   int Connect(const IPEndPoint& address) override;
   int Read(IOBuffer* buf,
            int buf_len,
-           const CompletionCallback& callback) override;
+           CompletionOnceCallback callback) override;
   int Write(IOBuffer* buf,
             int buf_len,
-            const CompletionCallback& callback) override;
+            CompletionOnceCallback callback) override;
   void Close() override;
   int GetPeerAddress(IPEndPoint* address) const override;
   int GetLocalAddress(IPEndPoint* address) const override;

@@ -162,7 +162,7 @@ void Logging::OnPostDispatchMessage(const Message& message,
   } else {
     main_thread_->task_runner()->PostTask(
         CR_FROM_HERE,
-        crbase::Bind(&Logging::Log, crbase::Unretained(this), data));
+        crbase::BindOnce(&Logging::Log, crbase::Unretained(this), data));
   }
 }
 
@@ -233,7 +233,7 @@ void Logging::Log(const LogData& data) {
         queue_invoke_later_pending_ = true;
         crbase::ThreadTaskRunnerHandle::Get()->PostDelayedTask(
             CR_FROM_HERE,
-            crbase::Bind(&Logging::OnSendLogs, crbase::Unretained(this)),
+            crbase::BindOnce(&Logging::OnSendLogs, crbase::Unretained(this)),
             crbase::TimeDelta::FromMilliseconds(kLogSendDelayMs));
       }
     }

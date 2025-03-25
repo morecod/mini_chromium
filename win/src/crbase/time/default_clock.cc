@@ -8,7 +8,7 @@ namespace crbase {
 
 DefaultClock::~DefaultClock() {}
 
-Time DefaultClock::Now() {
+Time DefaultClock::Now() const {
   return Time::Now();
 }
 

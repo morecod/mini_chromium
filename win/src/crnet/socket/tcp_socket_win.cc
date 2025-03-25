@@ -416,7 +416,7 @@ int TCPSocketWin::Listen(int backlog) {
 
 int TCPSocketWin::Accept(std::unique_ptr<TCPSocketWin>* socket,
                          IPEndPoint* address,
-                         const CompletionCallback& callback) {
+                         CompletionOnceCallback callback) {
   CR_DCHECK(CalledOnValidThread());
   CR_DCHECK(socket);
   CR_DCHECK(address);
@@ -434,14 +434,14 @@ int TCPSocketWin::Accept(std::unique_ptr<TCPSocketWin>* socket,
 
     accept_socket_ = socket;
     accept_address_ = address;
-    accept_callback_ = callback;
+    accept_callback_ = std::move(callback);
   }
 
   return result;
 }
 
 int TCPSocketWin::Connect(const IPEndPoint& address,
-                          const CompletionCallback& callback) {
+                          CompletionOnceCallback callback) {
   CR_DCHECK(CalledOnValidThread());
   CR_DCHECK_NE(socket_, INVALID_SOCKET);
   CR_DCHECK(!waiting_connect_);
@@ -465,7 +465,7 @@ int TCPSocketWin::Connect(const IPEndPoint& address,
   if (rv == ERR_IO_PENDING) {
     // Synchronous operation not supported.
     CR_DCHECK(!callback.is_null());
-    read_callback_ = callback;
+    read_callback_ = std::move(callback);
     waiting_connect_ = true;
   } else {
     DoConnectComplete(rv);
@@ -517,19 +517,19 @@ bool TCPSocketWin::IsConnectedAndIdle() const {
 
 int TCPSocketWin::Read(IOBuffer* buf,
                        int buf_len,
-                       const CompletionCallback& callback) {
+                       CompletionOnceCallback callback) {
   CR_DCHECK(CalledOnValidThread());
   CR_DCHECK_NE(socket_, INVALID_SOCKET);
   CR_DCHECK(!waiting_read_);
   CR_CHECK(read_callback_.is_null());
   CR_DCHECK(!core_->read_iobuffer_.get());
 
-  return DoRead(buf, buf_len, callback);
+  return DoRead(buf, buf_len, std::move(callback));
 }
 
 int TCPSocketWin::Write(IOBuffer* buf,
                         int buf_len,
-                        const CompletionCallback& callback) {
+                        CompletionOnceCallback callback) {
   CR_DCHECK(CalledOnValidThread());
   CR_DCHECK_NE(socket_, INVALID_SOCKET);
   CR_DCHECK(!waiting_write_);
@@ -571,7 +571,7 @@ int TCPSocketWin::Write(IOBuffer* buf,
     }
   }
   waiting_write_ = true;
-  write_callback_ = callback;
+  write_callback_ = std::move(callback);
   core_->write_iobuffer_ = buf;
   core_->write_buffer_length_ = buf_len;
   core_->WatchForWrite();
@@ -917,7 +917,7 @@ void TCPSocketWin::DoConnectComplete(int result) {
 ///}
 
 int TCPSocketWin::DoRead(IOBuffer* buf, int buf_len,
-                         const CompletionCallback& callback) {
+                         CompletionOnceCallback callback) {
   if (!core_->non_blocking_reads_initialized_) {
     WSAEventSelect(socket_, core_->read_overlapped_.hEvent,
                    FD_READ | FD_CLOSE);
@@ -941,7 +941,7 @@ int TCPSocketWin::DoRead(IOBuffer* buf, int buf_len,
   }
 
   waiting_read_ = true;
-  read_callback_ = callback;
+  read_callback_ = std::move(callback);
   core_->read_iobuffer_ = buf;
   core_->read_buffer_length_ = buf_len;
   core_->WatchForRead();
@@ -1058,7 +1058,7 @@ void TCPSocketWin::DidSignalRead() {
     // (WSAECONNRESET vs. WSAECONNABORTED) when the connection was
     // reset.
     rv = DoRead(core_->read_iobuffer_.get(), core_->read_buffer_length_,
-                read_callback_);
+                std::move(read_callback_));
     if (rv == ERR_IO_PENDING)
       return;
   } else {

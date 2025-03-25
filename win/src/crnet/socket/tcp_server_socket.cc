@@ -56,7 +56,7 @@ int TCPServerSocket::GetLocalAddress(IPEndPoint* address) const {
 }
 
 int TCPServerSocket::Accept(std::unique_ptr<StreamSocket>* socket,
-                            const CompletionCallback& callback) {
+                            CompletionOnceCallback callback) {
   CR_DCHECK(socket);
   CR_DCHECK(!callback.is_null());
 
@@ -67,11 +67,11 @@ int TCPServerSocket::Accept(std::unique_ptr<StreamSocket>* socket,
 
   // It is safe to use base::Unretained(this). |socket_| is owned by this class,
   // and the callback won't be run after |socket_| is destroyed.
-  CompletionCallback accept_callback =
-      crbase::Bind(&TCPServerSocket::OnAcceptCompleted, 
-                   crbase::Unretained(this), socket, callback);
+  CompletionOnceCallback accept_callback =
+      crbase::BindOnce(&TCPServerSocket::OnAcceptCompleted, 
+                       crbase::Unretained(this), socket, std::move(callback));
   int result = socket_.Accept(&accepted_socket_, &accepted_address_,
-                              accept_callback);
+                              std::move(accept_callback));
   if (result != ERR_IO_PENDING) {
     // |accept_callback| won't be called so we need to run
     // ConvertAcceptedSocket() ourselves in order to do the conversion from
@@ -104,11 +104,11 @@ int TCPServerSocket::ConvertAcceptedSocket(
 
 void TCPServerSocket::OnAcceptCompleted(
     std::unique_ptr<StreamSocket>* output_accepted_socket,
-    const CompletionCallback& forward_callback,
+    CompletionOnceCallback forward_callback,
     int result) {
   result = ConvertAcceptedSocket(result, output_accepted_socket);
   pending_accept_ = false;
-  forward_callback.Run(result);
+  std::move(forward_callback).Run(result);
 }
 
 }  // namespace crnet

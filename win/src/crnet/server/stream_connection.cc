@@ -116,7 +116,7 @@ bool StreamConnection::QueuedWriteIOBuffer::Append(const std::string& data) {
   }
 
   pending_data_.push(data);
-  total_size_ += data.size();
+  total_size_ += static_cast<int>(data.size());
 
   // If new data is the first pending data, updates data_.
   if (pending_data_.size() == 1)
@@ -147,7 +147,7 @@ int StreamConnection::QueuedWriteIOBuffer::GetSizeToWrite() const {
   CR_DCHECK_GE(data_, pending_data_.front().data());
   int consumed = static_cast<int>(data_ - pending_data_.front().data());
   CR_DCHECK_GT(static_cast<int>(pending_data_.front().size()), consumed);
-  return pending_data_.front().size() - consumed;
+  return static_cast<int>(pending_data_.front().size()) - consumed;
 }
 
 StreamConnection::StreamConnection(int id, std::unique_ptr<StreamSocket> socket)

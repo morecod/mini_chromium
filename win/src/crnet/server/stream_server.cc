@@ -38,8 +38,8 @@ StreamServer::StreamServer(std::unique_ptr<ServerSocket> server_socket,
   // ready to get callbacks.
   crbase::ThreadTaskRunnerHandle::Get()->PostTask(
       CR_FROM_HERE,
-      crbase::Bind(&StreamServer::DoAcceptLoop, 
-                   weak_ptr_factory_.GetWeakPtr()));
+      crbase::BindOnce(&StreamServer::DoAcceptLoop, 
+                       weak_ptr_factory_.GetWeakPtr()));
 }
 
 StreamServer::~StreamServer() {
@@ -92,9 +92,10 @@ void StreamServer::SetSendBufferSize(int connection_id, int32_t size) {
 void StreamServer::DoAcceptLoop() {
   int rv;
   do {
-    rv = server_socket_->Accept(&accepted_socket_,
-                                crbase::Bind(&StreamServer::OnAcceptCompleted,
-                                             weak_ptr_factory_.GetWeakPtr()));
+    rv = server_socket_->Accept(
+        &accepted_socket_,
+        crbase::BindOnce(&StreamServer::OnAcceptCompleted,
+                         weak_ptr_factory_.GetWeakPtr()));
     if (rv == ERR_IO_PENDING)
       return;
     rv = HandleAcceptResult(rv);
@@ -134,8 +135,8 @@ void StreamServer::DoReadLoop(StreamConnection* connection) {
     rv = connection->socket()->Read(
         read_buf,
         read_buf->RemainingCapacity(),
-        crbase::Bind(&StreamServer::OnReadCompleted,
-                     weak_ptr_factory_.GetWeakPtr(), connection->id()));
+        crbase::BindOnce(&StreamServer::OnReadCompleted,
+                         weak_ptr_factory_.GetWeakPtr(), connection->id()));
     if (rv == ERR_IO_PENDING)
       return;
     rv = HandleReadResult(connection, rv);
@@ -188,8 +189,8 @@ void StreamServer::DoWriteLoop(StreamConnection* connection) {
     rv = connection->socket()->Write(
         write_buf,
         write_buf->GetSizeToWrite(),
-        crbase::Bind(&StreamServer::OnWriteCompleted,
-                     weak_ptr_factory_.GetWeakPtr(), connection->id()));
+        crbase::BindOnce(&StreamServer::OnWriteCompleted,
+                         weak_ptr_factory_.GetWeakPtr(), connection->id()));
     if (rv == ERR_IO_PENDING || rv == OK)
       return;
     rv = HandleWriteResult(connection, rv);

@@ -8,24 +8,11 @@
 
 #include <stack>
 
-#include "crbase/build_config.h"
-#include "crbase/lazy_instance.h"
-#include "crbase/logging.h"
 #include "crbase/atomic/atomic_sequence_num.h"
-#include "crbase/synchronization/waitable_event.h"
+#include "crbase/logging.h"
+#include "crbase/build_config.h"
 
 namespace {
-
-struct WaitableEventLazyInstanceTraits
-    : public crbase::DefaultLazyInstanceTraits<crbase::WaitableEvent> {
-  static crbase::WaitableEvent* New(void* instance) {
-    // Use placement new to initialize our instance in our preallocated space.
-    return new (instance) crbase::WaitableEvent(true, true);
-  }
-};
-
-crbase::LazyInstance<crbase::WaitableEvent, WaitableEventLazyInstanceTraits>
-    dummy_event = CR_LAZY_INSTANCE_INITIALIZER;
 
 crbase::StaticAtomicSequenceNumber g_next_id;
 
@@ -40,8 +27,7 @@ SyncMessage::SyncMessage(int32_t routing_id,
                          PriorityValue priority,
                          MessageReplyDeserializer* deserializer)
     : Message(routing_id, type, priority),
-      deserializer_(deserializer),
-      pump_messages_event_(NULL) {
+      deserializer_(deserializer) {
   set_sync();
   set_unblock(true);
 
@@ -57,11 +43,6 @@ SyncMessage::~SyncMessage() {
 MessageReplyDeserializer* SyncMessage::GetReplyDeserializer() {
   CR_DCHECK(deserializer_.get());
   return deserializer_.release();
-}
-
-void SyncMessage::EnableMessagePumping() {
-  CR_DCHECK(!pump_messages_event_);
-  set_pump_messages_event(dummy_event.Pointer());
 }
 
 bool SyncMessage::IsMessageReplyTo(const Message& msg, int request_id) {

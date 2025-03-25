@@ -16,7 +16,7 @@ class CRBASE_EXPORT DefaultTickClock : public TickClock {
   ~DefaultTickClock() override;
 
   // Simply returns TimeTicks::Now().
-  TimeTicks NowTicks() override;
+  TimeTicks NowTicks() const override;
 };
 
 }  // namespace crbase

@@ -18,7 +18,7 @@
 #include "crbase/win/object_watcher.h"
 #include "crbase/win/scoped_handle.h"
 #include "crnet/base/address_family.h"
-#include "crnet/base/completion_callback.h"
+#include "crnet/base/completion_once_callback.h"
 #include "crnet/base/io_buffer.h"
 #include "crnet/base/ip_endpoint.h"
 #include "crnet/base/net_export.h"
@@ -84,12 +84,12 @@ class CRNET_EXPORT UDPSocketWin
   // Reads from the socket.
   // Only usable from the client-side of a UDP socket, after the socket
   // has been connected.
-  int Read(IOBuffer* buf, int buf_len, const CompletionCallback& callback);
+  int Read(IOBuffer* buf, int buf_len, CompletionOnceCallback callback);
 
   // Writes to the socket.
   // Only usable from the client-side of a UDP socket, after the socket
   // has been connected.
-  int Write(IOBuffer* buf, int buf_len, const CompletionCallback& callback);
+  int Write(IOBuffer* buf, int buf_len, CompletionOnceCallback callback);
 
   // Reads from a socket and receive sender address information.
   // |buf| is the buffer to read data into.
@@ -107,7 +107,7 @@ class CRNET_EXPORT UDPSocketWin
   int RecvFrom(IOBuffer* buf,
                int buf_len,
                IPEndPoint* address,
-               const CompletionCallback& callback);
+               CompletionOnceCallback callback);
 
   // Sends to a socket with a particular destination.
   // |buf| is the buffer to send
@@ -121,7 +121,7 @@ class CRNET_EXPORT UDPSocketWin
   int SendTo(IOBuffer* buf,
              int buf_len,
              const IPEndPoint& address,
-             const CompletionCallback& callback);
+             CompletionOnceCallback callback);
 
   // Sets the receive buffer size (in bytes) for the socket.
   // Returns a net error code.
@@ -230,7 +230,7 @@ class CRNET_EXPORT UDPSocketWin
   int SendToOrWrite(IOBuffer* buf,
                     int buf_len,
                     const IPEndPoint* address,
-                    const CompletionCallback& callback);
+                    CompletionOnceCallback callback);
 
   int InternalConnect(const IPEndPoint& address);
 
@@ -312,10 +312,10 @@ class CRNET_EXPORT UDPSocketWin
   std::unique_ptr<IPEndPoint> send_to_address_;
 
   // External callback; called when read is complete.
-  CompletionCallback read_callback_;
+  CompletionOnceCallback read_callback_;
 
   // External callback; called when write is complete.
-  CompletionCallback write_callback_;
+  CompletionOnceCallback write_callback_;
 
   ///BoundNetLog net_log_;
 

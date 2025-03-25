@@ -16,9 +16,6 @@
     <Filter Include="files">
       <UniqueIdentifier>{c35fea01-f3b9-4fe8-8765-e24b7d66d63a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="functional">
-      <UniqueIdentifier>{1cd3d220-06f3-443c-95fb-9800ee6e6b7b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="json">
       <UniqueIdentifier>{537d7f82-81a8-4c05-9add-209580dadff3}</UniqueIdentifier>
     </Filter>
@@ -79,6 +76,9 @@
     <Filter Include="posix">
       <UniqueIdentifier>{102d3cdb-1472-4bb6-b00e-e69c33b3522d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="functional">
+      <UniqueIdentifier>{1cd3d220-06f3-443c-95fb-9800ee6e6b7b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\src\crbase\atomic\atomic_ref_count.h">
@@ -119,33 +119,6 @@
     </ClInclude>
     <ClInclude Include="..\..\..\src\crbase\files\scoped_file.h">
       <Filter>files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\crbase\functional\bind.h">
-      <Filter>functional</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\crbase\functional\bind_helpers.h">
-      <Filter>functional</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\crbase\functional\bind_internal.h">
-      <Filter>functional</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\crbase\functional\bind_internal_win.h">
-      <Filter>functional</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\crbase\functional\callback.h">
-      <Filter>functional</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\crbase\functional\callback_forward.h">
-      <Filter>functional</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\crbase\functional\callback_helpers.h">
-      <Filter>functional</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\crbase\functional\callback_internal.h">
-      <Filter>functional</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\crbase\functional\critical_closure.h">
-      <Filter>functional</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\crbase\json\json_parser.h">
       <Filter>json</Filter>
@@ -523,9 +496,6 @@
     <ClInclude Include="..\..\..\src\crbase\strings\utf_offset_string_conversions.h">
       <Filter>strings</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\crbase\functional\cancelable_callback.h">
-      <Filter>functional</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\src\crbase\memory\free_deleter.h">
       <Filter>memory</Filter>
     </ClInclude>
@@ -548,6 +518,39 @@
     <ClInclude Include="..\..\..\src\crbase\scoped_generic.h" />
     <ClInclude Include="..\..\..\src\crbase\posix\eintr_wrapper.h">
       <Filter>posix</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\crbase\functional\bind.h">
+      <Filter>functional</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\crbase\functional\bind_helpers.h">
+      <Filter>functional</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\crbase\functional\bind_internal.h">
+      <Filter>functional</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\crbase\functional\callback.h">
+      <Filter>functional</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\crbase\functional\callback_forward.h">
+      <Filter>functional</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\crbase\functional\callback_helpers.h">
+      <Filter>functional</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\crbase\functional\callback_internal.h">
+      <Filter>functional</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\crbase\functional\callback_list.h">
+      <Filter>functional</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\crbase\functional\cancelable_callback.h">
+      <Filter>functional</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\crbase\memory\ptr_util.h">
+      <Filter>memory</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\crbase\functional\critical_closure.h">
+      <Filter>functional</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -589,15 +592,6 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\crbase\files\file_win.cc">
       <Filter>files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\crbase\functional\bind_helpers.cc">
-      <Filter>functional</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\crbase\functional\callback_helpers.cc">
-      <Filter>functional</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\crbase\functional\callback_internal.cc">
-      <Filter>functional</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\crbase\json\json_parser.cc">
       <Filter>json</Filter>
@@ -937,6 +931,15 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\crbase\process\process_iterator.cc">
       <Filter>process</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\crbase\functional\bind_helpers.cc">
+      <Filter>functional</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\crbase\functional\callback_helpers.cc">
+      <Filter>functional</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\crbase\functional\callback_internal.cc">
+      <Filter>functional</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

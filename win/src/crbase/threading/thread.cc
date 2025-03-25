@@ -21,7 +21,7 @@ namespace {
 // because its Stop method was called.  This allows us to catch cases where
 // MessageLoop::QuitWhenIdle() is called directly, which is unexpected when
 // using a Thread to setup and run a MessageLoop.
-crbase::LazyInstance<crbase::ThreadLocalBoolean> lazy_tls_bool =
+crbase::LazyInstance<crbase::ThreadLocalBoolean>::Leaky lazy_tls_bool =
     CR_LAZY_INSTANCE_INITIALIZER;
 
 }  // namespace
@@ -162,7 +162,7 @@ void Thread::StopSoon() {
     return;
 
   stopping_ = true;
-  task_runner()->PostTask(CR_FROM_HERE, crbase::Bind(&ThreadQuitHelper));
+  task_runner()->PostTask(CR_FROM_HERE, crbase::BindOnce(&ThreadQuitHelper));
 }
 
 PlatformThreadId Thread::GetThreadId() const {

@@ -75,7 +75,7 @@ int TCPClientSocket::Bind(const IPEndPoint& address) {
   return OK;
 }
 
-int TCPClientSocket::Connect(const CompletionCallback& callback) {
+int TCPClientSocket::Connect(CompletionOnceCallback callback) {
   CR_DCHECK(!callback.is_null());
 
   // If connecting or already connected, then just return OK.
@@ -91,7 +91,7 @@ int TCPClientSocket::Connect(const CompletionCallback& callback) {
 
   int rv = DoConnectLoop(OK);
   if (rv == ERR_IO_PENDING) {
-    connect_callback_ = callback;
+    connect_callback_ = std::move(callback);
   } /* else {
     socket_->EndLoggingMultipleConnectAttempts(rv);
   } */
@@ -163,8 +163,8 @@ int TCPClientSocket::DoConnect() {
   // |socket_| is owned by this class and the callback won't be run once
   // |socket_| is gone. Therefore, it is safe to use base::Unretained() here.
   return socket_->Connect(endpoint,
-                          crbase::Bind(&TCPClientSocket::DidCompleteConnect,
-                                       crbase::Unretained(this)));
+                          crbase::BindOnce(&TCPClientSocket::DidCompleteConnect,
+                                           crbase::Unretained(this)));
 }
 
 int TCPClientSocket::DoConnectComplete(int result) {
@@ -269,14 +269,15 @@ bool TCPClientSocket::WasNpnNegotiated() const {
 
 int TCPClientSocket::Read(IOBuffer* buf,
                           int buf_len,
-                          const CompletionCallback& callback) {
+                          CompletionOnceCallback callback) {
   CR_DCHECK(!callback.is_null());
 
   // |socket_| is owned by this class and the callback won't be run once
   // |socket_| is gone. Therefore, it is safe to use base::Unretained() here.
-  CompletionCallback read_callback = crbase::Bind(
-      &TCPClientSocket::DidCompleteRead, crbase::Unretained(this), callback);
-  int result = socket_->Read(buf, buf_len, read_callback);
+  CompletionOnceCallback read_callback = crbase::BindOnce(
+      &TCPClientSocket::DidCompleteRead, crbase::Unretained(this), 
+      std::move(callback));
+  int result = socket_->Read(buf, buf_len, std::move(read_callback));
   if (result > 0) {
     use_history_.set_was_used_to_convey_data();
     total_received_bytes_ += result;
@@ -287,14 +288,15 @@ int TCPClientSocket::Read(IOBuffer* buf,
 
 int TCPClientSocket::Write(IOBuffer* buf,
                            int buf_len,
-                           const CompletionCallback& callback) {
+                           CompletionOnceCallback callback) {
   CR_DCHECK(!callback.is_null());
 
   // |socket_| is owned by this class and the callback won't be run once
   // |socket_| is gone. Therefore, it is safe to use base::Unretained() here.
-  CompletionCallback write_callback = crbase::Bind(
-      &TCPClientSocket::DidCompleteWrite, crbase::Unretained(this), callback);
-  int result = socket_->Write(buf, buf_len, write_callback);
+  CompletionOnceCallback write_callback = crbase::BindOnce(
+      &TCPClientSocket::DidCompleteWrite, crbase::Unretained(this), 
+      std::move(callback));
+  int result = socket_->Write(buf, buf_len, std::move(write_callback));
   if (result > 0)
     use_history_.set_was_used_to_convey_data();
 
@@ -347,20 +349,20 @@ void TCPClientSocket::DidCompleteConnect(int result) {
   }
 }
 
-void TCPClientSocket::DidCompleteRead(const CompletionCallback& callback,
+void TCPClientSocket::DidCompleteRead(CompletionOnceCallback callback,
                                       int result) {
   if (result > 0)
     total_received_bytes_ += result;
 
-  DidCompleteReadWrite(callback, result);
+  DidCompleteReadWrite(std::move(callback), result);
 }
 
-void TCPClientSocket::DidCompleteWrite(const CompletionCallback& callback,
+void TCPClientSocket::DidCompleteWrite(CompletionOnceCallback callback,
                                        int result) {
-  DidCompleteReadWrite(callback, result);
+  DidCompleteReadWrite(std::move(callback), result);
 }
 
-void TCPClientSocket::DidCompleteReadWrite(const CompletionCallback& callback,
+void TCPClientSocket::DidCompleteReadWrite(CompletionOnceCallback callback,
                                            int result) {
   if (result > 0)
     use_history_.set_was_used_to_convey_data();
@@ -369,7 +371,7 @@ void TCPClientSocket::DidCompleteReadWrite(const CompletionCallback& callback,
   ///tracked_objects::ScopedTracker tracking_profile(
   ///    FROM_HERE_WITH_EXPLICIT_FUNCTION(
   ///        "462780 TCPClientSocket::DidCompleteReadWrite"));
-  callback.Run(result);
+  std::move(callback).Run(result);
 }
 
 int TCPClientSocket::OpenSocket(AddressFamily family) {

@@ -2,22 +2,24 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#ifndef MINI_CHROMIUM_SRC_CRIPC_IPC_SYNC_MESSAGE_H_
-#define MINI_CHROMIUM_SRC_CRIPC_IPC_SYNC_MESSAGE_H_
+#ifndef MINI_CHROMIUM_CRIPC_IPC_SYNC_MESSAGE_H_
+#define MINI_CHROMIUM_CRIPC_IPC_SYNC_MESSAGE_H_
 
 #include <stdint.h>
-#include <windows.h>
 
-#include <string>
+#if defined(MINI_CHROMIUM_OS_WIN)
+#include <windows.h>
+#endif
+
 #include <memory>
+#include <string>
 
 #include "crbase/build_config.h"
-
 #include "cripc/ipc_message.h"
 
 namespace crbase {
 class WaitableEvent;
-}
+}  // namespace crbase
 
 namespace cripc {
 
@@ -39,24 +41,16 @@ class CRIPC_EXPORT SyncMessage : public Message {
   // If this message can cause the receiver to block while waiting for user
   // input (i.e. by calling MessageBox), then the caller needs to pump window
   // messages and dispatch asynchronous messages while waiting for the reply.
-  // If this event is passed in, then window messages will start being pumped
-  // when it's set.  Note that this behavior will continue even if the event is
-  // later reset.  The event must be valid until after the Send call returns.
-  void set_pump_messages_event(crbase::WaitableEvent* event) {
-    pump_messages_event_ = event;
-    if (event) {
-      header()->flags |= PUMPING_MSGS_BIT;
-    } else {
-      header()->flags &= ~PUMPING_MSGS_BIT;
-    }
+  // This call enables message pumping behavior while waiting for a reply to
+  // this message.
+  void EnableMessagePumping() {
+    header()->flags |= PUMPING_MSGS_BIT;
   }
 
-  // Call this if you always want to pump messages.  You can call this method
-  // or set_pump_messages_event but not both.
-  void EnableMessagePumping();
-
-  crbase::WaitableEvent* pump_messages_event() const {
-    return pump_messages_event_;
+  // Indicates whether window messages should be pumped while waiting for a
+  // reply to this message.
+  bool ShouldPumpMessages() const {
+    return (header()->flags & PUMPING_MSGS_BIT) != 0;
   }
 
   // Returns true if the message is a reply to the given request id.
@@ -82,7 +76,6 @@ class CRIPC_EXPORT SyncMessage : public Message {
   static bool WriteSyncHeader(Message* msg, const SyncHeader& header);
 
   std::unique_ptr<MessageReplyDeserializer> deserializer_;
-  crbase::WaitableEvent* pump_messages_event_;
 };
 
 // Used to deserialize parameters from a reply to a synchronous message
@@ -100,10 +93,9 @@ class CRIPC_EXPORT MessageReplyDeserializer {
 // When sending a synchronous message, this structure contains an object
 // that knows how to deserialize the response.
 struct PendingSyncMsg {
-  PendingSyncMsg(int id,
-                 MessageReplyDeserializer* d,
-                 crbase::WaitableEvent* e)
-      : id(id), deserializer(d), done_event(e), send_result(false) { }
+  PendingSyncMsg(int id, MessageReplyDeserializer* d, crbase::WaitableEvent* e)
+      : id(id), deserializer(d), done_event(e), send_result(false) {}
+
   int id;
   MessageReplyDeserializer* deserializer;
   crbase::WaitableEvent* done_event;
@@ -112,4 +104,4 @@ struct PendingSyncMsg {
 
 }  // namespace cripc
 
-#endif  // MINI_CHROMIUM_SRC_CRIPC_IPC_SYNC_MESSAGE_H_
+#endif  // MINI_CHROMIUM_CRIPC_IPC_SYNC_MESSAGE_H_

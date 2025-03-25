@@ -50,11 +50,11 @@
     <ClInclude Include="..\..\..\src\crbase\functional\bind.h" />
     <ClInclude Include="..\..\..\src\crbase\functional\bind_helpers.h" />
     <ClInclude Include="..\..\..\src\crbase\functional\bind_internal.h" />
-    <ClInclude Include="..\..\..\src\crbase\functional\bind_internal_win.h" />
     <ClInclude Include="..\..\..\src\crbase\functional\callback.h" />
     <ClInclude Include="..\..\..\src\crbase\functional\callback_forward.h" />
     <ClInclude Include="..\..\..\src\crbase\functional\callback_helpers.h" />
     <ClInclude Include="..\..\..\src\crbase\functional\callback_internal.h" />
+    <ClInclude Include="..\..\..\src\crbase\functional\callback_list.h" />
     <ClInclude Include="..\..\..\src\crbase\functional\cancelable_callback.h" />
     <ClInclude Include="..\..\..\src\crbase\functional\critical_closure.h" />
     <ClInclude Include="..\..\..\src\crbase\guid.h" />
@@ -71,6 +71,7 @@
     <ClInclude Include="..\..\..\src\crbase\memory\aligned_memory.h" />
     <ClInclude Include="..\..\..\src\crbase\memory\free_deleter.h" />
     <ClInclude Include="..\..\..\src\crbase\memory\linked_ptr.h" />
+    <ClInclude Include="..\..\..\src\crbase\memory\ptr_util.h" />
     <ClInclude Include="..\..\..\src\crbase\memory\ref_counted.h" />
     <ClInclude Include="..\..\..\src\crbase\memory\scoped_vector.h" />
     <ClInclude Include="..\..\..\src\crbase\memory\shared_memory.h" />

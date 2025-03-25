@@ -11,6 +11,7 @@
 
 #include "crbase/functional/bind.h"
 #include "crbase/tracing/location.h"
+#include "crbase/memory/ptr_util.h"
 #include "crbase/memory/ref_counted.h"
 #include "crbase/threading/single_thread_task_runner.h"
 #include "crbase/threading/thread_task_runner_handle.h"
@@ -80,7 +81,7 @@ bool ChannelProxy::Context::TryFilters(const Message& message) {
     if (message.dispatch_error()) {
       listener_task_runner_->PostTask(
           CR_FROM_HERE, 
-          crbase::Bind(&Context::OnDispatchBadMessage, this, message));
+          crbase::BindOnce(&Context::OnDispatchBadMessage, this, message));
     }
 #ifdef ENABLE_IPC_MESSAGE_LOG
     if (logger->Enabled())
@@ -102,7 +103,8 @@ bool ChannelProxy::Context::OnMessageReceived(const Message& message) {
 // Called on the IPC::Channel thread
 bool ChannelProxy::Context::OnMessageReceivedNoFilter(const Message& message) {
   listener_task_runner_->PostTask(
-      CR_FROM_HERE, crbase::Bind(&Context::OnDispatchMessage, this, message));
+      CR_FROM_HERE, 
+      crbase::BindOnce(&Context::OnDispatchMessage, this, message));
   return true;
 }
 
@@ -119,7 +121,7 @@ void ChannelProxy::Context::OnChannelConnected(int32_t peer_pid) {
 
   // See above comment about using listener_task_runner_ here.
   listener_task_runner_->PostTask(
-      CR_FROM_HERE, crbase::Bind(&Context::OnDispatchConnected, this));
+      CR_FROM_HERE, crbase::BindOnce(&Context::OnDispatchConnected, this));
 }
 
 // Called on the IPC::Channel thread
@@ -129,7 +131,7 @@ void ChannelProxy::Context::OnChannelError() {
 
   // See above comment about using listener_task_runner_ here.
   listener_task_runner_->PostTask(
-      CR_FROM_HERE, crbase::Bind(&Context::OnDispatchError, this));
+      CR_FROM_HERE, crbase::BindOnce(&Context::OnDispatchError, this));
 }
 
 // Called on the IPC::Channel thread
@@ -260,7 +262,7 @@ void ChannelProxy::Context::AddFilter(MessageFilter* filter) {
   crbase::AutoLock auto_lock(pending_filters_lock_);
   pending_filters_.push_back(crbase::make_scoped_refptr(filter));
   ipc_task_runner_->PostTask(
-      CR_FROM_HERE, crbase::Bind(&Context::OnAddFilter, this));
+      CR_FROM_HERE, crbase::BindOnce(&Context::OnAddFilter, this));
 }
 
 // Called on the listener's thread
@@ -345,8 +347,8 @@ void ChannelProxy::Context::Send(Message* message) {
 
   ipc_task_runner()->PostTask(
       CR_FROM_HERE, 
-      crbase::Bind(&ChannelProxy::Context::OnSendMessage, this,
-                   crbase::Passed(std::unique_ptr<Message>(message))));
+      crbase::BindOnce(&ChannelProxy::Context::OnSendMessage, this,
+                       crbase::Passed(crbase::WrapUnique(message))));
 }
 
 bool ChannelProxy::Context::IsChannelSendThreadSafe() const {
@@ -418,13 +420,13 @@ void ChannelProxy::Init(std::unique_ptr<ChannelFactory> factory,
   } else {
     context_->ipc_task_runner()->PostTask(
         CR_FROM_HERE, 
-        crbase::Bind(&Context::CreateChannel, context_.get(),
-                     crbase::Passed(&factory)));
+        crbase::BindOnce(&Context::CreateChannel, context_,
+                         crbase::Passed(&factory)));
   }
 
   // complete initialization on the background thread
   context_->ipc_task_runner()->PostTask(
-      CR_FROM_HERE, crbase::Bind(&Context::OnChannelOpened, context_.get()));
+      CR_FROM_HERE, crbase::BindOnce(&Context::OnChannelOpened, context_));
 
   did_init_ = true;
   OnChannelInit();
@@ -440,7 +442,7 @@ void ChannelProxy::Close() {
 
   if (context_->ipc_task_runner()) {
     context_->ipc_task_runner()->PostTask(
-        CR_FROM_HERE, crbase::Bind(&Context::OnChannelClosed, context_.get()));
+        CR_FROM_HERE, crbase::BindOnce(&Context::OnChannelClosed, context_));
   }
 }
 
@@ -466,8 +468,8 @@ void ChannelProxy::RemoveFilter(MessageFilter* filter) {
 
   context_->ipc_task_runner()->PostTask(
       CR_FROM_HERE, 
-      crbase::Bind(&Context::OnRemoveFilter, context_.get(),
-                   crbase::make_scoped_refptr(filter)));
+      crbase::BindOnce(&Context::OnRemoveFilter, context_, 
+                       crbase::RetainedRef(filter)));
 }
 
 void ChannelProxy::ClearIPCTaskRunner() {

@@ -47,7 +47,7 @@
   <ItemGroup>
     <ClInclude Include="..\..\..\src\crnet\base\address_family.h" />
     <ClInclude Include="..\..\..\src\crnet\base\address_list.h" />
-    <ClInclude Include="..\..\..\src\crnet\base\completion_callback.h" />
+    <ClInclude Include="..\..\..\src\crnet\base\completion_once_callback.h" />
     <ClInclude Include="..\..\..\src\crnet\base\io_buffer.h" />
     <ClInclude Include="..\..\..\src\crnet\base\ip_address.h" />
     <ClInclude Include="..\..\..\src\crnet\base\ip_address_number.h" />

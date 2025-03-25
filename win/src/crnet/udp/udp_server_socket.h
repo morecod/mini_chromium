@@ -8,7 +8,7 @@
 #include <stdint.h>
 
 #include "crbase/macros.h"
-#include "crnet/base/completion_callback.h"
+#include "crnet/base/completion_once_callback.h"
 #include "crnet/base/ip_address_number.h"
 #include "crnet/udp/datagram_server_socket.h"
 #include "crnet/udp/udp_socket.h"
@@ -33,11 +33,11 @@ class CRNET_EXPORT UDPServerSocket : public DatagramServerSocket {
   int RecvFrom(IOBuffer* buf,
                int buf_len,
                IPEndPoint* address,
-               const CompletionCallback& callback) override;
+               CompletionOnceCallback callback) override;
   int SendTo(IOBuffer* buf,
              int buf_len,
              const IPEndPoint& address,
-             const CompletionCallback& callback) override;
+             CompletionOnceCallback callback) override;
   int SetReceiveBufferSize(int32_t size) override;
   int SetSendBufferSize(int32_t size) override;
   void Close() override;

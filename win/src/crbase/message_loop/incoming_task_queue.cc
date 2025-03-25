@@ -43,7 +43,7 @@ IncomingTaskQueue::IncomingTaskQueue(MessageLoop* message_loop)
 
 bool IncomingTaskQueue::AddToIncomingQueue(
     const tracked_objects::Location& from_here,
-    const Closure& task,
+    OnceClosure task,
     TimeDelta delay,
     bool nestable) {
   CR_DLOG_IF(WARNING, delay.InSeconds() > kTaskDelayWarningThresholdInSeconds)
@@ -52,7 +52,7 @@ bool IncomingTaskQueue::AddToIncomingQueue(
 
   AutoLock locked(incoming_queue_lock_);
   PendingTask pending_task(
-      from_here, task, CalculateDelayedRuntime(delay), nestable);
+      from_here, std::move(task), CalculateDelayedRuntime(delay), nestable);
 
   // We consider the task needs a high resolution timer if the delay is
   // more than 0 and less than 32ms. This caps the relative error to
@@ -89,7 +89,7 @@ int IncomingTaskQueue::ReloadWorkQueue(TaskQueue* work_queue) {
     // incoming queue becomes nonempty we need to schedule it again.
     message_loop_scheduled_ = false;
   } else {
-    incoming_queue_.Swap(work_queue);
+    incoming_queue_.swap(*work_queue);
   }
   // Reset the count of high resolution tasks since our queue is now empty.
   int high_res_tasks = high_res_task_count_;
@@ -148,8 +148,7 @@ bool IncomingTaskQueue::PostPendingTask(PendingTask* pending_task) {
   ///                                              *pending_task);
 
   bool was_empty = incoming_queue_.empty();
-  incoming_queue_.push(*pending_task);
-  pending_task->task.Reset();
+  incoming_queue_.push(std::move(*pending_task));
 
   if (is_ready_for_scheduling_ &&
       (always_schedule_work_ || (!message_loop_scheduled_ && was_empty))) {

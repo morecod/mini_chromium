@@ -30,7 +30,7 @@ DWORD CALLBACK WorkItemCallback(void* param) {
 
   tracked_objects::TaskStopwatch stopwatch;
   stopwatch.Start();
-  pending_task->task.Run();
+  std::move(pending_task->task).Run();
   stopwatch.Stop();
 
   g_worker_pool_running_on_this_thread.Get().Set(false);
@@ -61,8 +61,8 @@ bool PostTaskInternal(PendingTask* pending_task, bool task_is_slow) {
 
 // static
 bool WorkerPool::PostTask(const tracked_objects::Location& from_here,
-                          const Closure& task, bool task_is_slow) {
-  PendingTask* pending_task = new PendingTask(from_here, task);
+                          OnceClosure task, bool task_is_slow) {
+  PendingTask* pending_task = new PendingTask(from_here, std::move(task));
   return PostTaskInternal(pending_task, task_is_slow);
 }
 

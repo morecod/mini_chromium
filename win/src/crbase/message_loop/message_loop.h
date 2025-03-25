@@ -177,17 +177,17 @@ class CRBASE_EXPORT MessageLoop : public MessagePump::Delegate {
   // NOTE: These methods may be called on any thread.  The Task will be invoked
   // on the thread that executes MessageLoop::Run().
   void PostTask(const tracked_objects::Location& from_here,
-                const Closure& task);
+                OnceClosure task);
 
   void PostDelayedTask(const tracked_objects::Location& from_here,
-                       const Closure& task,
+                       OnceClosure task,
                        TimeDelta delay);
 
   void PostNonNestableTask(const tracked_objects::Location& from_here,
-                           const Closure& task);
+                           OnceClosure task);
 
   void PostNonNestableDelayedTask(const tracked_objects::Location& from_here,
-                                  const Closure& task,
+                                  OnceClosure task,
                                   TimeDelta delay);
 
   // A variant on PostTask that deletes the given object.  This is useful
@@ -265,9 +265,9 @@ class CRBASE_EXPORT MessageLoop : public MessagePump::Delegate {
   void QuitNow();
 
   // Deprecated: use RunLoop instead.
-  // Construct a Closure that will call QuitWhenIdle(). Useful to schedule an
-  // arbitrary MessageLoop to QuitWhenIdle.
-  static Closure QuitWhenIdleClosure();
+  // Construct a RepeatingClosure that will call QuitWhenIdle(). Useful to 
+  // schedule an arbitrary MessageLoop to QuitWhenIdle.
+  static RepeatingClosure QuitWhenIdleClosure();
 
   // Set the timer slack for this message loop.
   void SetTimerSlack(TimerSlack timer_slack) {
@@ -390,7 +390,7 @@ class CRBASE_EXPORT MessageLoop : public MessagePump::Delegate {
   ///debug::TaskAnnotator* task_annotator() { return &task_annotator_; }
 
   // Runs the specified PendingTask.
-  void RunTask(const PendingTask& pending_task);
+  void RunTask(PendingTask* pending_task);
 
   //----------------------------------------------------------------------------
  protected:
@@ -402,7 +402,8 @@ class CRBASE_EXPORT MessageLoop : public MessagePump::Delegate {
   friend class ScheduleWorkTest;
   friend class Thread;
 
-  using MessagePumpFactoryCallback = Callback<std::unique_ptr<MessagePump>()>;
+  using MessagePumpFactoryCallback = 
+      OnceCallback<std::unique_ptr<MessagePump>()>;
 
   // Creates a MessageLoop without binding to a thread.
   // If |type| is TYPE_CUSTOM non-null |pump_factory| must be also given
@@ -438,10 +439,10 @@ class CRBASE_EXPORT MessageLoop : public MessagePump::Delegate {
 
   // Calls RunTask or queues the pending_task on the deferred task list if it
   // cannot be run right now.  Returns true if the task was run.
-  bool DeferOrRunPendingTask(const PendingTask& pending_task);
+  bool DeferOrRunPendingTask(PendingTask pending_task);
 
   // Adds the pending task to delayed_work_queue_.
-  void AddToDelayedWorkQueue(const PendingTask& pending_task);
+  void AddToDelayedWorkQueue(PendingTask pending_task);
 
   // Delete tasks that haven't run yet without running them.  Used in the
   // destructor to make sure all the task's destructors get called.  Returns
