@@ -70,9 +70,16 @@ void CALLBACK ObjectWatcher::DoneWaiting(void* param, BOOLEAN timed_out) {
   // The destructor blocks on any callbacks that are in flight, so we know that
   // that is always a pointer to a valid ObjectWater.
   ObjectWatcher* that = static_cast<ObjectWatcher*>(param);
-  that->origin_loop_->task_runner()->PostTask(CR_FROM_HERE, that->callback_);
+
+  // `that` must not be touched once `PostTask` returns since the callback
+  // could delete the instance on another thread.
+  SingleThreadTaskRunner* const task_runner = 
+      that->origin_loop_->task_runner().get();
+
   if (that->run_once_)
-    that->callback_.Reset();
+    task_runner->PostTask(CR_FROM_HERE, std::move(that->callback_));
+  else
+    task_runner->PostTask(CR_FROM_HERE, that->callback_);
 }
 
 bool ObjectWatcher::StartWatchingInternal(HANDLE object, Delegate* delegate,
