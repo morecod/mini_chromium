@@ -34,7 +34,7 @@
 #include "crbase/base_export.h"
 #include "crbase/build_config.h"
 
-#if defined(WCHAR_T_IS_UTF16)
+#if defined(CR_WCHAR_T_IS_UTF16)
 
 namespace crbase {
 
@@ -44,7 +44,7 @@ typedef std::char_traits<wchar_t> string16_char_traits;
 
 }  // namespace crbase
 
-#elif defined(WCHAR_T_IS_UTF32)
+#elif defined(CR_WCHAR_T_IS_UTF32)
 
 namespace crbase {
 
@@ -183,6 +183,6 @@ extern template
 class CRBASE_EXPORT std::basic_string<crbase::char16, 
                                       crbase::string16_char_traits>;
 
-#endif  // WCHAR_T_IS_UTF32
+#endif  // CR_WCHAR_T_IS_UTF32
 
 #endif  // MINI_CHROMIUM_CRBASE_STRINGS_STRING16_H_

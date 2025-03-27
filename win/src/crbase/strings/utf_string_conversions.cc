@@ -90,7 +90,7 @@ std::wstring UTF8ToWide(StringPiece utf8) {
 
 // UTF-16 <-> Wide -------------------------------------------------------------
 
-#if defined(WCHAR_T_IS_UTF16)
+#if defined(CR_WCHAR_T_IS_UTF16)
 
 // When wide == UTF-16, then conversions are a NOP.
 bool WideToUTF16(const wchar_t* src, size_t src_len, string16* output) {
@@ -111,7 +111,7 @@ std::wstring UTF16ToWide(const string16& utf16) {
   return utf16;
 }
 
-#elif defined(WCHAR_T_IS_UTF32)
+#elif defined(CR_WCHAR_T_IS_UTF32)
 
 bool WideToUTF16(const wchar_t* src, size_t src_len, string16* output) {
   output->clear();
@@ -141,11 +141,11 @@ std::wstring UTF16ToWide(const string16& utf16) {
   return ret;
 }
 
-#endif  // defined(WCHAR_T_IS_UTF32)
+#endif  // defined(CR_WCHAR_T_IS_UTF32)
 
 // UTF16 <-> UTF8 --------------------------------------------------------------
 
-#if defined(WCHAR_T_IS_UTF32)
+#if defined(CR_WCHAR_T_IS_UTF32)
 
 bool UTF8ToUTF16(const char* src, size_t src_len, string16* output) {
   if (IsStringASCII(StringPiece(src, src_len))) {
@@ -192,7 +192,7 @@ std::string UTF16ToUTF8(StringPiece16 utf16) {
   return ret;
 }
 
-#elif defined(WCHAR_T_IS_UTF16)
+#elif defined(CR_WCHAR_T_IS_UTF16)
 // Easy case since we can use the "wide" versions we already wrote above.
 
 bool UTF8ToUTF16(const char* src, size_t src_len, string16* output) {
