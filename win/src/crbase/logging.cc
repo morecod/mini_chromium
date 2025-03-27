@@ -551,13 +551,23 @@ LogMessage::~LogMessage() {
     // to do this at the same time, there will be a race condition to create
     // the lock. This is why InitLogging should be called from the main
     // thread at the beginning of execution.
-    if (InitializeLogFileHandle()) {
+#if !defined(MINI_CHROMIUM_OS_WIN)
+    LoggingLock::Init(LOCK_LOG_FILE, nullptr);
+    LoggingLock logging_lock;
+#endif
+    if (/*InitializeLogFileHandle()*/g_log_file) {
+#if defined(MINI_CHROMIUM_OS_WIN)
       DWORD num_written;
-      ::WriteFile(g_log_file,
-                  static_cast<const void*>(str_newline.c_str()),
-                  static_cast<DWORD>(str_newline.length()),
-                  &num_written,
-                  nullptr);
+      WriteFile(g_log_file,
+                static_cast<const void*>(str_newline.c_str()),
+                static_cast<DWORD>(str_newline.length()),
+                &num_written,
+                nullptr);
+#else
+      ignore_result(fwrite(
+          str_newline.data(), str_newline.size(), 1, g_log_file));
+      fflush(g_log_file);
+#endif
     }
   }
 
