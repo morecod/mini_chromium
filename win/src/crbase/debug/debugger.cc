@@ -23,13 +23,5 @@ bool WaitForDebugger(int wait_seconds, bool silent) {
   return false;
 }
 
-void SetSuppressDebugUI(bool suppress) {
-  is_debug_ui_suppressed = suppress;
-}
-
-bool IsDebugUISuppressed() {
-  return is_debug_ui_suppressed;
-}
-
 }  // namespace debug
 }  // namespace crbase

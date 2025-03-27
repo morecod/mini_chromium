@@ -799,7 +799,7 @@ CRBASE_EXPORT void RawLog(int level, const char *message);
   do {                                                                         \
     if (!(condition))                                                          \
       crbase_logging::RawLog(crbase_logging::LOG_FATAL,                        \
-                           "Check failed: " #condition "\n");                  \
+                             "Check failed: " #condition "\n");                \
   } while (0)
 
 #if defined(MINI_CHROMIUM_OS_WIN)

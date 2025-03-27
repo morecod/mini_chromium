@@ -74,6 +74,7 @@ Logging::Logging()
 Logging::~Logging() {
 }
 
+// static
 Logging* Logging::GetInstance() {
   return crbase::Singleton<Logging>::get();
 }

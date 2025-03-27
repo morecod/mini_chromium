@@ -30,14 +30,6 @@ CRBASE_EXPORT bool BeingDebugged();
 // Break into the debugger, assumes a debugger is present.
 CRBASE_EXPORT void BreakDebugger();
 
-// Used in test code, this controls whether showing dialogs and breaking into
-// the debugger is suppressed for debug errors, even in debug mode (normally
-// release mode doesn't do this stuff --  this is controlled separately).
-// Normally UI is not suppressed.  This is normally used when running automated
-// tests where we want a crash rather than a dialog or a debugger.
-CRBASE_EXPORT void SetSuppressDebugUI(bool suppress);
-CRBASE_EXPORT bool IsDebugUISuppressed();
-
 }  // namespace debug
 }  // namespace crbase
 

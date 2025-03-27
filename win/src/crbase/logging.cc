@@ -66,6 +66,7 @@ typedef pthread_mutex_t* MutexHandle;
 #include "crbase/synchronization/lock_impl.h"
 #include "crbase/threading/platform_thread.h"
 #include "crbase/posix/eintr_wrapper.h"
+#include "crbase/immediate_crash.h"
 
 #if defined(MINI_CHROMIUM_OS_POSIX)
 #include "crbase/posix/safe_strerror.h"
@@ -584,7 +585,8 @@ LogMessage::~LogMessage() {
       }
 #endif
       // Crash the process to generate a dump.
-      crbase::debug::BreakDebugger();
+      ///crbase::debug::BreakDebugger();
+      CR_IMMEDIATE_CRASH();
     }
   }
 }
