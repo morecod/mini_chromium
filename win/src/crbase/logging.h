@@ -226,7 +226,7 @@ CRBASE_EXPORT void SetLogAssertHandler(LogAssertHandlerFunction handler);
 // should not be sent to other log destinations.
 typedef bool (*LogMessageHandlerFunction)(int severity, const char *file,
                                           int line, size_t message_start,
-                                          const std::string &str);
+                                          std::string &str);
 CRBASE_EXPORT void SetLogMessageHandler(LogMessageHandlerFunction handler);
 CRBASE_EXPORT LogMessageHandlerFunction GetLogMessageHandler();
 

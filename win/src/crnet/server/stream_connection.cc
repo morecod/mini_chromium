@@ -124,6 +124,27 @@ bool StreamConnection::QueuedWriteIOBuffer::Append(const std::string& data) {
   return true;
 }
 
+bool StreamConnection::QueuedWriteIOBuffer::Append(const char* data, 
+                                                   size_t data_len) {
+  if (data == nullptr || !data_len)
+    return true;
+
+  if (total_size_ + static_cast<int>(data_len) > max_buffer_size_) {
+    CR_LOG(ERROR) << "Too large write data is pending: size="
+                  << total_size_ + data_len
+                  << ", max_buffer_size=" << max_buffer_size_;
+    return false;
+  }
+
+  pending_data_.push(std::string(data, data_len));
+  total_size_ += static_cast<int>(data_len);
+
+  // If new data is the first pending data, updates data_.
+  if (pending_data_.size() == 1)
+    data_ = const_cast<char*>(pending_data_.front().data());
+  return true;
+}
+
 void StreamConnection::QueuedWriteIOBuffer::DidConsume(int size) {
   CR_DCHECK_GE(total_size_, size);
   CR_DCHECK_GE(GetSizeToWrite(), size);

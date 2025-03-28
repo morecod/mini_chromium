@@ -88,6 +88,7 @@ class StreamConnection {
     // the limit, |total_size_limit_|.  It would change data() if new data is
     // the first pending data.
     bool Append(const std::string& data);
+    bool Append(const char* data, size_t len);
 
     // Consumes data and changes data() accordingly.  It cannot be more than
     // GetSizeToWrite().

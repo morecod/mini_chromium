@@ -47,13 +47,14 @@ StreamServer::~StreamServer() {
       id_to_connection_.begin(), id_to_connection_.end());
 }
 
-void StreamServer::SendRaw(int connection_id, const std::string& data) {
+void StreamServer::SendData(int connection_id, const char* data, 
+                            size_t data_len) {
   StreamConnection* connection = FindConnection(connection_id);
   if (connection == NULL)
     return;
 
   bool writing_in_progress = !connection->write_buf()->IsEmpty();
-  if (connection->write_buf()->Append(data) && !writing_in_progress)
+  if (connection->write_buf()->Append(data, data_len) && !writing_in_progress)
     DoWriteLoop(connection);
 }
 

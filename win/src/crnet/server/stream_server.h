@@ -30,6 +30,9 @@ class StreamServer {
    public:
     virtual ~Delegate() {}
     virtual void OnConnect(int connection_id) = 0;
+
+    // Returns the number of bytes handled. if an error occurs than return a
+    // net_error code(defines in crnet/base/net_errors.h i.g:ERROR_FAILED)
     virtual int OnRecvData(int connection_id, const char* data, 
                            int data_len) = 0;
     virtual void OnClose(int connection_id) = 0;
@@ -49,7 +52,7 @@ class StreamServer {
   // Sends the provided data directly to the given connection. No validation is
   // performed that data constitutes a valid Stream response. A valid Stream
   // response may be split across multiple calls to SendRaw.
-  void SendRaw(int connection_id, const std::string& data);
+  void SendData(int connection_id, const char* data, size_t data_len);
 
   void Close(int connection_id);
 
@@ -81,7 +84,10 @@ class StreamServer {
   bool HasClosedConnection(StreamConnection* connection);
 
   const std::unique_ptr<ServerSocket> server_socket_;
+
+  // currently accepted socket from client.
   std::unique_ptr<StreamSocket> accepted_socket_;
+
   StreamServer::Delegate* const delegate_;
 
   int last_id_;
