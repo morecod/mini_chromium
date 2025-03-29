@@ -176,36 +176,15 @@ class CRBASE_EXPORT RefCountedThreadSafeBase {
 
 }  // namespace subtle
 
-// ScopedAllowCrossThreadRefCountAccess disables the check documented on
-// RefCounted below for rare pre-existing use cases where thread-safety was
-// guaranteed through other means (e.g. explicit sequencing of calls across
-// execution sequences when bouncing between threads in order). New callers
-// should refrain from using this (callsites handling thread-safety through
-// locks should use RefCountedThreadSafe per the overhead of its atomics being
-// negligible compared to locks anyways and callsites doing explicit sequencing
-// should properly std::move() the ref to avoid hitting this check).
-// TODO(tzik): Cleanup existing use cases and remove
-// ScopedAllowCrossThreadRefCountAccess.
-class CRBASE_EXPORT ScopedAllowCrossThreadRefCountAccess final {
- public:
-#if CR_DCHECK_IS_ON()
-  ScopedAllowCrossThreadRefCountAccess();
-  ~ScopedAllowCrossThreadRefCountAccess();
-#else
-  ScopedAllowCrossThreadRefCountAccess() {}
-  ~ScopedAllowCrossThreadRefCountAccess() {}
-#endif
-};
-
 //
 // A base class for reference counted classes.  Otherwise, known as a cheap
 // knock-off of WebKit's RefCounted<T> class.  To use this, just extend your
 // class from it like so:
 //
-//   class MyFoo : public base::RefCounted<MyFoo> {
+//   class MyFoo : public crbase::RefCounted<MyFoo> {
 //    ...
 //    private:
-//     friend class base::RefCounted<MyFoo>;
+//     friend class crbase::RefCounted<MyFoo>;
 //     ~MyFoo();
 //   };
 //
@@ -225,8 +204,8 @@ class CRBASE_EXPORT ScopedAllowCrossThreadRefCountAccess final {
 // the ref counted class to opt-in.
 //
 // If an object has start-from-one ref count, the first scoped_refptr need to be
-// created by base::AdoptRef() or base::MakeRefCounted(). We can use
-// base::MakeRefCounted() to create create both type of ref counted object.
+// created by base::AdoptRef() or crbase::MakeRefCounted(). We can use
+// crbase::MakeRefCounted() to create create both type of ref counted object.
 //
 // The motivations to use start-from-one ref count are:
 //  - Start-from-one ref count doesn't need the ref count increment for the
@@ -237,7 +216,7 @@ class CRBASE_EXPORT ScopedAllowCrossThreadRefCountAccess final {
 //    TODO(tzik): Implement invalid acquisition detection.
 //  - Behavior parity to Blink's WTF::RefCounted, whose count starts from one.
 //    And start-from-one ref count is a step to merge WTF::RefCounted into
-//    base::RefCounted.
+//    crbase::RefCounted.
 //
 #define REQUIRE_ADOPTION_FOR_REFCOUNTED_TYPE()               \
   static constexpr ::crbase::subtle::StartRefCountFromOneTag \
@@ -290,14 +269,14 @@ struct DefaultRefCountedThreadSafeTraits {
 //
 // A thread-safe variant of RefCounted<T>
 //
-//   class MyFoo : public base::RefCountedThreadSafe<MyFoo> {
+//   class MyFoo : public crbase::RefCountedThreadSafe<MyFoo> {
 //    ...
 //   };
 //
 // If you're using the default trait, then you should add compile time
 // asserts that no one else is deleting your object.  i.e.
 //    private:
-//     friend class base::RefCountedThreadSafe<MyFoo>;
+//     friend class crbase::RefCountedThreadSafe<MyFoo>;
 //     ~MyFoo();
 //
 // We can use REQUIRE_ADOPTION_FOR_REFCOUNTED_TYPE() with RefCountedThreadSafe

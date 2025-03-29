@@ -19,7 +19,7 @@
 #include "crbase/atomic/atomic_sequence_num.h"
 #include "crbase/functional/callback.h"
 #include "crbase/functional/critical_closure.h"
-#include "crbase/memory/linked_ptr.h"
+#include "crbase/memory/ptr_util.h"
 #include "crbase/strings/stringprintf.h"
 #include "crbase/synchronization/condition_variable.h"
 #include "crbase/synchronization/lock.h"
@@ -459,7 +459,7 @@ class SequencedWorkerPool::Inner {
   // Owning pointers to all threads we've created so far, indexed by
   // ID. Since we lazily create threads, this may be less than
   // max_threads_ and will be initially empty.
-  typedef std::map<PlatformThreadId, linked_ptr<Worker> > ThreadMap;
+  typedef std::map<PlatformThreadId, std::unique_ptr<Worker> > ThreadMap;
   ThreadMap threads_;
 
   // Set to true when we're in the process of creating another thread.
@@ -794,7 +794,7 @@ void SequencedWorkerPool::Inner::ThreadLoop(Worker* this_worker) {
     thread_being_created_ = false;
     std::pair<ThreadMap::iterator, bool> result =
         threads_.insert(
-            std::make_pair(this_worker->tid(), make_linked_ptr(this_worker)));
+            std::make_pair(this_worker->tid(), WrapUnique(this_worker)));
     CR_DCHECK(result.second);
 
     while (true) {

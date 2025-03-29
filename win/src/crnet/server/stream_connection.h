@@ -132,7 +132,6 @@ class StreamConnection {
   const std::unique_ptr<StreamSocket> socket_;
   const crbase::scoped_refptr<ReadIOBuffer> read_buf_;
   const crbase::scoped_refptr<QueuedWriteIOBuffer> write_buf_;
-
   ///DISALLOW_COPY_AND_ASSIGN(HttpConnection);
 };
 

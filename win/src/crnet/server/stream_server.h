@@ -32,7 +32,7 @@ class StreamServer {
     virtual void OnConnect(int connection_id) = 0;
 
     // Returns the number of bytes handled. if an error occurs then return a
-    // net_error code(defines in crnet/base/net_errors.h i.g:ERROR_FAILED)
+    // net error code(defines in crnet/base/net_errors.h i.g:ERROR_FAILED)
     virtual int OnRecvData(int connection_id, const char* data, 
                            int data_len) = 0;
     virtual void OnClose(int connection_id) = 0;
