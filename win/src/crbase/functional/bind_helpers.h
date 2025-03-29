@@ -4,7 +4,7 @@
 
 // This defines a set of argument wrappers and related factory methods that
 // can be used specify the refcounting and reference semantics of arguments
-// that are bound by the Bind() function in base/bind.h.
+// that are bound by the Bind() function in crbase/functional/bind.h.
 //
 // It also defines a set of simple functions and utilities that people want
 // when using Callback<> and Bind().
@@ -12,8 +12,8 @@
 //
 // ARGUMENT BINDING WRAPPERS
 //
-// The wrapper functions are base::Unretained(), base::Owned(), base::Passed(),
-// base::ConstRef(), and base::IgnoreResult().
+// The wrapper functions are crbase::Unretained(), crbase::Owned(), 
+// crbase::Passed(), crbase::ConstRef(), and crbase::IgnoreResult().
 //
 // Unretained() allows Bind() to bind a non-refcounted class, and to disable
 // refcounting on arguments that are refcounted objects.
@@ -79,7 +79,7 @@
 //    void foo(RefCountedBytes* bytes) {}
 //
 //    scoped_refptr<RefCountedBytes> bytes = ...;
-//    Closure callback = Bind(&foo, base::RetainedRef(bytes));
+//    Closure callback = Bind(&foo, crbase::RetainedRef(bytes));
 //    callback.Run();
 //
 // Without RetainedRef, the scoped_refptr would try to implicitly convert to

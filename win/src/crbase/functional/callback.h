@@ -9,7 +9,8 @@
 #include "crbase/functional/callback_internal.h"
 
 // NOTE: Header files that do not require the full definition of Callback or
-// Closure should #include "base/callback_forward.h" instead of this file.
+// Closure should #include "crbase/functional/callback_forward.h" instead of 
+// this file.
 
 // -----------------------------------------------------------------------------
 // Usage documentation

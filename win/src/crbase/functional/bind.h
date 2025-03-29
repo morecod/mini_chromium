@@ -19,8 +19,8 @@
 // -----------------------------------------------------------------------------
 //
 // If you're reading the implementation, before proceeding further, you should
-// read the top comment of base/bind_internal.h for a definition of common
-// terms and concepts.
+// read the top comment of crbase/functional/bind_internal.h for a definition of
+// common terms and concepts.
 
 namespace crbase {
 
@@ -67,16 +67,6 @@ BindRepeating(Functor&& functor, Args&&... args) {
       std::forward<Functor>(functor),
       std::forward<Args>(args)...));
 }
-
-// Unannotated Bind.
-// TODO(tzik): Deprecate this and migrate to OnceCallback and
-// RepeatingCallback, once they get ready.
-///template <typename Functor, typename... Args>
-///inline Callback<MakeUnboundRunType<Functor, Args...>>
-///Bind(Functor&& functor, Args&&... args) {
-///  return BindRepeating(std::forward<Functor>(functor),
-///                       std::forward<Args>(args)...);
-///}
 
 }  // namespace crbase
 

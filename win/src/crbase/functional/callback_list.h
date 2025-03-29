@@ -8,6 +8,7 @@
 #include <list>
 #include <memory>
 
+#include "crbase/functional/callback_forward.h"
 #include "crbase/functional/callback.h"
 #include "crbase/compiler_specific.h"
 #include "crbase/logging.h"
@@ -26,9 +27,12 @@
 //  public:
 //   ...
 //
-//   typedef base::Callback<void(const Foo&)> OnFooCallback;
+//   MyWidget(const MyWidget&) = delete;
+//   MyWidget& operator=(const MyWidget&) = delete;
 //
-//   std::unique_ptr<base::CallbackList<void(const Foo&)>::Subscription>
+//   typedef crbase::Callback<void(const Foo&)> OnFooCallback;
+//
+//   std::unique_ptr<crbase::CallbackList<void(const Foo&)>::Subscription>
 //   RegisterCallback(const OnFooCallback& cb) {
 //     return callback_list_.Add(cb);
 //   }
@@ -38,14 +42,15 @@
 //      callback_list_.Notify(foo);
 //   }
 //
-//   base::CallbackList<void(const Foo&)> callback_list_;
-//
-//   DISALLOW_COPY_AND_ASSIGN(MyWidget);
+//   crbase::CallbackList<void(const Foo&)> callback_list_;
 // };
 //
 //
 // class MyWidgetListener {
 //  public:
+//   MyWidgetListener(const MyWidgetListener&) = delete;
+//   MyWidgetListener& operator=(const MyWidgetListener&) = delete;
+//
 //   MyWidgetListener::MyWidgetListener() {
 //     foo_subscription_ = MyWidget::GetCurrent()->RegisterCallback(
 //             base::Bind(&MyWidgetListener::OnFoo, this)));
@@ -63,8 +68,6 @@
 //
 //   std::unique_ptr<base::CallbackList<void(const Foo&)>::Subscription>
 //       foo_subscription_;
-//
-//   DISALLOW_COPY_AND_ASSIGN(MyWidgetListener);
 // };
 
 namespace crbase {
@@ -98,14 +101,13 @@ class CallbackListBase {
    private:
     CallbackListBase<CallbackType>* list_;
     typename std::list<CallbackType>::iterator iter_;
-
-    ///DISALLOW_COPY_AND_ASSIGN(Subscription);
   };
 
   // Add a callback to the list. The callback will remain registered until the
   // returned Subscription is destroyed, which must occur before the
   // CallbackList is destroyed.
-  std::unique_ptr<Subscription> Add(const CallbackType& cb) WARN_UNUSED_RESULT {
+  std::unique_ptr<Subscription> Add(const CallbackType& cb) 
+      CR_WARN_UNUSED_RESULT {
     CR_DCHECK(!cb.is_null());
     return std::unique_ptr<Subscription>(
         new Subscription(this, callbacks_.insert(callbacks_.end(), cb)));
@@ -198,9 +200,7 @@ class CallbackListBase {
  private:
   std::list<CallbackType> callbacks_;
   int active_iterator_count_;
-  Closure removal_callback_;
-
-  ///DISALLOW_COPY_AND_ASSIGN(CallbackListBase);
+  RepeatingClosure removal_callback_;
 };
 
 }  // namespace internal
@@ -227,9 +227,6 @@ class CallbackList<void(Args...)>
       cb->Run(args...);
     }
   }
-
- private:
-  ///DISALLOW_COPY_AND_ASSIGN(CallbackList);
 };
 
 }  // namespace crbase
