@@ -42,7 +42,7 @@
 //      callback_list_.Notify(foo);
 //   }
 //
-//   crbase::CallbackList<void(const Foo&)> callback_list_;
+//   crbase::RepeatingCallbackList<void(const Foo&)> callback_list_;
 // };
 //
 //
@@ -53,7 +53,7 @@
 //
 //   MyWidgetListener::MyWidgetListener() {
 //     foo_subscription_ = MyWidget::GetCurrent()->RegisterCallback(
-//             base::Bind(&MyWidgetListener::OnFoo, this)));
+//             crbase::BindRepeating(&MyWidgetListener::OnFoo, this)));
 //   }
 //
 //   MyWidgetListener::~MyWidgetListener() {
@@ -66,7 +66,8 @@
 //     // Do something.
 //   }
 //
-//   std::unique_ptr<base::CallbackList<void(const Foo&)>::Subscription>
+//   std::unique_ptr<crbase::RepeatingCallbackList<void(const Foo&)>::
+//                       Subscription>
 //       foo_subscription_;
 // };
 
@@ -205,18 +206,18 @@ class CallbackListBase {
 
 }  // namespace internal
 
-template <typename Sig> class CallbackList;
+template <typename Sig> class RepeatingCallbackList;
 
 template <typename... Args>
-class CallbackList<void(Args...)>
+class RepeatingCallbackList<void(Args...)>
     : public internal::CallbackListBase<Callback<void(Args...)> > {
  public:
   typedef Callback<void(Args...)> CallbackType;
 
-  CallbackList(const CallbackList&) = delete;
-  CallbackList& operator=(const CallbackList&) = delete;
+  RepeatingCallbackList(const RepeatingCallbackList&) = delete;
+  RepeatingCallbackList& operator=(const RepeatingCallbackList&) = delete;
 
-  CallbackList() {}
+  RepeatingCallbackList() {}
 
   template <typename... RunArgs>
   void Notify(RunArgs&&... args) {
