@@ -62,14 +62,4 @@ bool RefCountedThreadSafeBase::Release() const {
 
 }  // namespace subtle
 
-#if CR_DCHECK_IS_ON()
-ScopedAllowCrossThreadRefCountAccess::ScopedAllowCrossThreadRefCountAccess() {
-  AtomicRefCountInc(&g_cross_thread_ref_count_access_allow_count);
-}
-
-ScopedAllowCrossThreadRefCountAccess::~ScopedAllowCrossThreadRefCountAccess() {
-  AtomicRefCountDec(&g_cross_thread_ref_count_access_allow_count);
-}
-#endif
-
 }  // namespace crbase
