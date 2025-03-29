@@ -330,6 +330,7 @@ void MessagePumpForUI::RescheduleTimer() {
     // TODO(jar): If we don't see this error, use a CHECK() here instead.
     ///UMA_HISTOGRAM_ENUMERATION("Chrome.MessageLoopProblem", SET_TIMER_ERROR,
     ///                          MESSAGE_LOOP_PROBLEM_MAX);
+    CR_CHECK(FALSE) << "MessageLoopProblem: SET_TIMER_ERROR";
   }
 }
 
@@ -351,8 +352,6 @@ bool MessagePumpForUI::ProcessNextWindowsMessage() {
 }
 
 bool MessagePumpForUI::ProcessMessageHelper(const MSG& msg) {
-  ///TRACE_EVENT1("base", "MessagePumpForUI::ProcessMessageHelper",
-  ///             "message", msg.message);
   if (WM_QUIT == msg.message) {
     // Repost the QUIT message so that it will be retrieved by the primary
     // GetMessage() loop.
@@ -555,7 +554,7 @@ bool MessagePumpForIO::WaitForIOCompletion(DWORD timeout, IOHandler* filter) {
       completed_io_.push_back(item);
     } else {
       CR_DCHECK(!item.has_valid_io_context ||
-                  (item.context->handler == item.handler));
+                    (item.context->handler == item.handler));
       WillProcessIOEvent();
       item.handler->OnIOCompleted(item.context, item.bytes_transfered,
                                   item.error);

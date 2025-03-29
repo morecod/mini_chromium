@@ -47,7 +47,7 @@ class CRBASE_EXPORT IncomingTaskQueue
   bool HasHighResolutionTasks();
 
   // Returns true if the message loop is "idle". Provided for testing.
-  bool IsIdleForTesting();
+  ///bool IsIdleForTesting();
 
   // Loads tasks from the |incoming_queue_| into |*work_queue|. Must be called
   // from the thread that is running the loop. Returns the number of tasks that

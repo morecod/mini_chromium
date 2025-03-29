@@ -383,7 +383,7 @@ class CRBASE_EXPORT MessageLoop : public MessagePump::Delegate {
   bool HasHighResolutionTasks();
 
   // Returns true if the message loop is "idle". Provided for testing.
-  bool IsIdleForTesting();
+  ///bool IsIdleForTesting();
 
   // Returns the TaskAnnotator which is used to add debug information to posted
   // tasks.

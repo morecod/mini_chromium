@@ -56,20 +56,20 @@ namespace crurl {
 // * SchemeHostPort objects are commonly created from GURL objects:
 //
 //     GURL url("https://example.com/");
-//     url::SchemeHostPort tuple(url);
+//     crurl::SchemeHostPort tuple(url);
 //     tuple.scheme(); // "https"
 //     tuple.host(); // "example.com"
 //     tuple.port(); // 443
 //
 // * Objects may also be explicitly created and compared:
 //
-//     url::SchemeHostPort tuple(url::kHttpsScheme, "example.com", 443);
+//     crurl::SchemeHostPort tuple(crurl::kHttpsScheme, "example.com", 443);
 //     tuple.scheme(); // "https"
 //     tuple.host(); // "example.com"
 //     tuple.port(); // 443
 //
 //     GURL url("https://example.com/");
-//     tuple.Equals(url::SchemeHostPort(url)); // true
+//     tuple.Equals(crurl::SchemeHostPort(url)); // true
 class CRURL_EXPORT SchemeHostPort {
  public:
   // Creates an invalid (scheme, host, port) tuple, which represents an invalid

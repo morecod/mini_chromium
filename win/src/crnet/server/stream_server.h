@@ -31,7 +31,7 @@ class StreamServer {
     virtual ~Delegate() {}
     virtual void OnConnect(int connection_id) = 0;
 
-    // Returns the number of bytes handled. if an error occurs than return a
+    // Returns the number of bytes handled. if an error occurs then return a
     // net_error code(defines in crnet/base/net_errors.h i.g:ERROR_FAILED)
     virtual int OnRecvData(int connection_id, const char* data, 
                            int data_len) = 0;
@@ -51,7 +51,7 @@ class StreamServer {
 
   // Sends the provided data directly to the given connection. No validation is
   // performed that data constitutes a valid Stream response. A valid Stream
-  // response may be split across multiple calls to SendRaw.
+  // response may be split across multiple calls to SendData.
   void SendData(int connection_id, const char* data, size_t data_len);
 
   void Close(int connection_id);
