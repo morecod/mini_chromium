@@ -29,9 +29,11 @@ class TCPSimpleServer : public crnet::StreamServer::Delegate {
   bool SetUp() ;
 
  protected:
-  void OnConnect(int connection_id) override;
-  int OnRecvData(int connection_id, const char* data, int data_len) override;
-  void OnClose(int connection_id) override;
+  // crnet::StreamServer::Delegate overrides.
+  void OnConnectionCreate(uint32_t connection_id) override;
+  int OnConnectionData(uint32_t connection_id, 
+                       const char* data, int data_len) override;
+  void OnConnectionClose(uint32_t connection_id) override;
 
  private:
   std::unique_ptr<crnet::StreamServer> server_;
@@ -62,19 +64,20 @@ bool TCPSimpleServer::SetUp() {
   return true;
 }
 
-void TCPSimpleServer::OnConnect(int connection_id) {
-  CR_LOG(INFO) << "NewConnection: id=" << connection_id;
+void TCPSimpleServer::OnConnectionCreate(uint32_t connection_id) {
+  CR_LOG(INFO) << "Connection[" << connection_id << "] Created.";
 }
 
-int TCPSimpleServer::OnRecvData(int connection_id, const char* data, int data_len) {
+int TCPSimpleServer::OnConnectionData(uint32_t connection_id, 
+                                      const char* data, int data_len) {
   std::string msg;
   msg.assign(data, data_len);
-  CR_LOG(INFO) << "GotMessage[" << connection_id << "]:" << msg;
+  CR_LOG(INFO) << "Message[" << connection_id << "]:" << msg;
   return data_len;
 }
 
-void TCPSimpleServer::OnClose(int connection_id) {
-  CR_LOG(INFO) << "ConnectionClosed: id=" << connection_id;
+void TCPSimpleServer::OnConnectionClose(uint32_t connection_id) {
+  CR_LOG(INFO) << "Connection[" << connection_id << "] Closed.";
 }
 
 }  // namespace

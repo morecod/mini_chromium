@@ -21,6 +21,9 @@
   <ItemGroup>
     <ClCompile Include="..\..\..\src\crnet\base\address_family.cc" />
     <ClCompile Include="..\..\..\src\crnet\base\address_list.cc" />
+    <ClCompile Include="..\..\..\src\crnet\base\file_stream.cc" />
+    <ClCompile Include="..\..\..\src\crnet\base\file_stream_context.cc" />
+    <ClCompile Include="..\..\..\src\crnet\base\file_stream_context_win.cc" />
     <ClCompile Include="..\..\..\src\crnet\base\io_buffer.cc" />
     <ClCompile Include="..\..\..\src\crnet\base\ip_address.cc" />
     <ClCompile Include="..\..\..\src\crnet\base\ip_address_number.cc" />
@@ -34,12 +37,14 @@
     <ClCompile Include="..\..\..\src\crnet\base\winsock_util.cc" />
     <ClCompile Include="..\..\..\src\crnet\server\stream_connection.cc" />
     <ClCompile Include="..\..\..\src\crnet\server\stream_server.cc" />
+    <ClCompile Include="..\..\..\src\crnet\socket\client_socket_factory.cc" />
     <ClCompile Include="..\..\..\src\crnet\socket\server_socket.cc" />
     <ClCompile Include="..\..\..\src\crnet\socket\socket_descriptor.cc" />
     <ClCompile Include="..\..\..\src\crnet\socket\stream_socket.cc" />
     <ClCompile Include="..\..\..\src\crnet\socket\tcp_client_socket.cc" />
     <ClCompile Include="..\..\..\src\crnet\socket\tcp_server_socket.cc" />
     <ClCompile Include="..\..\..\src\crnet\socket\tcp_socket_win.cc" />
+    <ClCompile Include="..\..\..\src\crnet\udp\datagram_server_socket.cc" />
     <ClCompile Include="..\..\..\src\crnet\udp\udp_client_socket.cc" />
     <ClCompile Include="..\..\..\src\crnet\udp\udp_server_socket.cc" />
     <ClCompile Include="..\..\..\src\crnet\udp\udp_socket_win.cc" />
@@ -48,6 +53,8 @@
     <ClInclude Include="..\..\..\src\crnet\base\address_family.h" />
     <ClInclude Include="..\..\..\src\crnet\base\address_list.h" />
     <ClInclude Include="..\..\..\src\crnet\base\completion_once_callback.h" />
+    <ClInclude Include="..\..\..\src\crnet\base\file_stream.h" />
+    <ClInclude Include="..\..\..\src\crnet\base\file_stream_context.h" />
     <ClInclude Include="..\..\..\src\crnet\base\io_buffer.h" />
     <ClInclude Include="..\..\..\src\crnet\base\ip_address.h" />
     <ClInclude Include="..\..\..\src\crnet\base\ip_address_number.h" />
@@ -65,6 +72,7 @@
     <ClInclude Include="..\..\..\src\crnet\base\winsock_util.h" />
     <ClInclude Include="..\..\..\src\crnet\server\stream_connection.h" />
     <ClInclude Include="..\..\..\src\crnet\server\stream_server.h" />
+    <ClInclude Include="..\..\..\src\crnet\socket\client_socket_factory.h" />
     <ClInclude Include="..\..\..\src\crnet\socket\connection_attempts.h" />
     <ClInclude Include="..\..\..\src\crnet\socket\server_socket.h" />
     <ClInclude Include="..\..\..\src\crnet\socket\socket.h" />

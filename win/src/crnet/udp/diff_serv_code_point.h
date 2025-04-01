@@ -2,8 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#ifndef MINI_CHROMIUM_CRNET_UDP_DIFF_SERV_CODE_POINT_H_
-#define MINI_CHROMIUM_CRNET_UDP_DIFF_SERV_CODE_POINT_H_
+#ifndef MINI_CHROMIUM_SRC_CRNET_UDP_DIFF_SERV_CODE_POINT_H_
+#define MINI_CHROMIUM_SRC_CRNET_UDP_DIFF_SERV_CODE_POINT_H_
 
 namespace crnet {
 
@@ -39,4 +39,4 @@ enum DiffServCodePoint {
 
 }  // namespace crnet
 
-#endif  // MINI_CHROMIUM_CRNET_UDP_DIFF_SERV_CODE_POINT_H_
+#endif  // MINI_CHROMIUM_SRC_CRNET_UDP_DIFF_SERV_CODE_POINT_H_

@@ -141,9 +141,6 @@
     <ClInclude Include="..\..\..\src\crbase\memory\aligned_memory.h">
       <Filter>memory</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\crbase\memory\linked_ptr.h">
-      <Filter>memory</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\src\crbase\memory\ref_counted.h">
       <Filter>memory</Filter>
     </ClInclude>
@@ -474,7 +471,6 @@
     <ClInclude Include="..\..\..\src\crbase\lazy_instance.h" />
     <ClInclude Include="..\..\..\src\crbase\logging.h" />
     <ClInclude Include="..\..\..\src\crbase\macros.h" />
-    <ClInclude Include="..\..\..\src\crbase\move.h" />
     <ClInclude Include="..\..\..\src\crbase\observer_list.h" />
     <ClInclude Include="..\..\..\src\crbase\observer_list_threadsafe.h" />
     <ClInclude Include="..\..\..\src\crbase\path_service.h" />
@@ -552,6 +548,7 @@
     <ClInclude Include="..\..\..\src\crbase\functional\critical_closure.h">
       <Filter>functional</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\crbase\immediate_crash.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\crbase\codes\base64.cc">

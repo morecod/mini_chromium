@@ -59,6 +59,7 @@
     <ClInclude Include="..\..\..\src\crbase\functional\critical_closure.h" />
     <ClInclude Include="..\..\..\src\crbase\guid.h" />
     <ClInclude Include="..\..\..\src\crbase\hash.h" />
+    <ClInclude Include="..\..\..\src\crbase\immediate_crash.h" />
     <ClInclude Include="..\..\..\src\crbase\json\json_parser.h" />
     <ClInclude Include="..\..\..\src\crbase\json\json_reader.h" />
     <ClInclude Include="..\..\..\src\crbase\json\json_string_value_serializer.h" />
@@ -70,7 +71,6 @@
     <ClInclude Include="..\..\..\src\crbase\macros.h" />
     <ClInclude Include="..\..\..\src\crbase\memory\aligned_memory.h" />
     <ClInclude Include="..\..\..\src\crbase\memory\free_deleter.h" />
-    <ClInclude Include="..\..\..\src\crbase\memory\linked_ptr.h" />
     <ClInclude Include="..\..\..\src\crbase\memory\ptr_util.h" />
     <ClInclude Include="..\..\..\src\crbase\memory\ref_counted.h" />
     <ClInclude Include="..\..\..\src\crbase\memory\scoped_vector.h" />
@@ -86,7 +86,6 @@
     <ClInclude Include="..\..\..\src\crbase\message_loop\message_pump_dispatcher.h" />
     <ClInclude Include="..\..\..\src\crbase\message_loop\message_pump_win.h" />
     <ClInclude Include="..\..\..\src\crbase\message_loop\timer_slack.h" />
-    <ClInclude Include="..\..\..\src\crbase\move.h" />
     <ClInclude Include="..\..\..\src\crbase\numerics\safe_conversions.h" />
     <ClInclude Include="..\..\..\src\crbase\numerics\safe_conversions_impl.h" />
     <ClInclude Include="..\..\..\src\crbase\numerics\safe_math.h" />

@@ -87,6 +87,21 @@
     <ClCompile Include="..\..\..\src\crnet\udp\udp_socket_win.cc">
       <Filter>udp</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\crnet\base\file_stream.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\crnet\base\file_stream_context.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\crnet\base\file_stream_context_win.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\crnet\socket\client_socket_factory.cc">
+      <Filter>socket</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\crnet\udp\datagram_server_socket.cc">
+      <Filter>udp</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\src\crnet\base\address_family.h">
@@ -199,6 +214,15 @@
     </ClInclude>
     <ClInclude Include="..\..\..\src\crnet\base\completion_once_callback.h">
       <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\crnet\base\file_stream.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\crnet\base\file_stream_context.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\crnet\socket\client_socket_factory.h">
+      <Filter>socket</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -2,8 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#ifndef MINI_CHROMIUM_CRNET_SOCKET_UDP_CLIENT_SOCKET_H_
-#define MINI_CHROMIUM_CRNET_SOCKET_UDP_CLIENT_SOCKET_H_
+#ifndef MINI_CHROMIUM_SRC_CRNET_SOCKET_UDP_CLIENT_SOCKET_H_
+#define MINI_CHROMIUM_SRC_CRNET_SOCKET_UDP_CLIENT_SOCKET_H_
 
 #include <stdint.h>
 
@@ -63,4 +63,4 @@ class CRNET_EXPORT_PRIVATE UDPClientSocket : public DatagramClientSocket {
 
 }  // namespace crnet
 
-#endif  // MINI_CHROMIUM_CRNET_SOCKET_UDP_CLIENT_SOCKET_H_
+#endif  // MINI_CHROMIUM_SRC_CRNET_SOCKET_UDP_CLIENT_SOCKET_H_

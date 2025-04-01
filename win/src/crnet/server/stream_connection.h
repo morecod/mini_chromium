@@ -2,8 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#ifndef MINI_CHROMIUM_CRNET_SERVER_HTTP_CONNECTION_H_
-#define MINI_CHROMIUM_CRNET_SERVER_HTTP_CONNECTION_H_
+#ifndef MINI_CHROMIUM_SRC_CRNET_SERVER_STREAM_CONNECTION_H_
+#define MINI_CHROMIUM_SRC_CRNET_SERVER_STREAM_CONNECTION_H_
 
 #include <queue>
 #include <string>
@@ -122,13 +122,13 @@ class StreamConnection {
   StreamConnection(int id, std::unique_ptr<StreamSocket> socket);
   ~StreamConnection();
 
-  int id() const { return id_; }
+  uint32_t id() const { return id_; }
   StreamSocket* socket() const { return socket_.get(); }
   ReadIOBuffer* read_buf() const { return read_buf_.get(); }
   QueuedWriteIOBuffer* write_buf() const { return write_buf_.get(); }
 
  private:
-  const int id_;
+  const uint32_t id_;
   const std::unique_ptr<StreamSocket> socket_;
   const crbase::scoped_refptr<ReadIOBuffer> read_buf_;
   const crbase::scoped_refptr<QueuedWriteIOBuffer> write_buf_;
@@ -137,4 +137,4 @@ class StreamConnection {
 
 }  // namespace crnet
 
-#endif  // MINI_CHROMIUM_CRNET_SERVER_HTTP_CONNECTION_H_
+#endif  // MINI_CHROMIUM_SRC_CRNET_SERVER_STREAM_CONNECTION_H_

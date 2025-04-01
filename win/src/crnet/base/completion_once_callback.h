@@ -2,8 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#ifndef MINI_CHROMIUM_CRNET_BASE_COMPLETION_ONCE_CALLBACK_H_
-#define MINI_CHROMIUM_CRNET_BASE_COMPLETION_ONCE_CALLBACK_H_
+#ifndef MINI_CHROMIUM_SRC_CRNET_BASE_COMPLETION_ONCE_CALLBACK_H_
+#define MINI_CHROMIUM_SRC_CRNET_BASE_COMPLETION_ONCE_CALLBACK_H_
 
 #include <stdint.h>
 
@@ -26,4 +26,4 @@ using CancelableCompletionOnceCallback =
 
 }  // namespace crnet
 
-#endif  // MINI_CHROMIUM_CRNET_BASE_COMPLETION_ONCE_CALLBACK_H_
+#endif  // MINI_CHROMIUM_SRC_CRNET_BASE_COMPLETION_ONCE_CALLBACK_H_

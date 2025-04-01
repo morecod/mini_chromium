@@ -5,8 +5,8 @@
 // Winsock initialization must happen before any Winsock calls are made.  The
 // EnsureWinsockInit method will make sure that WSAStartup has been called.
 
-#ifndef MINI_CHROMIUM_CRNET_BASE_WINSOCK_INIT_H_
-#define MINI_CHROMIUM_CRNET_BASE_WINSOCK_INIT_H_
+#ifndef MINI_CHROMIUM_SRC_CRNET_BASE_WINSOCK_INIT_H_
+#define MINI_CHROMIUM_SRC_CRNET_BASE_WINSOCK_INIT_H_
 
 #include "crnet/base/net_export.h"
 
@@ -17,4 +17,4 @@ CRNET_EXPORT void EnsureWinsockInit();
 
 }  // namespace crnet
 
-#endif  // MINI_CHROMIUM_CRNET_BASE_WINSOCK_INIT_H_
+#endif  // MINI_CHROMIUM_SRC_CRNET_BASE_WINSOCK_INIT_H_

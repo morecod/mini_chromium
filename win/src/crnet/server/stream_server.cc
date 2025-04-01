@@ -47,7 +47,17 @@ StreamServer::~StreamServer() {
       id_to_connection_.begin(), id_to_connection_.end());
 }
 
-void StreamServer::SendData(int connection_id, const char* data, 
+void StreamServer::SendData(uint32_t connection_id, const std::string& data) {
+  StreamConnection* connection = FindConnection(connection_id);
+  if (connection == NULL)
+    return;
+
+  bool writing_in_progress = !connection->write_buf()->IsEmpty();
+  if (connection->write_buf()->Append(data) && !writing_in_progress)
+    DoWriteLoop(connection);
+}
+
+void StreamServer::SendData(uint32_t connection_id, const char* data,
                             size_t data_len) {
   StreamConnection* connection = FindConnection(connection_id);
   if (connection == NULL)
@@ -58,13 +68,13 @@ void StreamServer::SendData(int connection_id, const char* data,
     DoWriteLoop(connection);
 }
 
-void StreamServer::Close(int connection_id) {
+void StreamServer::Close(uint32_t connection_id) {
   StreamConnection* connection = FindConnection(connection_id);
   if (connection == NULL)
     return;
 
   id_to_connection_.erase(connection_id);
-  delegate_->OnClose(connection_id);
+  delegate_->OnConnectionClose(connection_id);
 
   // The call stack might have callbacks which still have the pointer of
   // connection. Instead of referencing connection with ID all the time,
@@ -78,13 +88,13 @@ int StreamServer::GetLocalAddress(IPEndPoint* address) {
   return server_socket_->GetLocalAddress(address);
 }
 
-void StreamServer::SetReceiveBufferSize(int connection_id, int32_t size) {
+void StreamServer::SetReceiveBufferSize(uint32_t connection_id, int32_t size) {
   StreamConnection* connection = FindConnection(connection_id);
   if (connection)
     connection->read_buf()->set_max_buffer_size(size);
 }
 
-void StreamServer::SetSendBufferSize(int connection_id, int32_t size) {
+void StreamServer::SetSendBufferSize(uint32_t connection_id, int32_t size) {
   StreamConnection* connection = FindConnection(connection_id);
   if (connection)
     connection->write_buf()->set_max_buffer_size(size);
@@ -117,7 +127,7 @@ int StreamServer::HandleAcceptResult(int rv) {
   StreamConnection* connection =
       new StreamConnection(++last_id_, std::move(accepted_socket_));
   id_to_connection_[connection->id()] = connection;
-  delegate_->OnConnect(connection->id());
+  delegate_->OnConnectionCreate(connection->id());
   if (!HasClosedConnection(connection))
     DoReadLoop(connection);
   return OK;
@@ -144,7 +154,7 @@ void StreamServer::DoReadLoop(StreamConnection* connection) {
   } while (rv == OK);
 }
 
-void StreamServer::OnReadCompleted(int connection_id, int rv) {
+void StreamServer::OnReadCompleted(uint32_t connection_id, int rv) {
   StreamConnection* connection = FindConnection(connection_id);
   if (!connection)  // It might be closed right before by write error.
     return;
@@ -162,9 +172,9 @@ int StreamServer::HandleReadResult(StreamConnection* connection, int rv) {
   StreamConnection::ReadIOBuffer* read_buf = connection->read_buf();
   read_buf->DidRead(rv);
 
-  // Handles http requests or websocket messages.
+  // Handles stream.
   while (read_buf->GetSize() > 0) {
-    int handled = delegate_->OnRecvData(
+    int handled = delegate_->OnConnectionData(
         connection->id(), read_buf->StartOfBuffer(),  read_buf->GetSize());
     if (handled == 0) {
       break;
@@ -198,7 +208,7 @@ void StreamServer::DoWriteLoop(StreamConnection* connection) {
   }
 }
 
-void StreamServer::OnWriteCompleted(int connection_id, int rv) {
+void StreamServer::OnWriteCompleted(uint32_t connection_id, int rv) {
   StreamConnection* connection = FindConnection(connection_id);
   if (!connection)  // It might be closed right before by read error.
     return;
@@ -217,7 +227,7 @@ int StreamServer::HandleWriteResult(StreamConnection* connection, int rv) {
   return OK;
 }
 
-StreamConnection* StreamServer::FindConnection(int connection_id) {
+StreamConnection* StreamServer::FindConnection(uint32_t connection_id) {
   IdToConnectionMap::iterator it = id_to_connection_.find(connection_id);
   if (it == id_to_connection_.end())
     return NULL;

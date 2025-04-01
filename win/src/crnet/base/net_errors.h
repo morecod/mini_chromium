@@ -2,8 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#ifndef MINI_CHROMIUM_NET_BASE_NET_ERRORS_H_
-#define MINI_CHROMIUM_NET_BASE_NET_ERRORS_H_
+#ifndef MINI_CHROMIUM_SRC_CRNET_BASE_NET_ERRORS_H_
+#define MINI_CHROMIUM_SRC_CRNET_BASE_NET_ERRORS_H_
 
 #include <string>
 #include <vector>
@@ -52,4 +52,4 @@ CRNET_EXPORT Error FileErrorToNetError(crbase::File::Error file_error);
 
 }  // namespace crnet
 
-#endif  // MINI_CHROMIUM_NET_BASE_NET_ERRORS_H__
+#endif  // MINI_CHROMIUM_SRC_CRNET_BASE_NET_ERRORS_H__

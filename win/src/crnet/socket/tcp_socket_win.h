@@ -2,8 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#ifndef MINI_CHROMIUM_NET_SOCKET_TCP_SOCKET_WIN_H_
-#define MINI_CHROMIUM_NET_SOCKET_TCP_SOCKET_WIN_H_
+#ifndef MINI_CHROMIUM_SRC_CRNET_SOCKET_TCP_SOCKET_WIN_H_
+#define MINI_CHROMIUM_SRC_CRNET_SOCKET_TCP_SOCKET_WIN_H_
 
 #include <stdint.h>
 #include <winsock2.h>
@@ -174,4 +174,4 @@ class CRNET_EXPORT TCPSocketWin
 
 }  // namespace crnet
 
-#endif  // MINI_CHROMIUM_NET_SOCKET_TCP_SOCKET_WIN_H_
+#endif  // MINI_CHROMIUM_SRC_CRNET_SOCKET_TCP_SOCKET_WIN_H_

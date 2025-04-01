@@ -2,8 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#ifndef MINI_CHROMIUM_CRNET_UDP_DATAGRAM_CLIENT_SOCKET_H_
-#define MINI_CHROMIUM_CRNET_UDP_DATAGRAM_CLIENT_SOCKET_H_
+#ifndef MINI_CHROMIUM_SRC_CRNET_UDP_DATAGRAM_CLIENT_SOCKET_H_
+#define MINI_CHROMIUM_SRC_CRNET_UDP_DATAGRAM_CLIENT_SOCKET_H_
 
 ///#include "crnet/base/network_change_notifier.h"
 #include "crnet/socket/socket.h"
@@ -39,6 +39,6 @@ class CRNET_EXPORT_PRIVATE DatagramClientSocket : public DatagramSocket,
   virtual int Connect(const IPEndPoint& address) = 0;
 };
 
-}  // namespace net
+}  // namespace crnet
 
-#endif  // NET_UDP_DATAGRAM_CLIENT_SOCKET_H_
+#endif  // MINI_CHROMIUM_SRC_CRNET_UDP_DATAGRAM_CLIENT_SOCKET_H_

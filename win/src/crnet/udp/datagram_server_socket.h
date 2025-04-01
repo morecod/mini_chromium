@@ -2,8 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#ifndef MINI_CHROMIUM_CRNET_UDP_DATAGRAM_SERVER_SOCKET_H_
-#define MINI_CHROMIUM_CRNET_UDP_DATAGRAM_SERVER_SOCKET_H_
+#ifndef MINI_CHROMIUM_SRC_CRNET_UDP_DATAGRAM_SERVER_SOCKET_H_
+#define MINI_CHROMIUM_SRC_CRNET_UDP_DATAGRAM_SERVER_SOCKET_H_
 
 #include <stdint.h>
 
@@ -25,6 +25,14 @@ class CRNET_EXPORT DatagramServerSocket : public DatagramSocket {
   // Initialize this socket as a server socket listening at |address|.
   // Returns a network error code.
   virtual int Listen(const IPEndPoint& address) = 0;
+
+  
+  // Binds the socket with address and port, and starts listening. It expects
+  // a valid IPv4 or IPv6 address. Otherwise, it returns ERR_ADDRESS_INVALID.
+  // Subclasses may override this function if |address_string| is in a different
+  // format, for example, unix domain socket path.
+  virtual int ListenWithAddressAndPort(const std::string& address_string,
+                                       uint16_t port);
 
   // Read from a socket and receive sender address information.
   // |buf| is the buffer to read data into.
@@ -115,4 +123,4 @@ class CRNET_EXPORT DatagramServerSocket : public DatagramSocket {
 
 }  // namespace crnet
 
-#endif  // MINI_CHROMIUM_CRNET_UDP_DATAGRAM_SERVER_SOCKET_H_
+#endif  // MINI_CHROMIUM_SRC_CRNET_UDP_DATAGRAM_SERVER_SOCKET_H_
