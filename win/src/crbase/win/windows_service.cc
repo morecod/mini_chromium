@@ -8,7 +8,7 @@
 #include "crbase/logging.h"
 #include "crbase/strings/sys_string_conversions.h"
 
-namespace crbase {
+namespace cr {
 namespace win {
 
 namespace {
@@ -17,15 +17,15 @@ const unsigned int kServiceQueryWaitTimeMs = 100;
 const unsigned int kMaxServiceQueryIterations = 100;
 }  // namespace
 
-WindowsService::WindowsService(const crbase::StringPiece16& service_name) {
+WindowsService::WindowsService(const cr::StringPiece16& service_name) {
   service_name_ = service_name.as_string();
 }
 
 WindowsService::~WindowsService() {}
 
 DWORD WindowsService::InstallService(
-    const crbase::FilePath& service_binary_path,
-    const crbase::StringPiece16& display_name,
+    const cr::FilePath& service_binary_path,
+    const cr::StringPiece16& display_name,
     DWORD service_type,
     DWORD start_type,
     DWORD error_control,
@@ -35,7 +35,7 @@ DWORD WindowsService::InstallService(
   if (!scm_handle.IsValid())
     return ::GetLastError();
 
-  crbase::CommandLine command_line(crbase::CommandLine::NO_PROGRAM);
+  cr::CommandLine command_line(cr::CommandLine::NO_PROGRAM);
   command_line.SetProgram(service_binary_path);
 
   *sc_handle = ScopedScHandle(::CreateServiceW(
@@ -317,4 +317,4 @@ DWORD WindowsService::SetServiceStatus(
 }
 
 }  // namespace win
-}  // namespace crbase
+}  // namespace cr

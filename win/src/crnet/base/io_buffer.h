@@ -73,7 +73,7 @@ namespace crnet {
 // and hence the buffer it was reading into must remain alive. Using
 // reference counting we can add a reference to the IOBuffer and make sure
 // it is not destroyed until after the synchronous operation has completed.
-class CRNET_EXPORT IOBuffer : public crbase::RefCountedThreadSafe<IOBuffer> {
+class CRNET_EXPORT IOBuffer : public cr::RefCountedThreadSafe<IOBuffer> {
  public:
   IOBuffer();
 
@@ -84,7 +84,7 @@ class CRNET_EXPORT IOBuffer : public crbase::RefCountedThreadSafe<IOBuffer> {
   char* data() { return data_; }
 
  protected:
-  friend class crbase::RefCountedThreadSafe<IOBuffer>;
+  friend class cr::RefCountedThreadSafe<IOBuffer>;
 
   // Only allow derived classes to specify data_.
   // In all other cases, we own data_, and must delete it at destruction time.
@@ -177,7 +177,7 @@ class CRNET_EXPORT DrainableIOBuffer : public IOBuffer {
  private:
   ~DrainableIOBuffer() override;
 
-  crbase::scoped_refptr<IOBuffer> base_;
+  cr::scoped_refptr<IOBuffer> base_;
   size_t size_;
   size_t used_;
 };
@@ -217,7 +217,7 @@ class CRNET_EXPORT GrowableIOBuffer : public IOBuffer {
  private:
   ~GrowableIOBuffer() override;
 
-  std::unique_ptr<char, crbase::FreeDeleter> real_data_;
+  std::unique_ptr<char, cr::FreeDeleter> real_data_;
   int capacity_;
   int offset_;
 };
@@ -228,7 +228,7 @@ class CRNET_EXPORT PickledIOBuffer : public IOBuffer {
  public:
   PickledIOBuffer();
 
-  crbase::Pickle* pickle() { return &pickle_; }
+  cr::Pickle* pickle() { return &pickle_; }
 
   // Signals that we are done writing to the pickle and we can use it for a
   // write-style IO operation.
@@ -237,7 +237,7 @@ class CRNET_EXPORT PickledIOBuffer : public IOBuffer {
  private:
   ~PickledIOBuffer() override;
 
-  crbase::Pickle pickle_;
+  cr::Pickle pickle_;
 };
 
 // This class allows the creation of a temporary IOBuffer that doesn't really

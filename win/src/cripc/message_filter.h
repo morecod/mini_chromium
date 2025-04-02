@@ -21,7 +21,7 @@ class Message;
 // A class that receives messages on the thread where the IPC channel is
 // running.  It can choose to prevent the default action for an IPC message.
 class CRIPC_EXPORT MessageFilter
-    : public crbase::RefCountedThreadSafe<MessageFilter> {
+    : public cr::RefCountedThreadSafe<MessageFilter> {
  public:
   MessageFilter();
 
@@ -62,7 +62,7 @@ class CRIPC_EXPORT MessageFilter
   virtual ~MessageFilter();
 
  private:
-  friend class crbase::RefCountedThreadSafe<MessageFilter>;
+  friend class cr::RefCountedThreadSafe<MessageFilter>;
 };
 
 }  // namespace cripc

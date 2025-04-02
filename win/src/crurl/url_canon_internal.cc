@@ -85,7 +85,7 @@ void DoOverrideComponent(const char* override_source,
 // may get resized while we're overriding a subsequent component. Instead, the
 // caller should use the beginning of the |utf8_buffer| as the string pointer
 // for all components once all overrides have been prepared.
-bool PrepareUTF16OverrideComponent(const crbase::char16* override_source,
+bool PrepareUTF16OverrideComponent(const cr::char16* override_source,
                                    const Component& override_component,
                                    CanonOutput* utf8_buffer,
                                    Component* dest_component) {
@@ -233,7 +233,7 @@ const char kCharToHexLookup[8] = {
     0,         // 0xE0 - 0xFF
 };
 
-const crbase::char16 kUnicodeReplacementCharacter = 0xfffd;
+const cr::char16 kUnicodeReplacementCharacter = 0xfffd;
 
 void AppendStringOfType(const char* source, int length,
                         SharedCharTypes type,
@@ -241,10 +241,10 @@ void AppendStringOfType(const char* source, int length,
   DoAppendStringOfType<char, unsigned char>(source, length, type, output);
 }
 
-void AppendStringOfType(const crbase::char16* source, int length,
+void AppendStringOfType(const cr::char16* source, int length,
                         SharedCharTypes type,
                         CanonOutput* output) {
-  DoAppendStringOfType<crbase::char16, crbase::char16>(
+  DoAppendStringOfType<cr::char16, cr::char16>(
       source, length, type, output);
 }
 
@@ -253,21 +253,21 @@ bool ReadUTFChar(const char* str, int* begin, int length,
   // This depends on ints and int32s being the same thing. If they're not, it
   // will fail to compile.
   // TODO(mmenke): This should probably be fixed.
-  if (!crbase::ReadUnicodeCharacter(str, length, begin, code_point_out) ||
-      !crbase::IsValidCharacter(*code_point_out)) {
+  if (!cr::ReadUnicodeCharacter(str, length, begin, code_point_out) ||
+      !cr::IsValidCharacter(*code_point_out)) {
     *code_point_out = kUnicodeReplacementCharacter;
     return false;
   }
   return true;
 }
 
-bool ReadUTFChar(const crbase::char16* str, int* begin, int length,
+bool ReadUTFChar(const cr::char16* str, int* begin, int length,
                  unsigned* code_point_out) {
   // This depends on ints and int32s being the same thing. If they're not, it
   // will fail to compile.
   // TODO(mmenke): This should probably be fixed.
-  if (!crbase::ReadUnicodeCharacter(str, length, begin, code_point_out) ||
-      !crbase::IsValidCharacter(*code_point_out)) {
+  if (!cr::ReadUnicodeCharacter(str, length, begin, code_point_out) ||
+      !cr::IsValidCharacter(*code_point_out)) {
     *code_point_out = kUnicodeReplacementCharacter;
     return false;
   }
@@ -279,13 +279,13 @@ void AppendInvalidNarrowString(const char* spec, int begin, int end,
   DoAppendInvalidNarrowString<char, unsigned char>(spec, begin, end, output);
 }
 
-void AppendInvalidNarrowString(const crbase::char16* spec, int begin, int end,
+void AppendInvalidNarrowString(const cr::char16* spec, int begin, int end,
                                CanonOutput* output) {
-  DoAppendInvalidNarrowString<crbase::char16, crbase::char16>(
+  DoAppendInvalidNarrowString<cr::char16, cr::char16>(
       spec, begin, end, output);
 }
 
-bool ConvertUTF16ToUTF8(const crbase::char16* input, int input_len,
+bool ConvertUTF16ToUTF8(const cr::char16* input, int input_len,
                         CanonOutput* output) {
   bool success = true;
   for (int i = 0; i < input_len; i++) {
@@ -297,7 +297,7 @@ bool ConvertUTF16ToUTF8(const crbase::char16* input, int input_len,
 }
 
 bool ConvertUTF8ToUTF16(const char* input, int input_len,
-                        CanonOutputT<crbase::char16>* output) {
+                        CanonOutputT<cr::char16>* output) {
   bool success = true;
   for (int i = 0; i < input_len; i++) {
     unsigned code_point;
@@ -339,14 +339,14 @@ void SetupOverrideComponents(const char* base,
 }
 
 bool SetupUTF16OverrideComponents(const char* base,
-                                  const Replacements<crbase::char16>& repl,
+                                  const Replacements<cr::char16>& repl,
                                   CanonOutput* utf8_buffer,
                                   URLComponentSource<char>* source,
                                   Parsed* parsed) {
   bool success = true;
 
   // Get the source and parsed structures of the things we are replacing.
-  const URLComponentSource<crbase::char16>& repl_source = repl.sources();
+  const URLComponentSource<cr::char16>& repl_source = repl.sources();
   const Parsed& repl_parsed = repl.components();
 
   success &= PrepareUTF16OverrideComponent(
@@ -408,7 +408,7 @@ int _itoa_s(int value, char* buffer, size_t size_in_chars, int radix) {
   return 0;
 }
 
-int _itow_s(int value, crbase::char16* buffer, size_t size_in_chars, 
+int _itow_s(int value, cr::char16* buffer, size_t size_in_chars, 
             int radix) {
   if (radix != 10)
     return EINVAL;
@@ -423,7 +423,7 @@ int _itow_s(int value, crbase::char16* buffer, size_t size_in_chars,
   }
 
   for (int i = 0; i < written; ++i) {
-    buffer[i] = static_cast<crbase::char16>(temp[i]);
+    buffer[i] = static_cast<cr::char16>(temp[i]);
   }
   buffer[written] = '\0';
   return 0;

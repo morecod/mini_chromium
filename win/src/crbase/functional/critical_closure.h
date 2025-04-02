@@ -16,7 +16,7 @@
 ///#include "base/ios/scoped_critical_action.h"
 ///#endif
 
-namespace crbase {
+namespace cr {
 
 ///namespace internal {
 ///
@@ -71,6 +71,6 @@ inline OnceClosure MakeCriticalClosure(OnceClosure closure) {
 }
 ///#endif  // defined(OS_IOS)
 
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_CRBASE_FUNCTIONAL_CRITICAL_CLOSURE_H_

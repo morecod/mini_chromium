@@ -22,7 +22,7 @@
 // read the top comment of crbase/functional/bind_internal.h for a definition of
 // common terms and concepts.
 
-namespace crbase {
+namespace cr {
 
 // Bind as OnceCallback.
 template <typename Functor, typename... Args>
@@ -68,6 +68,6 @@ BindRepeating(Functor&& functor, Args&&... args) {
       std::forward<Args>(args)...));
 }
 
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_CRBASE_FUNCTIONAL_BIND_H_

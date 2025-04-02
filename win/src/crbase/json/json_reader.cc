@@ -7,7 +7,7 @@
 #include "crbase/json/json_parser.h"
 #include "crbase/values.h"
 
-namespace crbase {
+namespace cr {
 
 // Values 1000 and above are used by JSONFileValueSerializer::JsonFileError.
 static_assert(JSONReader::JSON_PARSE_ERROR_COUNT < 1000,
@@ -116,4 +116,4 @@ std::string JSONReader::GetErrorMessage() const {
   return parser_->GetErrorMessage();
 }
 
-}  // namespace crbase
+}  // namespace cr

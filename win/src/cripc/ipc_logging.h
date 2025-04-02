@@ -101,7 +101,7 @@ class CRIPC_EXPORT Logging {
   const char* ANSIEscape(ANSIColor color);
   ANSIColor DelayColor(double delay);
 
-  friend struct crbase::DefaultSingletonTraits<Logging>;
+  friend struct cr::DefaultSingletonTraits<Logging>;
   Logging();
 
   void OnSendLogs();
@@ -115,7 +115,7 @@ class CRIPC_EXPORT Logging {
   bool queue_invoke_later_pending_;
 
   Sender* sender_;
-  crbase::MessageLoop* main_thread_;
+  cr::MessageLoop* main_thread_;
 
   Consumer* consumer_;
 

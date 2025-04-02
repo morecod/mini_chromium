@@ -17,7 +17,7 @@
 #include "crbase/strings/string_util.h"
 #include "crbase/strings/utf_string_conversions.h"
 
-namespace crbase {
+namespace cr {
 
 CommandLine* CommandLine::current_process_commandline_ = NULL;
 
@@ -442,4 +442,4 @@ void CommandLine::ResetStringPieces() {
     switches_by_stringpiece_[entry.first] = &(entry.second);
 }
 
-}  // namespace crbase
+}  // namespace cr

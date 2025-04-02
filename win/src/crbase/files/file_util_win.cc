@@ -38,7 +38,7 @@
 #define _SH_DENYNO 0x40
 #endif
 
-namespace crbase {
+namespace cr {
 
 namespace {
 
@@ -824,7 +824,7 @@ bool MoveUnsafe(const FilePath& from_path, const FilePath& to_path) {
 bool CopyAndDeleteDirectory(const FilePath& from_path,
                             const FilePath& to_path) {
   if (CopyDirectory(from_path, to_path, true)) {
-    if (crbase::DeleteFile(from_path, true))
+    if (cr::DeleteFile(from_path, true))
       return true;
 
     // Like Move, this function is not transactional, so we just
@@ -836,4 +836,4 @@ bool CopyAndDeleteDirectory(const FilePath& from_path,
 }
 
 }  // namespace internal
-}  // namespace crbase
+}  // namespace cr

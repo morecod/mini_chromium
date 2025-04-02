@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\src\crbase\array_view.h" />
     <ClInclude Include="..\..\..\src\crbase\atomic\atomicops.h" />
     <ClInclude Include="..\..\..\src\crbase\atomic\atomicops_internals_portable.h" />
     <ClInclude Include="..\..\..\src\crbase\atomic\atomic_ref_count.h" />

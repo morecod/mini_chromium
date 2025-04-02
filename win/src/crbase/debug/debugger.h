@@ -11,7 +11,7 @@
 
 #include "crbase/base_export.h"
 
-namespace crbase {
+namespace cr {
 namespace debug {
 
 // Waits wait_seconds seconds for a debugger to attach to the current process.
@@ -31,6 +31,6 @@ CRBASE_EXPORT bool BeingDebugged();
 CRBASE_EXPORT void BreakDebugger();
 
 }  // namespace debug
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // ESDk_SRC_CR_DEBUG_DEBUGGER_H_

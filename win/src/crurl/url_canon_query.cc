@@ -82,7 +82,7 @@ void RunConverter(const char* spec,
 // Runs the converter with the given UTF-16 input. We don't have to do
 // anything, but this overridden function allows us to use the same code
 // for both UTF-8 and UTF-16 input.
-void RunConverter(const crbase::char16* spec,
+void RunConverter(const cr::char16* spec,
                   const Component& query,
                   CharsetConverter* converter,
                   CanonOutput* output) {
@@ -144,20 +144,20 @@ void CanonicalizeQuery(const char* spec,
                                            output, out_query);
 }
 
-void CanonicalizeQuery(const crbase::char16* spec,
+void CanonicalizeQuery(const cr::char16* spec,
                        const Component& query,
                        CharsetConverter* converter,
                        CanonOutput* output,
                        Component* out_query) {
-  DoCanonicalizeQuery<crbase::char16, crbase::char16>(
+  DoCanonicalizeQuery<cr::char16, cr::char16>(
       spec, query, converter, output, out_query);
 }
 
-void ConvertUTF16ToQueryEncoding(const crbase::char16* input,
+void ConvertUTF16ToQueryEncoding(const cr::char16* input,
                                  const Component& query,
                                  CharsetConverter* converter,
                                  CanonOutput* output) {
-  DoConvertToQueryEncoding<crbase::char16, crbase::char16>(
+  DoConvertToQueryEncoding<cr::char16, cr::char16>(
       input, query, converter, output);
 }
 

@@ -33,7 +33,7 @@ static DeleteProcThreadAttributeListFunction delete_proc_thread_attribute_list;
 
 }  // namespace
 
-namespace crbase {
+namespace cr {
 namespace win {
 
 StartupInformation::StartupInformation() {
@@ -105,4 +105,4 @@ bool StartupInformation::UpdateProcThreadAttribute(
 }
 
 }  // namespace win
-}  // namespace crbase
+}  // namespace cr

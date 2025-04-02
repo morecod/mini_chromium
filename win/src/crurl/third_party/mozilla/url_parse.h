@@ -223,7 +223,7 @@ struct CRURL_EXPORT Parsed {
 CRURL_EXPORT void ParseStandardURL(const char* url,
                                    int url_len,
                                    Parsed* parsed);
-CRURL_EXPORT void ParseStandardURL(const crbase::char16* url,
+CRURL_EXPORT void ParseStandardURL(const cr::char16* url,
                                    int url_len,
                                    Parsed* parsed);
 
@@ -235,7 +235,7 @@ CRURL_EXPORT void ParsePathURL(const char* url,
                                int url_len,
                                bool trim_path_end,
                                Parsed* parsed);
-CRURL_EXPORT void ParsePathURL(const crbase::char16* url,
+CRURL_EXPORT void ParsePathURL(const cr::char16* url,
                                int url_len,
                                bool trim_path_end,
                                Parsed* parsed);
@@ -243,7 +243,7 @@ CRURL_EXPORT void ParsePathURL(const crbase::char16* url,
 // FileURL is for file URLs. There are some special rules for interpreting
 // these.
 CRURL_EXPORT void ParseFileURL(const char* url, int url_len, Parsed* parsed);
-CRURL_EXPORT void ParseFileURL(const crbase::char16* url,
+CRURL_EXPORT void ParseFileURL(const cr::char16* url,
                                int url_len,
                                Parsed* parsed);
 
@@ -251,13 +251,13 @@ CRURL_EXPORT void ParseFileURL(const crbase::char16* url,
 CRURL_EXPORT void ParseFileSystemURL(const char* url,
                                      int url_len,
                                      Parsed* parsed);
-CRURL_EXPORT void ParseFileSystemURL(const crbase::char16* url,
+CRURL_EXPORT void ParseFileSystemURL(const cr::char16* url,
                                      int url_len,
                                      Parsed* parsed);
 
 // MailtoURL is for mailto: urls. They are made up scheme,path,query
 CRURL_EXPORT void ParseMailtoURL(const char* url, int url_len, Parsed* parsed);
-CRURL_EXPORT void ParseMailtoURL(const crbase::char16* url,
+CRURL_EXPORT void ParseMailtoURL(const cr::char16* url,
                                  int url_len,
                                  Parsed* parsed);
 
@@ -286,13 +286,13 @@ CRURL_EXPORT void ParseMailtoURL(const crbase::char16* url,
 CRURL_EXPORT bool ExtractScheme(const char* url,
                                 int url_len,
                                 Component* scheme);
-CRURL_EXPORT bool ExtractScheme(const crbase::char16* url,
+CRURL_EXPORT bool ExtractScheme(const cr::char16* url,
                                 int url_len,
                                 Component* scheme);
 
 // Returns true if ch is a character that terminates the authority segment
 // of a URL.
-CRURL_EXPORT bool IsAuthorityTerminator(crbase::char16 ch);
+CRURL_EXPORT bool IsAuthorityTerminator(cr::char16 ch);
 
 // Does a best effort parse of input |spec|, in range |auth|. If a particular
 // component is not found, it will be set to invalid.
@@ -302,7 +302,7 @@ CRURL_EXPORT void ParseAuthority(const char* spec,
                                Component* password,
                                Component* hostname,
                                Component* port_num);
-CRURL_EXPORT void ParseAuthority(const crbase::char16* spec,
+CRURL_EXPORT void ParseAuthority(const cr::char16* spec,
                                  const Component& auth,
                                  Component* username,
                                  Component* password,
@@ -317,7 +317,7 @@ CRURL_EXPORT void ParseAuthority(const crbase::char16* spec,
 // the two special values below.
 enum SpecialPort { PORT_UNSPECIFIED = -1, PORT_INVALID = -2 };
 CRURL_EXPORT int ParsePort(const char* url, const Component& port);
-CRURL_EXPORT int ParsePort(const crbase::char16* url, const Component& port);
+CRURL_EXPORT int ParsePort(const cr::char16* url, const Component& port);
 
 // Extracts the range of the file name in the given url. The path must
 // already have been computed by the parse function, and the matching URL
@@ -332,7 +332,7 @@ CRURL_EXPORT int ParsePort(const crbase::char16* url, const Component& port);
 CRURL_EXPORT void ExtractFileName(const char* url,
                                   const Component& path,
                                   Component* file_name);
-CRURL_EXPORT void ExtractFileName(const crbase::char16* url,
+CRURL_EXPORT void ExtractFileName(const cr::char16* url,
                                   const Component& path,
                                   Component* file_name);
 
@@ -355,7 +355,7 @@ CRURL_EXPORT bool ExtractQueryKeyValue(const char* url,
                                        Component* query,
                                        Component* key,
                                        Component* value);
-CRURL_EXPORT bool ExtractQueryKeyValue(const crbase::char16* url,
+CRURL_EXPORT bool ExtractQueryKeyValue(const cr::char16* url,
                                        Component* query,
                                        Component* key,
                                        Component* value);

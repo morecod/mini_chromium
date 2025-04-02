@@ -30,7 +30,7 @@
 #include "crbase/base_export.h"
 #include "crbase/strings/string16.h"
 
-namespace crbase {
+namespace cr {
 
 template <typename STRING_TYPE> class BasicStringPiece;
 typedef BasicStringPiece<std::string> StringPiece;
@@ -150,7 +150,7 @@ CRBASE_EXPORT StringPiece16 substr(const StringPiece16& self,
 // rather to BasicStringPiece, StringPiece, or StringPiece16.
 //
 // This is templatized by string class type rather than character type, so
-// BasicStringPiece<std::string> or BasicStringPiece<crbase::string16>.
+// BasicStringPiece<std::string> or BasicStringPiece<cr::string16>.
 template <typename STRING_TYPE> class BasicStringPiece {
  public:
   // Standard STL container boilerplate.
@@ -411,7 +411,7 @@ inline bool operator>=(const StringPiece16& x, const StringPiece16& y) {
 
 CRBASE_EXPORT std::ostream& operator<<(std::ostream& o, const StringPiece& piece);
 
-}  // namespace crbase
+}  // namespace cr
 
 // Hashing ---------------------------------------------------------------------
 
@@ -431,15 +431,15 @@ CRBASE_EXPORT std::ostream& operator<<(std::ostream& o, const StringPiece& piece
 namespace std {
 
 template<>
-struct hash<crbase::StringPiece> {
-  std::size_t operator()(const crbase::StringPiece& sp) const {
-    CR_HASH_STRING_PIECE(crbase::StringPiece, sp);
+struct hash<cr::StringPiece> {
+  std::size_t operator()(const cr::StringPiece& sp) const {
+    CR_HASH_STRING_PIECE(cr::StringPiece, sp);
   }
 };
 template<>
-struct hash<crbase::StringPiece16> {
-  std::size_t operator()(const crbase::StringPiece16& sp16) const {
-    CR_HASH_STRING_PIECE(crbase::StringPiece16, sp16);
+struct hash<cr::StringPiece16> {
+  std::size_t operator()(const cr::StringPiece16& sp16) const {
+    CR_HASH_STRING_PIECE(cr::StringPiece16, sp16);
   }
 };
 

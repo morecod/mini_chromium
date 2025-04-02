@@ -11,7 +11,7 @@
 #include "crbase/memory/singleton.h"
 #include "crbase/strings/string_util.h"
 
-namespace crbase {
+namespace cr {
 namespace {
 
 static const char kDefaultName[] = "";
@@ -109,4 +109,4 @@ void ThreadIdNameManager::RemoveName(PlatformThreadHandle::Handle handle,
   thread_id_to_handle_.erase(id_to_handle_iter);
 }
 
-}  // namespace crbase
+}  // namespace cr

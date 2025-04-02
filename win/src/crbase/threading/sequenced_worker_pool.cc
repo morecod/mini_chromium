@@ -37,7 +37,7 @@
 #include "crbase/win/scoped_com_initializer.h"
 #endif
 
-namespace crbase {
+namespace cr {
 
 namespace {
 
@@ -49,7 +49,7 @@ struct SequencedTask : public TrackingInfo  {
         shutdown_behavior(SequencedWorkerPool::BLOCK_SHUTDOWN) {}
 
   explicit SequencedTask(const tracked_objects::Location& from_here)
-      : crbase::TrackingInfo(from_here, TimeTicks()),
+      : cr::TrackingInfo(from_here, TimeTicks()),
         sequence_token_id(0),
         trace_id(0),
         sequence_task_number(0),
@@ -433,7 +433,7 @@ class SequencedWorkerPool::Inner {
   // only does threadsafe increment operations, you do not need to hold the
   // lock. This is class-static to make SequenceTokens issued by
   // GetSequenceToken unique across SequencedWorkerPool instances.
-  static crbase::StaticAtomicSequenceNumber g_last_sequence_number_;
+  static cr::StaticAtomicSequenceNumber g_last_sequence_number_;
 
   // This lock protects |everything in this class|. Do not read or modify
   // anything without holding this lock. Do not block while holding this
@@ -627,7 +627,7 @@ bool SequencedWorkerPool::Inner::PostTask(
   sequenced.posted_from = from_here;
   sequenced.task =
       shutdown_behavior == BLOCK_SHUTDOWN ?
-      crbase::MakeCriticalClosure(std::move(task)) : std::move(task);
+      cr::MakeCriticalClosure(std::move(task)) : std::move(task);
   sequenced.time_to_run = TimeTicks::Now() + delay;
 
   int create_thread_id = 0;
@@ -725,7 +725,7 @@ void SequencedWorkerPool::Inner::SetRunningTaskInfoForCurrentThread(
 // See https://code.google.com/p/chromium/issues/detail?id=168415
 void SequencedWorkerPool::Inner::CleanupForTesting() {
   CR_DCHECK(!RunsTasksOnCurrentThread());
-  crbase::ThreadRestrictions::ScopedAllowWait allow_wait;
+  cr::ThreadRestrictions::ScopedAllowWait allow_wait;
   AutoLock lock(lock_);
   CR_CHECK_EQ(CLEANUP_DONE, cleanup_state_);
   if (shutdown_called_)
@@ -773,7 +773,7 @@ void SequencedWorkerPool::Inner::Shutdown(
   ///TimeTicks shutdown_wait_begin = TimeTicks::Now();
 
   {
-    crbase::ThreadRestrictions::ScopedAllowWait allow_wait;
+    cr::ThreadRestrictions::ScopedAllowWait allow_wait;
     AutoLock lock(lock_);
     while (!CanShutdown())
       can_shutdown_cv_.Wait();
@@ -1222,13 +1222,13 @@ bool SequencedWorkerPool::Inner::CanShutdown() const {
          blocking_shutdown_pending_task_count_ == 0;
 }
 
-crbase::StaticAtomicSequenceNumber
+cr::StaticAtomicSequenceNumber
 SequencedWorkerPool::Inner::g_last_sequence_number_;
 
 // SequencedWorkerPool --------------------------------------------------------
 
 std::string SequencedWorkerPool::SequenceToken::ToString() const {
-  return crbase::StringPrintf("[%d]", id_);
+  return cr::StringPrintf("[%d]", id_);
 }
 
 // static
@@ -1430,4 +1430,4 @@ bool SequencedWorkerPool::IsShutdownInProgress() {
   return inner_->IsShutdownInProgress();
 }
 
-}  // namespace crbase
+}  // namespace cr

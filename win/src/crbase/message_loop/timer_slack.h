@@ -5,7 +5,7 @@
 #ifndef MINI_CHROMIUM_SRC_CRBASE_MESSAGE_LOOP_TIMER_SLACK_H_
 #define MINI_CHROMIUM_SRC_CRBASE_MESSAGE_LOOP_TIMER_SLACK_H_
 
-namespace crbase {
+namespace cr {
 
 // Amount of timer slack to use for delayed timers.  Increasing timer slack
 // allows the OS to coalesce timers more effectively.
@@ -17,6 +17,6 @@ enum TimerSlack {
   TIMER_SLACK_MAXIMUM
 };
 
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_SRC_CRBASE_MESSAGE_LOOP_TIMER_SLACK_H_

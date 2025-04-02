@@ -5,7 +5,7 @@
 #include "crbase/process/process_iterator.h"
 #include "crbase/build_config.h"
 
-namespace crbase {
+namespace cr {
 
 #if defined(MINI_CHROMIUM_OS_POSIX)
 ProcessEntry::ProcessEntry() : pid_(0), ppid_(0), gid_(0) {}
@@ -52,4 +52,4 @@ int GetProcessCount(const FilePath::StringType& executable_name,
   return count;
 }
 
-}  // namespace crbase
+}  // namespace cr

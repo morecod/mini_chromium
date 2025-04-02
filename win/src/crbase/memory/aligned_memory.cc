@@ -7,7 +7,7 @@
 #include "crbase/logging.h"
 #include "crbase/build_config.h"
 
-namespace crbase {
+namespace cr {
 
 void* AlignedAlloc(size_t size, size_t alignment) {
   CR_DCHECK_GT(size, 0U);
@@ -34,4 +34,4 @@ void* AlignedAlloc(size_t size, size_t alignment) {
   return ptr;
 }
 
-}  // namespace crbase
+}  // namespace cr

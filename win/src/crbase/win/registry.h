@@ -14,7 +14,7 @@
 #include "crbase/macros.h"
 ///#include "crbase/win/scoped_handle.h"
 
-namespace crbase {
+namespace cr {
 namespace win {
 
 // Utility class to read, write and manipulate the Windows Registry.
@@ -27,7 +27,7 @@ namespace win {
 class CRBASE_EXPORT RegKey {
  public:
   // Called from the MessageLoop when the key changes.
-  ///typedef crbase::Callback<void()> ChangeCallback;
+  ///typedef cr::Callback<void()> ChangeCallback;
 
   RegKey(const RegKey&) = delete;
   RegKey& operator=(const RegKey&) = delete;
@@ -260,6 +260,6 @@ class CRBASE_EXPORT RegistryKeyIterator {
 };
 
 }  // namespace win
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_SRC_CRBASE_WIN_REGISTRY_H_

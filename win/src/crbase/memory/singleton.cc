@@ -6,7 +6,7 @@
 
 #include "crbase/threading/platform_thread.h"
 
-namespace crbase {
+namespace cr {
 namespace internal {
 
 subtle::AtomicWord WaitForInstance(subtle::AtomicWord* instance) {
@@ -31,4 +31,4 @@ subtle::AtomicWord WaitForInstance(subtle::AtomicWord* instance) {
 }
 
 }  // namespace internal
-}  // namespace crbase
+}  // namespace cr

@@ -97,7 +97,7 @@
 // There is the special severity of DFATAL, which logs FATAL in debug mode,
 // ERROR in normal mode.
 
-namespace crbase_logging {
+namespace cr_logging {
 
 #if defined(MINI_CHROMIUM_OS_WIN)
 // TODO(avi): do we want to do a unification of character types here?
@@ -250,20 +250,20 @@ const LogSeverity LOG_DFATAL = LOG_FATAL;
 // A few definitions of macros that don't generate much code. These are used
 // by LOG() and LOG_IF, etc. Since these are used all over our code, it's
 // better to have compact code for these operations.
-#define COMPACT_CR_LOG_EX_INFO(ClassName, ...)                               \
-  crbase_logging::ClassName(__FILE__, __LINE__, crbase_logging::LOG_INFO,    \
+#define COMPACT_CR_LOG_EX_INFO(ClassName, ...)                           \
+  ::cr_logging::ClassName(__FILE__, __LINE__, ::cr_logging::LOG_INFO,    \
                           ##__VA_ARGS__)
-#define COMPACT_CR_LOG_EX_WARNING(ClassName, ...)                            \
-  crbase_logging::ClassName(__FILE__, __LINE__, crbase_logging::LOG_WARNING, \
+#define COMPACT_CR_LOG_EX_WARNING(ClassName, ...)                        \
+  ::cr_logging::ClassName(__FILE__, __LINE__, ::cr_logging::LOG_WARNING, \
                           ##__VA_ARGS__)
-#define COMPACT_CR_LOG_EX_ERROR(ClassName, ...)                              \
-  crbase_logging::ClassName(__FILE__, __LINE__, crbase_logging::LOG_ERROR,   \
+#define COMPACT_CR_LOG_EX_ERROR(ClassName, ...)                          \
+  ::cr_logging::ClassName(__FILE__, __LINE__, ::cr_logging::LOG_ERROR,   \
                           ##__VA_ARGS__)
-#define COMPACT_CR_LOG_EX_FATAL(ClassName, ...)                              \
-  crbase_logging::ClassName(__FILE__, __LINE__, crbase_logging::LOG_FATAL,   \
+#define COMPACT_CR_LOG_EX_FATAL(ClassName, ...)                          \
+  ::cr_logging::ClassName(__FILE__, __LINE__, ::cr_logging::LOG_FATAL,   \
                           ##__VA_ARGS__)
-#define COMPACT_CR_LOG_EX_DFATAL(ClassName, ...)                             \
-  crbase_logging::ClassName(__FILE__, __LINE__, crbase_logging::LOG_DFATAL,  \
+#define COMPACT_CR_LOG_EX_DFATAL(ClassName, ...)                         \
+  ::cr_logging::ClassName(__FILE__, __LINE__, ::cr_logging::LOG_DFATAL,  \
                           ##__VA_ARGS__)
 
 #define COMPACT_CR_LOG_INFO COMPACT_CR_LOG_EX_INFO(LogMessage)
@@ -288,12 +288,12 @@ const LogSeverity LOG_0 = LOG_ERROR;
 // Also, CR_LOG_IS_ON(DFATAL) always holds in debug mode. In particular,
 // CHECK()s will always fire if they fail.
 #define CR_LOG_IS_ON(severity)                                               \
-  (::crbase_logging::ShouldCreateLogMessage(::crbase_logging::LOG_##severity))
+  (::cr_logging::ShouldCreateLogMessage(::cr_logging::LOG_##severity))
 
 // Helper macro which avoids evaluating the arguments to a stream if
 // the condition doesn't hold. Condition is evaluated once and only once.
 #define CR_LAZY_STREAM(stream, condition)                                    \
-  !(condition) ? (void)0 : ::crbase_logging::LogMessageVoidify() & (stream)
+  !(condition) ? (void)0 : ::cr_logging::LogMessageVoidify() & (stream)
 
 // We use the preprocessor's merging operator, "##", so that, e.g.,
 // LOG(INFO) becomes the token COMPACT_CR_LOG_INFO.  There's some funny
@@ -321,7 +321,7 @@ const LogSeverity LOG_0 = LOG_ERROR;
 
 #define CR_PLOG_STREAM(severity)                                             \
   COMPACT_CR_LOG_EX_##severity(Win32ErrorLogMessage,                         \
-                               crbase_logging::GetLastSystemErrorCode())     \
+                               cr_logging::GetLastSystemErrorCode())         \
       .stream()
 
 #define CR_PLOG(severity)                                                    \
@@ -333,7 +333,7 @@ const LogSeverity LOG_0 = LOG_ERROR;
 
 // The actual stream used isn't important.
 #define CR_EAT_STREAM_PARAMETERS                                             \
-  true ? (void)0 : ::crbase_logging::LogMessageVoidify() & CR_LOG_STREAM(FATAL)
+  true ? (void)0 : ::cr_logging::LogMessageVoidify() & CR_LOG_STREAM(FATAL)
 
 // Captures the result of a CR_CHECK_EQ (for example) and facilitates
 // testing as a boolean.
@@ -366,7 +366,7 @@ private:
 // remove BreakDebugger() from the backtrace, perhaps by turning it
 // into a macro (like __debugbreak() on Windows).
 #define CR_CHECK(condition)                                                  \
-  !(condition) ? ::crbase::debug::BreakDebugger() : CR_EAT_STREAM_PARAMETERS
+  !(condition) ? ::cr::debug::BreakDebugger() : CR_EAT_STREAM_PARAMETERS
 
 #define CR_PCHECK(condition) CR_CHECK(condition)
 
@@ -397,7 +397,7 @@ private:
 // Do as much work as possible out of line to reduce inline code size.
 #define CR_CHECK(condition)                                                  \
   CR_LAZY_STREAM(                                                            \
-      crbase_logging::LogMessage(__FILE__, __LINE__, #condition).stream(),   \
+      cr_logging::LogMessage(__FILE__, __LINE__, #condition).stream(),       \
       !(condition))
 
 #define CR_PCHECK(condition)                                                 \
@@ -416,12 +416,12 @@ private:
   switch (0)                                                                   \
   case 0:                                                                      \
   default:                                                                     \
-    if (crbase_logging::CheckOpResult true_if_passed =                         \
-            crbase_logging::Check##name##Impl((val1), (val2),                  \
-                                            #val1 " " #op " " #val2))          \
+    if (::cr_logging::CheckOpResult true_if_passed =                           \
+            ::cr_logging::Check##name##Impl((val1), (val2),                    \
+                                          #val1 " " #op " " #val2))            \
       ;                                                                        \
     else                                                                       \
-      crbase_logging::LogMessage(__FILE__, __LINE__, true_if_passed.message()) \
+      ::cr_logging::LogMessage(__FILE__, __LINE__, true_if_passed.message())   \
           .stream()
 
 #endif
@@ -607,14 +607,14 @@ const LogSeverity LOG_DCHECK = LOG_INFO;
   switch (0)                                                                   \
   case 0:                                                                      \
   default:                                                                     \
-    if (crbase_logging::CheckOpResult true_if_passed =                         \
-            CR_DCHECK_IS_ON() ? crbase_logging::Check##name##Impl(             \
+    if (cr_logging::CheckOpResult true_if_passed =                             \
+            CR_DCHECK_IS_ON() ? cr_logging::Check##name##Impl(                 \
                                       (val1), (val2), #val1 " " #op " " #val2) \
                                 : nullptr)                                     \
       ;                                                                        \
     else                                                                       \
-      crbase_logging::LogMessage(__FILE__, __LINE__,                           \
-                                 ::crbase_logging::LOG_DCHECK,                 \
+      cr_logging::LogMessage(__FILE__, __LINE__,                               \
+                                 ::cr_logging::LOG_DCHECK,                     \
                                  true_if_passed.message())                     \
           .stream()
 
@@ -810,7 +810,7 @@ CRBASE_EXPORT bool IsLoggingToFileEnabled();
 CRBASE_EXPORT std::wstring GetLogFileFullPath();
 #endif
 
-} // namespace crbase_logging
+} // namespace cr_logging
 
 // Note that "The behavior of a C++ program is undefined if it adds declarations
 // or definitions to namespace std or to a namespace within namespace std unless

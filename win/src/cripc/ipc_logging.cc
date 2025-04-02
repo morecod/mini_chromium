@@ -35,7 +35,7 @@ EXTERN_C errno_t getenv_s(
 );
 #endif
 
-using crbase::Time;
+using cr::Time;
 
 namespace cripc {
 
@@ -51,7 +51,7 @@ Logging::Logging()
       enabled_color_(false),
       queue_invoke_later_pending_(false),
       sender_(NULL),
-      main_thread_(crbase::MessageLoop::current()),
+      main_thread_(cr::MessageLoop::current()),
       consumer_(NULL) {
   // getenv triggers an unsafe warning. Simply check how big of a buffer
   // would be needed to fetch the value to see if the enviornment variable is
@@ -76,7 +76,7 @@ Logging::~Logging() {
 
 // static
 Logging* Logging::GetInstance() {
-  return crbase::Singleton<Logging>::get();
+  return cr::Singleton<Logging>::get();
 }
 
 void Logging::SetConsumer(Consumer* consumer) {
@@ -109,7 +109,7 @@ void Logging::SetIPCSender(Sender* sender) {
 
 void Logging::OnReceivedLoggingMessage(const Message& message) {
   std::vector<LogData> data;
-  crbase::PickleIterator iter(message);
+  cr::PickleIterator iter(message);
   if (!ReadParam(&message, &iter, &data))
     return;
 
@@ -158,12 +158,12 @@ void Logging::OnPostDispatchMessage(const Message& message,
   LogData data;
   GenerateLogData(channel_id, message, &data, true);
 
-  if (crbase::MessageLoop::current() == main_thread_) {
+  if (cr::MessageLoop::current() == main_thread_) {
     Log(data);
   } else {
     main_thread_->task_runner()->PostTask(
         CR_FROM_HERE,
-        crbase::BindOnce(&Logging::Log, crbase::Unretained(this), data));
+        cr::BindOnce(&Logging::Log, cr::Unretained(this), data));
   }
 }
 
@@ -177,7 +177,7 @@ void Logging::GetMessageText(uint32_t type, std::string* name,
   if (it == log_function_map_->end()) {
     if (name) {
       *name = "[UNKNOWN MSG ";
-      *name += crbase::IntToString(type);
+      *name += cr::IntToString(type);
       *name += " ]";
     }
     return;
@@ -232,17 +232,17 @@ void Logging::Log(const LogData& data) {
       queued_logs_.push_back(data);
       if (!queue_invoke_later_pending_) {
         queue_invoke_later_pending_ = true;
-        crbase::ThreadTaskRunnerHandle::Get()->PostDelayedTask(
+        cr::ThreadTaskRunnerHandle::Get()->PostDelayedTask(
             CR_FROM_HERE,
-            crbase::BindOnce(&Logging::OnSendLogs, crbase::Unretained(this)),
-            crbase::TimeDelta::FromMilliseconds(kLogSendDelayMs));
+            cr::BindOnce(&Logging::OnSendLogs, cr::Unretained(this)),
+            cr::TimeDelta::FromMilliseconds(kLogSendDelayMs));
       }
     }
   }
   if (enabled_on_stderr_) {
     std::string message_name;
     if (data.message_name.empty()) {
-      message_name = crbase::StringPrintf("[unknown type %d]", data.type);
+      message_name = cr::StringPrintf("[unknown type %d]", data.type);
     } else {
       message_name = data.message_name;
     }

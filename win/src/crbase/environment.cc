@@ -20,7 +20,7 @@
 #include <windows.h>
 #endif
 
-namespace crbase {
+namespace cr {
 
 namespace {
 
@@ -232,4 +232,4 @@ std::unique_ptr<char*[]> AlterEnvironment(const char* const* const env,
 
 #endif
 
-}  // namespace crbase
+}  // namespace cr

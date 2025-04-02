@@ -4,5 +4,13 @@
     <ClCompile Include="..\..\..\src\examples\crurl_gurl.cc" />
     <ClCompile Include="..\..\..\src\examples\crnet_tcp_simple_server.cc" />
     <ClCompile Include="..\..\..\src\examples\crnet_udp_simple_server.cc" />
+    <ClCompile Include="..\..\..\src\examples\crnet_stun_client\crnet_stun_client.cc">
+      <Filter>crnet_stun_client</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="crnet_stun_client">
+      <UniqueIdentifier>{04fb8149-2d50-4898-b119-927eefd6046b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>

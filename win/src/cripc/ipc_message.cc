@@ -18,14 +18,14 @@ namespace cripc {
 Message::~Message() {
 }
 
-Message::Message() : crbase::Pickle(sizeof(Header)) {
+Message::Message() : cr::Pickle(sizeof(Header)) {
   header()->routing = header()->type = 0;
   header()->flags = 0;
   Init();
 }
 
 Message::Message(int32_t routing_id, uint32_t type, PriorityValue priority)
-    : crbase::Pickle(sizeof(Header)) {
+    : cr::Pickle(sizeof(Header)) {
   header()->routing = routing_id;
   header()->type = type;
   CR_DCHECK((priority & 0xffffff00) == 0);
@@ -34,18 +34,18 @@ Message::Message(int32_t routing_id, uint32_t type, PriorityValue priority)
 }
 
 Message::Message(const char* data, int data_len)
-    : crbase::Pickle(data, data_len) {
+    : cr::Pickle(data, data_len) {
   Init();
 }
 
-Message::Message(const Message& other) : crbase::Pickle(other) {
+Message::Message(const Message& other) : cr::Pickle(other) {
   Init();
   sender_pid_ = other.sender_pid_;
 }
 
 void Message::Init() {
   dispatch_error_ = false;
-  sender_pid_ = crbase::kNullProcessId;
+  sender_pid_ = cr::kNullProcessId;
 #ifdef ENABLE_CRIPC_MESSAGE_LOG
   received_time_ = 0;
   dont_log_ = false;
@@ -54,7 +54,7 @@ void Message::Init() {
 }
 
 Message& Message::operator=(const Message& other) {
-  *static_cast<crbase::Pickle*>(this) = other;
+  *static_cast<cr::Pickle*>(this) = other;
   sender_pid_ = other.sender_pid_;
   return *this;
 }
@@ -103,7 +103,7 @@ void Message::FindNext(const char* range_start,
   info->message_size = 0;
 
   size_t pickle_size = 0;
-  if (!crbase::Pickle::PeekNext(sizeof(Header),
+  if (!cr::Pickle::PeekNext(sizeof(Header),
                                 range_start, range_end, &pickle_size))
     return;
 

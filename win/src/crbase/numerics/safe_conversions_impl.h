@@ -14,24 +14,7 @@
 #include "crbase/logging.h"
 #include "crbase/build_config.h"
 
-// compatible with <windows.h>
-#if defined(MINI_CHROMIUM_COMPILER_MSVC)
-
-#if defined(min)
-#undef min
-#endif
-
-#if defined(max)
-#undef max
-#endif
-
-#ifndef NOMINMAX
-#define NOMINMAX
-#endif
-
-#endif
-
-namespace crbase {
+namespace cr {
 namespace internal {
 
 // The std library doesn't provide a binary max_exponent for integers, however
@@ -278,6 +261,6 @@ inline RangeConstraint DstRangeRelationToSrcRange(Src value) {
 }
 
 }  // namespace internal
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_SRC_CRBASE_NUMERICS_SAFE_CONVERSIONS_IMPL_H_

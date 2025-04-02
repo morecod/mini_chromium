@@ -12,7 +12,7 @@
 #include "crbase/base_export.h"
 #include "crbase/build_config.h"
 
-namespace crbase {
+namespace cr {
 
 // Generate a 128-bit random GUID of the form: "%08X-%04X-%04X-%04X-%012llX".
 // If GUID generation fails an empty string is returned.
@@ -23,6 +23,6 @@ CRBASE_EXPORT std::string GenerateGUID();
 // Returns true if the input string conforms to the GUID format.
 CRBASE_EXPORT bool IsValidGUID(const std::string& guid);
 
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_SRC_CRBASE_GUID_H_

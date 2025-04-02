@@ -16,7 +16,7 @@
 #include "crbase/base_paths_posix.h"
 #endif
 
-namespace crbase {
+namespace cr {
 
 enum BasePathKey {
   PATH_START = 0,
@@ -38,6 +38,6 @@ enum BasePathKey {
   PATH_END
 };
 
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_SRC_CRBASE_BASE_PATHS_H_

@@ -33,7 +33,7 @@
 #include "crbase/win/scoped_propvariant.h"
 #include "crbase/win/windows_version.h"
 
-namespace crbase {
+namespace cr {
 namespace win {
 
 namespace {
@@ -446,4 +446,4 @@ bool MaybeHasSHA256Support() {
 }
 
 }  // namespace win
-}  // namespace crbase
+}  // namespace cr

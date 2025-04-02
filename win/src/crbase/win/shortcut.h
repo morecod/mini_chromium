@@ -13,7 +13,7 @@
 #include "crbase/files/file_path.h"
 #include "crbase/strings/string16.h"
 
-namespace crbase {
+namespace cr {
 namespace win {
 
 enum ShortcutOperation {
@@ -168,6 +168,6 @@ CRBASE_EXPORT bool PinShortcutToTaskbar(const FilePath& shortcut);
 CRBASE_EXPORT bool UnpinShortcutFromTaskbar(const FilePath& shortcut);
 
 }  // namespace win
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_SRC_CRBASE_WIN_SHORTCUT_H_

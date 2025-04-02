@@ -16,10 +16,10 @@ namespace crurl {
 #if defined(MINI_CHROMIUM_OS_WIN)
 
 // We allow both "c:" and "c|" as drive identifiers.
-inline bool IsWindowsDriveSeparator(crbase::char16 ch) {
+inline bool IsWindowsDriveSeparator(cr::char16 ch) {
   return ch == ':' || ch == '|';
 }
-inline bool IsWindowsDriveLetter(crbase::char16 ch) {
+inline bool IsWindowsDriveLetter(cr::char16 ch) {
   return (ch >= 'A' && ch <= 'Z') || (ch >= 'a' && ch <= 'z');
 }
 

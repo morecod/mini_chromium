@@ -549,6 +549,7 @@
       <Filter>functional</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\crbase\immediate_crash.h" />
+    <ClInclude Include="..\..\..\src\crbase\array_view.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\crbase\codes\base64.cc">

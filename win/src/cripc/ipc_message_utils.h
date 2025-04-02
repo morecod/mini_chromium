@@ -53,7 +53,7 @@
 #error "Please add the noinline property for your new compiler here."
 #endif
 
-namespace crbase {
+namespace cr {
 class DictionaryValue;
 class FilePath;
 class ListValue;
@@ -62,7 +62,7 @@ class Time;
 class TimeDelta;
 class TimeTicks;
 ///class SharedMemoryHandle;
-}  // namespace crbase
+}  // namespace cr
  
 namespace cripc {
 
@@ -102,7 +102,7 @@ static inline void WriteParam(Message* m, const P& p) {
 
 template <class P>
 static inline bool
-ReadParam(const Message* m, crbase::PickleIterator* iter, P* p) {
+ReadParam(const Message* m, cr::PickleIterator* iter, P* p) {
   typedef typename SimilarTypeTraits<P>::Type Type;
   return ParamTraits<Type>::Read(m, iter, reinterpret_cast<Type* >(p));
 }
@@ -122,7 +122,7 @@ struct ParamTraits<bool> {
     m->WriteBool(p);
   }
   static bool Read(const Message* m,
-                   crbase::PickleIterator* iter,
+                   cr::PickleIterator* iter,
                    param_type* r) {
     return iter->ReadBool(r);
   }
@@ -134,7 +134,7 @@ struct CRIPC_EXPORT ParamTraits<signed char> {
   typedef signed char param_type;
   static void Write(Message* m, const param_type& p);
   static bool Read(const Message* m, 
-                   crbase::PickleIterator* iter,
+                   cr::PickleIterator* iter,
                    param_type* r);
   static void Log(const param_type& p, std::string* l);
 };
@@ -144,7 +144,7 @@ struct CRIPC_EXPORT ParamTraits<unsigned char> {
   typedef unsigned char param_type;
   static void Write(Message* m, const param_type& p);
   static bool Read(const Message* m, 
-                   crbase::PickleIterator* iter,
+                   cr::PickleIterator* iter,
                    param_type* r);
   static void Log(const param_type& p, std::string* l);
 };
@@ -154,7 +154,7 @@ struct CRIPC_EXPORT ParamTraits<unsigned short> {
   typedef unsigned short param_type;
   static void Write(Message* m, const param_type& p);
   static bool Read(const Message* m, 
-                   crbase::PickleIterator* iter,
+                   cr::PickleIterator* iter,
                    param_type* r);
   static void Log(const param_type& p, std::string* l);
 };
@@ -166,7 +166,7 @@ struct ParamTraits<int> {
     m->WriteInt(p);
   }
   static bool Read(const Message* m,
-                   crbase::PickleIterator* iter,
+                   cr::PickleIterator* iter,
                    param_type* r) {
     return iter->ReadInt(r);
   }
@@ -180,7 +180,7 @@ struct ParamTraits<unsigned int> {
     m->WriteInt(p);
   }
   static bool Read(const Message* m,
-                   crbase::PickleIterator* iter,
+                   cr::PickleIterator* iter,
                    param_type* r) {
     return iter->ReadInt(reinterpret_cast<int*>(r));
   }
@@ -194,7 +194,7 @@ struct ParamTraits<long> {
     m->WriteLongUsingDangerousNonPortableLessPersistableForm(p);
   }
   static bool Read(const Message* m,
-                   crbase::PickleIterator* iter,
+                   cr::PickleIterator* iter,
                    param_type* r) {
     return iter->ReadLong(r);
   }
@@ -208,7 +208,7 @@ struct ParamTraits<unsigned long> {
     m->WriteLongUsingDangerousNonPortableLessPersistableForm(p);
   }
   static bool Read(const Message* m,
-                   crbase::PickleIterator* iter,
+                   cr::PickleIterator* iter,
                    param_type* r) {
     return iter->ReadLong(reinterpret_cast<long*>(r));
   }
@@ -222,7 +222,7 @@ struct ParamTraits<long long> {
     m->WriteInt64(static_cast<int64_t>(p));
   }
   static bool Read(const Message* m,
-                   crbase::PickleIterator* iter,
+                   cr::PickleIterator* iter,
                    param_type* r) {
     return iter->ReadInt64(reinterpret_cast<int64_t*>(r));
   }
@@ -236,7 +236,7 @@ struct ParamTraits<unsigned long long> {
     m->WriteInt64(p);
   }
   static bool Read(const Message* m,
-                   crbase::PickleIterator* iter,
+                   cr::PickleIterator* iter,
                    param_type* r) {
     return iter->ReadInt64(reinterpret_cast<int64_t*>(r));
   }
@@ -253,7 +253,7 @@ struct CRIPC_EXPORT ParamTraits<float> {
     m->WriteFloat(p);
   }
   static bool Read(const Message* m,
-                   crbase::PickleIterator* iter,
+                   cr::PickleIterator* iter,
                    param_type* r) {
     return iter->ReadFloat(r);
   }
@@ -265,7 +265,7 @@ struct CRIPC_EXPORT ParamTraits<double> {
   typedef double param_type;
   static void Write(Message* m, const param_type& p);
   static bool Read(const Message* m,
-                   crbase::PickleIterator* iter,
+                   cr::PickleIterator* iter,
                    param_type* r);
   static void Log(const param_type& p, std::string* l);
 };
@@ -279,7 +279,7 @@ struct ParamTraits<std::string> {
     m->WriteString(p);
   }
   static bool Read(const Message* m,
-                   crbase::PickleIterator* iter,
+                   cr::PickleIterator* iter,
                    param_type* r) {
     return iter->ReadString(r);
   }
@@ -287,13 +287,13 @@ struct ParamTraits<std::string> {
 };
 
 template <>
-struct ParamTraits<crbase::string16> {
-  typedef crbase::string16 param_type;
+struct ParamTraits<cr::string16> {
+  typedef cr::string16 param_type;
   static void Write(Message* m, const param_type& p) {
     m->WriteString16(p);
   }
   static bool Read(const Message* m,
-                   crbase::PickleIterator* iter,
+                   cr::PickleIterator* iter,
                    param_type* r) {
     return iter->ReadString16(r);
   }
@@ -305,7 +305,7 @@ struct CRIPC_EXPORT ParamTraits<std::vector<char>> {
   typedef std::vector<char> param_type;
   static void Write(Message* m, const param_type& p);
   static bool Read(const Message*,
-                   crbase::PickleIterator* iter,
+                   cr::PickleIterator* iter,
                    param_type* r);
   static void Log(const param_type& p, std::string* l);
 };
@@ -315,7 +315,7 @@ struct CRIPC_EXPORT ParamTraits<std::vector<unsigned char>> {
   typedef std::vector<unsigned char> param_type;
   static void Write(Message* m, const param_type& p);
   static bool Read(const Message* m,
-                   crbase::PickleIterator* iter,
+                   cr::PickleIterator* iter,
                    param_type* r);
   static void Log(const param_type& p, std::string* l);
 };
@@ -325,7 +325,7 @@ struct CRIPC_EXPORT ParamTraits<std::vector<bool>> {
   typedef std::vector<bool> param_type;
   static void Write(Message* m, const param_type& p);
   static bool Read(const Message* m,
-                   crbase::PickleIterator* iter,
+                   cr::PickleIterator* iter,
                    param_type* r);
   static void Log(const param_type& p, std::string* l);
 };
@@ -339,7 +339,7 @@ struct ParamTraits<std::vector<P> > {
       WriteParam(m, p[i]);
   }
   static bool Read(const Message* m,
-                   crbase::PickleIterator* iter,
+                   cr::PickleIterator* iter,
                    param_type* r) {
     int size;
     // ReadLength() checks for < 0 itself.
@@ -374,7 +374,7 @@ struct ParamTraits<std::set<P> > {
       WriteParam(m, *iter);
   }
   static bool Read(const Message* m,
-                   crbase::PickleIterator* iter,
+                   cr::PickleIterator* iter,
                    param_type* r) {
     int size;
     if (!iter->ReadLength(&size))
@@ -404,7 +404,7 @@ struct ParamTraits<std::map<K, V, C, A> > {
     }
   }
   static bool Read(const Message* m,
-                   crbase::PickleIterator* iter,
+                   cr::PickleIterator* iter,
                    param_type* r) {
     int size;
     if (!ReadParam(m, iter, &size) || size < 0)
@@ -432,7 +432,7 @@ struct ParamTraits<std::pair<A, B> > {
     WriteParam(m, p.second);
   }
   static bool Read(const Message* m,
-                   crbase::PickleIterator* iter,
+                   cr::PickleIterator* iter,
                    param_type* r) {
     return ReadParam(m, iter, &r->first) && ReadParam(m, iter, &r->second);
   }
@@ -448,65 +448,65 @@ struct ParamTraits<std::pair<A, B> > {
 // Base ParamTraits ------------------------------------------------------------
 
 template <>
-struct CRIPC_EXPORT ParamTraits<crbase::DictionaryValue> {
-  typedef crbase::DictionaryValue param_type;
+struct CRIPC_EXPORT ParamTraits<cr::DictionaryValue> {
+  typedef cr::DictionaryValue param_type;
   static void Write(Message* m, const param_type& p);
   static bool Read(const Message* m,
-                   crbase::PickleIterator* iter,
+                   cr::PickleIterator* iter,
                    param_type* r);
   static void Log(const param_type& p, std::string* l);
 };
 
 ///template <>
-///struct CRIPC_EXPORT ParamTraits<crbase::SharedMemoryHandle> {
-///  typedef crbase::SharedMemoryHandle param_type;
+///struct CRIPC_EXPORT ParamTraits<cr::SharedMemoryHandle> {
+///  typedef cr::SharedMemoryHandle param_type;
 ///  static void Write(Message* m, const param_type& p);
-///  static bool Read(const Message* m, crbase::PickleIterator* iter, param_type* r);
+///  static bool Read(const Message* m, cr::PickleIterator* iter, param_type* r);
 ///  static void Log(const param_type& p, std::string* l);
 ///};
 
 template <>
-struct CRIPC_EXPORT ParamTraits<crbase::FilePath> {
-  typedef crbase::FilePath param_type;
+struct CRIPC_EXPORT ParamTraits<cr::FilePath> {
+  typedef cr::FilePath param_type;
   static void Write(Message* m, const param_type& p);
   static bool Read(const Message* m,
-                   crbase::PickleIterator* iter,
+                   cr::PickleIterator* iter,
                    param_type* r);
   static void Log(const param_type& p, std::string* l);
 };
 
 template <>
-struct CRIPC_EXPORT ParamTraits<crbase::ListValue> {
-  typedef crbase::ListValue param_type;
+struct CRIPC_EXPORT ParamTraits<cr::ListValue> {
+  typedef cr::ListValue param_type;
   static void Write(Message* m, const param_type& p);
   static bool Read(const Message* m,
-                   crbase::PickleIterator* iter,
+                   cr::PickleIterator* iter,
                    param_type* r);
   static void Log(const param_type& p, std::string* l);
 };
 
 template <>
-struct CRIPC_EXPORT ParamTraits<crbase::NullableString16> {
-  typedef crbase::NullableString16 param_type;
+struct CRIPC_EXPORT ParamTraits<cr::NullableString16> {
+  typedef cr::NullableString16 param_type;
   static void Write(Message* m, const param_type& p);
   static bool Read(const Message* m,
-                   crbase::PickleIterator* iter,
+                   cr::PickleIterator* iter,
                    param_type* r);
   static void Log(const param_type& p, std::string* l);
 };
 
 template <>
-struct CRIPC_EXPORT ParamTraits<crbase::File::Info> {
-  typedef crbase::File::Info param_type;
+struct CRIPC_EXPORT ParamTraits<cr::File::Info> {
+  typedef cr::File::Info param_type;
   static void Write(Message* m, const param_type& p);
   static bool Read(const Message* m,
-                   crbase::PickleIterator* iter,
+                   cr::PickleIterator* iter,
                    param_type* r);
   static void Log(const param_type& p, std::string* l);
 };
 
 template <>
-struct SimilarTypeTraits<crbase::File::Error> {
+struct SimilarTypeTraits<cr::File::Error> {
   typedef int Type;
 };
 
@@ -516,42 +516,42 @@ struct SimilarTypeTraits<HWND> {
 };
 
 template <>
-struct CRIPC_EXPORT ParamTraits<crbase::Time> {
-  typedef crbase::Time param_type;
+struct CRIPC_EXPORT ParamTraits<cr::Time> {
+  typedef cr::Time param_type;
   static void Write(Message* m, const param_type& p);
   static bool Read(const Message* m,
-                   crbase::PickleIterator* iter,
+                   cr::PickleIterator* iter,
                    param_type* r);
   static void Log(const param_type& p, std::string* l);
 };
 
 template <>
-struct CRIPC_EXPORT ParamTraits<crbase::TimeDelta> {
-  typedef crbase::TimeDelta param_type;
+struct CRIPC_EXPORT ParamTraits<cr::TimeDelta> {
+  typedef cr::TimeDelta param_type;
   static void Write(Message* m, const param_type& p);
   static bool Read(const Message* m,
-                   crbase::PickleIterator* iter,
+                   cr::PickleIterator* iter,
                    param_type* r);
   static void Log(const param_type& p, std::string* l);
 };
 
 template <>
-struct CRIPC_EXPORT ParamTraits<crbase::TimeTicks> {
-  typedef crbase::TimeTicks param_type;
+struct CRIPC_EXPORT ParamTraits<cr::TimeTicks> {
+  typedef cr::TimeTicks param_type;
   static void Write(Message* m, const param_type& p);
   static bool Read(const Message* m,
-                   crbase::PickleIterator* iter,
+                   cr::PickleIterator* iter,
                    param_type* r);
   static void Log(const param_type& p, std::string* l);
 };
 
 template <>
-struct ParamTraits<crbase::Tuple<>> {
-  typedef crbase::Tuple<> param_type;
+struct ParamTraits<cr::Tuple<>> {
+  typedef cr::Tuple<> param_type;
   static void Write(Message* m, const param_type& p) {
   }
   static bool Read(const Message* m,
-                   crbase::PickleIterator* iter,
+                   cr::PickleIterator* iter,
                    param_type* r) {
     return true;
   }
@@ -560,135 +560,135 @@ struct ParamTraits<crbase::Tuple<>> {
 };
 
 template <class A>
-struct ParamTraits<crbase::Tuple<A>> {
-  typedef crbase::Tuple<A> param_type;
+struct ParamTraits<cr::Tuple<A>> {
+  typedef cr::Tuple<A> param_type;
   static void Write(Message* m, const param_type& p) {
-    WriteParam(m, crbase::get<0>(p));
+    WriteParam(m, cr::get<0>(p));
   }
   static bool Read(const Message* m,
-                   crbase::PickleIterator* iter,
+                   cr::PickleIterator* iter,
                    param_type* r) {
-    return ReadParam(m, iter, &crbase::get<0>(*r));
+    return ReadParam(m, iter, &cr::get<0>(*r));
   }
   static void Log(const param_type& p, std::string* l) {
-    LogParam(crbase::get<0>(p), l);
+    LogParam(cr::get<0>(p), l);
   }
 };
 
 template <class A, class B>
-struct ParamTraits<crbase::Tuple<A, B>> {
-  typedef crbase::Tuple<A, B> param_type;
+struct ParamTraits<cr::Tuple<A, B>> {
+  typedef cr::Tuple<A, B> param_type;
   static void Write(Message* m, const param_type& p) {
-    WriteParam(m, crbase::get<0>(p));
-    WriteParam(m, crbase::get<1>(p));
+    WriteParam(m, cr::get<0>(p));
+    WriteParam(m, cr::get<1>(p));
   }
   static bool Read(const Message* m,
-                   crbase::PickleIterator* iter,
+                   cr::PickleIterator* iter,
                    param_type* r) {
-    return (ReadParam(m, iter, &crbase::get<0>(*r)) &&
-            ReadParam(m, iter, &crbase::get<1>(*r)));
+    return (ReadParam(m, iter, &cr::get<0>(*r)) &&
+            ReadParam(m, iter, &cr::get<1>(*r)));
   }
   static void Log(const param_type& p, std::string* l) {
-    LogParam(crbase::get<0>(p), l);
+    LogParam(cr::get<0>(p), l);
     l->append(", ");
-    LogParam(crbase::get<1>(p), l);
+    LogParam(cr::get<1>(p), l);
   }
 };
 
 template <class A, class B, class C>
-struct ParamTraits<crbase::Tuple<A, B, C>> {
-  typedef crbase::Tuple<A, B, C> param_type;
+struct ParamTraits<cr::Tuple<A, B, C>> {
+  typedef cr::Tuple<A, B, C> param_type;
   static void Write(Message* m, const param_type& p) {
-    WriteParam(m, crbase::get<0>(p));
-    WriteParam(m, crbase::get<1>(p));
-    WriteParam(m, crbase::get<2>(p));
+    WriteParam(m, cr::get<0>(p));
+    WriteParam(m, cr::get<1>(p));
+    WriteParam(m, cr::get<2>(p));
   }
   static bool Read(const Message* m,
-                   crbase::PickleIterator* iter,
+                   cr::PickleIterator* iter,
                    param_type* r) {
-    return (ReadParam(m, iter, &crbase::get<0>(*r)) &&
-            ReadParam(m, iter, &crbase::get<1>(*r)) &&
-            ReadParam(m, iter, &crbase::get<2>(*r)));
+    return (ReadParam(m, iter, &cr::get<0>(*r)) &&
+            ReadParam(m, iter, &cr::get<1>(*r)) &&
+            ReadParam(m, iter, &cr::get<2>(*r)));
   }
   static void Log(const param_type& p, std::string* l) {
-    LogParam(crbase::get<0>(p), l);
+    LogParam(cr::get<0>(p), l);
     l->append(", ");
-    LogParam(crbase::get<1>(p), l);
+    LogParam(cr::get<1>(p), l);
     l->append(", ");
-    LogParam(crbase::get<2>(p), l);
+    LogParam(cr::get<2>(p), l);
   }
 };
 
 template <class A, class B, class C, class D>
-struct ParamTraits<crbase::Tuple<A, B, C, D>> {
-  typedef crbase::Tuple<A, B, C, D> param_type;
+struct ParamTraits<cr::Tuple<A, B, C, D>> {
+  typedef cr::Tuple<A, B, C, D> param_type;
   static void Write(Message* m, const param_type& p) {
-    WriteParam(m, crbase::get<0>(p));
-    WriteParam(m, crbase::get<1>(p));
-    WriteParam(m, crbase::get<2>(p));
-    WriteParam(m, crbase::get<3>(p));
+    WriteParam(m, cr::get<0>(p));
+    WriteParam(m, cr::get<1>(p));
+    WriteParam(m, cr::get<2>(p));
+    WriteParam(m, cr::get<3>(p));
   }
   static bool Read(const Message* m,
-                   crbase::PickleIterator* iter,
+                   cr::PickleIterator* iter,
                    param_type* r) {
-    return (ReadParam(m, iter, &crbase::get<0>(*r)) &&
-            ReadParam(m, iter, &crbase::get<1>(*r)) &&
-            ReadParam(m, iter, &crbase::get<2>(*r)) &&
-            ReadParam(m, iter, &crbase::get<3>(*r)));
+    return (ReadParam(m, iter, &cr::get<0>(*r)) &&
+            ReadParam(m, iter, &cr::get<1>(*r)) &&
+            ReadParam(m, iter, &cr::get<2>(*r)) &&
+            ReadParam(m, iter, &cr::get<3>(*r)));
   }
   static void Log(const param_type& p, std::string* l) {
-    LogParam(crbase::get<0>(p), l);
+    LogParam(cr::get<0>(p), l);
     l->append(", ");
-    LogParam(crbase::get<1>(p), l);
+    LogParam(cr::get<1>(p), l);
     l->append(", ");
-    LogParam(crbase::get<2>(p), l);
+    LogParam(cr::get<2>(p), l);
     l->append(", ");
-    LogParam(crbase::get<3>(p), l);
+    LogParam(cr::get<3>(p), l);
   }
 };
 
 template <class A, class B, class C, class D, class E>
-struct ParamTraits<crbase::Tuple<A, B, C, D, E>> {
-  typedef crbase::Tuple<A, B, C, D, E> param_type;
+struct ParamTraits<cr::Tuple<A, B, C, D, E>> {
+  typedef cr::Tuple<A, B, C, D, E> param_type;
   static void Write(Message* m, const param_type& p) {
-    WriteParam(m, crbase::get<0>(p));
-    WriteParam(m, crbase::get<1>(p));
-    WriteParam(m, crbase::get<2>(p));
-    WriteParam(m, crbase::get<3>(p));
-    WriteParam(m, crbase::get<4>(p));
+    WriteParam(m, cr::get<0>(p));
+    WriteParam(m, cr::get<1>(p));
+    WriteParam(m, cr::get<2>(p));
+    WriteParam(m, cr::get<3>(p));
+    WriteParam(m, cr::get<4>(p));
   }
   static bool Read(const Message* m,
-                   crbase::PickleIterator* iter,
+                   cr::PickleIterator* iter,
                    param_type* r) {
-    return (ReadParam(m, iter, &crbase::get<0>(*r)) &&
-            ReadParam(m, iter, &crbase::get<1>(*r)) &&
-            ReadParam(m, iter, &crbase::get<2>(*r)) &&
-            ReadParam(m, iter, &crbase::get<3>(*r)) &&
-            ReadParam(m, iter, &crbase::get<4>(*r)));
+    return (ReadParam(m, iter, &cr::get<0>(*r)) &&
+            ReadParam(m, iter, &cr::get<1>(*r)) &&
+            ReadParam(m, iter, &cr::get<2>(*r)) &&
+            ReadParam(m, iter, &cr::get<3>(*r)) &&
+            ReadParam(m, iter, &cr::get<4>(*r)));
   }
   static void Log(const param_type& p, std::string* l) {
-    LogParam(crbase::get<0>(p), l);
+    LogParam(cr::get<0>(p), l);
     l->append(", ");
-    LogParam(crbase::get<1>(p), l);
+    LogParam(cr::get<1>(p), l);
     l->append(", ");
-    LogParam(crbase::get<2>(p), l);
+    LogParam(cr::get<2>(p), l);
     l->append(", ");
-    LogParam(crbase::get<3>(p), l);
+    LogParam(cr::get<3>(p), l);
     l->append(", ");
-    LogParam(crbase::get<4>(p), l);
+    LogParam(cr::get<4>(p), l);
   }
 };
 
 template<class P>
-struct ParamTraits<crbase::ScopedVector<P> > {
-  typedef crbase::ScopedVector<P> param_type;
+struct ParamTraits<cr::ScopedVector<P> > {
+  typedef cr::ScopedVector<P> param_type;
   static void Write(Message* m, const param_type& p) {
     WriteParam(m, static_cast<int>(p.size()));
     for (size_t i = 0; i < p.size(); i++)
       WriteParam(m, *p[i]);
   }
   static bool Read(const Message* m,
-                   crbase::PickleIterator* iter,
+                   cr::PickleIterator* iter,
                    param_type* r) {
     int size = 0;
     if (!iter->ReadLength(&size))
@@ -713,15 +713,15 @@ struct ParamTraits<crbase::ScopedVector<P> > {
 };
 
 ///template <class P, size_t stack_capacity>
-///struct ParamTraits<crbase::StackVector<P, stack_capacity> > {
-///  typedef crbase::StackVector<P, stack_capacity> param_type;
+///struct ParamTraits<cr::StackVector<P, stack_capacity> > {
+///  typedef cr::StackVector<P, stack_capacity> param_type;
 ///  static void Write(Message* m, const param_type& p) {
 ///    WriteParam(m, static_cast<int>(p->size()));
 ///    for (size_t i = 0; i < p->size(); i++)
 ///      WriteParam(m, p[i]);
 ///  }
 ///  static bool Read(const Message* m,
-///                   crbase::PickleIterator* iter,
+///                   cr::PickleIterator* iter,
 ///                   param_type* r) {
 ///    int size;
 ///    // ReadLength() checks for < 0 itself.
@@ -751,8 +751,8 @@ struct ParamTraits<crbase::ScopedVector<P> > {
 ///          int kArraySize,
 ///          typename EqualKey,
 ///          typename MapInit>
-///struct ParamTraits<crbase::SmallMap<NormalMap, kArraySize, EqualKey, MapInit> > {
-///  typedef crbase::SmallMap<NormalMap, kArraySize, EqualKey, MapInit> param_type;
+///struct ParamTraits<cr::SmallMap<NormalMap, kArraySize, EqualKey, MapInit> > {
+///  typedef cr::SmallMap<NormalMap, kArraySize, EqualKey, MapInit> param_type;
 ///  typedef typename param_type::key_type K;
 ///  typedef typename param_type::data_type V;
 ///  static void Write(Message* m, const param_type& p) {
@@ -764,7 +764,7 @@ struct ParamTraits<crbase::ScopedVector<P> > {
 ///    }
 ///  }
 ///  static bool Read(const Message* m,
-///                   crbase::PickleIterator* iter,
+///                   cr::PickleIterator* iter,
 ///                   param_type* r) {
 ///    int size;
 ///    if (!iter->ReadLength(&size))
@@ -780,7 +780,7 @@ struct ParamTraits<crbase::ScopedVector<P> > {
 ///    return true;
 ///  }
 ///  static void Log(const param_type& p, std::string* l) {
-///    l->append("<crbase::SmallMap>");
+///    l->append("<cr::SmallMap>");
 ///  }
 ///};
 
@@ -794,7 +794,7 @@ struct ParamTraits<std::unique_ptr<P> > {
       WriteParam(m, *p);
   }
   static bool Read(const Message* m,
-                   crbase::PickleIterator* iter,
+                   cr::PickleIterator* iter,
                    param_type* r) {
     bool valid = false;
     if (!ReadParam(m, iter, &valid))
@@ -830,7 +830,7 @@ struct CRIPC_EXPORT ParamTraits<ChannelHandle> {
   typedef ChannelHandle param_type;
   static void Write(Message* m, const param_type& p);
   static bool Read(const Message* m,
-                   crbase::PickleIterator* iter,
+                   cr::PickleIterator* iter,
                    param_type* r);
   static void Log(const param_type& p, std::string* l);
 };
@@ -840,7 +840,7 @@ struct CRIPC_EXPORT ParamTraits<LogData> {
   typedef LogData param_type;
   static void Write(Message* m, const param_type& p);
   static bool Read(const Message* m,
-                   crbase::PickleIterator* iter,
+                   cr::PickleIterator* iter,
                    param_type* r);
   static void Log(const param_type& p, std::string* l);
 };
@@ -849,7 +849,7 @@ template <>
 struct CRIPC_EXPORT ParamTraits<Message> {
   static void Write(Message* m, const Message& p);
   static bool Read(const Message* m,
-                   crbase::PickleIterator* iter,
+                   cr::PickleIterator* iter,
                    Message* r);
   static void Log(const Message& p, std::string* l);
 };
@@ -861,7 +861,7 @@ struct CRIPC_EXPORT ParamTraits<HANDLE> {
   typedef HANDLE param_type;
   static void Write(Message* m, const param_type& p);
   static bool Read(const Message* m,
-                   crbase::PickleIterator* iter,
+                   cr::PickleIterator* iter,
                    param_type* r);
   static void Log(const param_type& p, std::string* l);
 };
@@ -871,7 +871,7 @@ struct CRIPC_EXPORT ParamTraits<LOGFONT> {
   typedef LOGFONT param_type;
   static void Write(Message* m, const param_type& p);
   static bool Read(const Message* m,
-                   crbase::PickleIterator* iter,
+                   cr::PickleIterator* iter,
                    param_type* r);
   static void Log(const param_type& p, std::string* l);
 };
@@ -881,7 +881,7 @@ struct CRIPC_EXPORT ParamTraits<MSG> {
   typedef MSG param_type;
   static void Write(Message* m, const param_type& p);
   static bool Read(const Message* m,
-                   crbase::PickleIterator* iter,
+                   cr::PickleIterator* iter,
                    param_type* r);
   static void Log(const param_type& p, std::string* l);
 };
@@ -894,7 +894,7 @@ template <class ParamType>
 class MessageSchema {
  public:
   typedef ParamType Param;
-  typedef typename crbase::TupleTypes<ParamType>::ParamTuple RefParam;
+  typedef typename cr::TupleTypes<ParamType>::ParamTuple RefParam;
 
   static void Write(Message* msg, const RefParam& p) CRIPC_MSG_NOINLINE;
   static bool Read(const Message* msg, Param* p) CRIPC_MSG_NOINLINE;
@@ -955,7 +955,7 @@ class ParamDeserializer : public MessageReplyDeserializer {
   explicit ParamDeserializer(const RefTuple& out) : out_(out) { }
 
   bool SerializeOutputParameters(const Message& msg,
-                                 crbase::PickleIterator iter) override {
+                                 cr::PickleIterator iter) override {
     return ReadParam(&msg, &iter, &out_);
   }
 
@@ -967,14 +967,14 @@ template <class SendParamType, class ReplyParamType>
 class SyncMessageSchema {
  public:
   typedef SendParamType SendParam;
-  typedef typename crbase::TupleTypes<SendParam>::ParamTuple RefSendParam;
+  typedef typename cr::TupleTypes<SendParam>::ParamTuple RefSendParam;
   typedef ReplyParamType ReplyParam;
 
   static void Write(Message* msg, const RefSendParam& send) CRIPC_MSG_NOINLINE;
   static bool ReadSendParam(const Message* msg, SendParam* p) CRIPC_MSG_NOINLINE;
   static bool ReadReplyParam(
       const Message* msg,
-      typename crbase::TupleTypes<ReplyParam>::ValueTuple* p) CRIPC_MSG_NOINLINE;
+      typename cr::TupleTypes<ReplyParam>::ValueTuple* p) CRIPC_MSG_NOINLINE;
 
   template<class T, class S, class Method>
   static bool DispatchWithSendParams(bool ok, const SendParam& send_params,
@@ -982,8 +982,8 @@ class SyncMessageSchema {
                                      Method func) {
     Message* reply = SyncMessage::GenerateReply(msg);
     if (ok) {
-      typename crbase::TupleTypes<ReplyParam>::ValueTuple reply_params;
-      crbase::DispatchToMethod(obj, func, send_params, &reply_params);
+      typename cr::TupleTypes<ReplyParam>::ValueTuple reply_params;
+      cr::DispatchToMethod(obj, func, send_params, &reply_params);
       WriteParam(reply, reply_params);
       LogReplyParamsToMessage(reply_params, msg);
     } else {
@@ -1001,9 +1001,9 @@ class SyncMessageSchema {
                                                Method func) {
     Message* reply = SyncMessage::GenerateReply(msg);
     if (ok) {
-      crbase::Tuple<Message&> t = crbase::MakeRefTuple(*reply);
+      cr::Tuple<Message&> t = cr::MakeRefTuple(*reply);
       ConnectMessageAndReply(msg, reply);
-      crbase::DispatchToMethod(obj, func, send_params, &t);
+      cr::DispatchToMethod(obj, func, send_params, &t);
     } else {
       CR_NOTREACHED() << "Error deserializing message " << msg->type();
       reply->set_reply_error();

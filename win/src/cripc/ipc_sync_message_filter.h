@@ -16,10 +16,10 @@
 #include "cripc/ipc_sync_message.h"
 #include "cripc/message_filter.h"
 
-namespace crbase {
+namespace cr {
 class SingleThreadTaskRunner;
 class WaitableEvent;
-}  // namespace crbase
+}  // namespace cr
 
 namespace cripc {
 class SyncChannel;
@@ -44,7 +44,7 @@ class CRIPC_EXPORT SyncMessageFilter : public MessageFilter, public Sender {
   bool OnMessageReceived(const Message& message) override;
 
  protected:
-  SyncMessageFilter(crbase::WaitableEvent* shutdown_event,
+  SyncMessageFilter(cr::WaitableEvent* shutdown_event,
                     bool is_channel_send_thread_safe);
 
   ~SyncMessageFilter() override;
@@ -67,21 +67,21 @@ class CRIPC_EXPORT SyncMessageFilter : public MessageFilter, public Sender {
   bool is_channel_send_thread_safe_;
 
   // The process's main thread.
-  crbase::scoped_refptr<crbase::SingleThreadTaskRunner> listener_task_runner_;
+  cr::scoped_refptr<cr::SingleThreadTaskRunner> listener_task_runner_;
 
   // The message loop where the Channel lives.
-  crbase::scoped_refptr<crbase::SingleThreadTaskRunner> io_task_runner_;
+  cr::scoped_refptr<cr::SingleThreadTaskRunner> io_task_runner_;
 
   typedef std::set<PendingSyncMsg*> PendingSyncMessages;
   PendingSyncMessages pending_sync_messages_;
 
   // Messages waiting to be delivered after IO initialization.
-  crbase::ScopedVector<Message> pending_messages_;
+  cr::ScopedVector<Message> pending_messages_;
 
   // Locks data members above.
-  crbase::Lock lock_;
+  cr::Lock lock_;
 
-  crbase::WaitableEvent* shutdown_event_;
+  cr::WaitableEvent* shutdown_event_;
 
   ///CR_DISALLOW_COPY_AND_ASSIGN(SyncMessageFilter)
 };

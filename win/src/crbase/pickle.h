@@ -14,7 +14,7 @@
 #include "crbase/strings/string16.h"
 #include "crbase/strings/string_piece.h"
 
-namespace crbase {
+namespace cr {
 
 class Pickle;
 
@@ -24,6 +24,7 @@ class CRBASE_EXPORT PickleIterator {
  public:
   PickleIterator() : payload_(NULL), read_index_(0), end_index_(0) {}
   explicit PickleIterator(const Pickle& pickle);
+  explicit PickleIterator(const char* payload, size_t payload_size);
 
   // Methods for reading the payload of the Pickle. To read from the start of
   // the Pickle, create a PickleIterator from a Pickle. If successful, these
@@ -309,6 +310,6 @@ class CRBASE_EXPORT Pickle {
   inline void WriteBytesCommon(const void* data, size_t length);
 };
 
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_SRC_CRBASE_PICKLE_H_

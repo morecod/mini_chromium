@@ -9,7 +9,7 @@
 // These can be used with the PathService to access various special
 // directories and files.
 
-namespace crbase {
+namespace cr {
 
 enum {
   PATH_WIN_START = 100,
@@ -44,12 +44,12 @@ enum {
                           // on all user's Desktop).
   DIR_USER_QUICK_LAUNCH,  // Directory for the quick launch shortcuts.
   DIR_TASKBAR_PINS,       // Directory for the shortcuts pinned to taskbar
-                          // (Win7-8) via crbase::win::PinShortcutToTaskbar().
+                          // (Win7-8) via cr::win::PinShortcutToTaskbar().
   DIR_WINDOWS_FONTS,      // Usually C:\Windows\Fonts.
 
   PATH_WIN_END
 };
 
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_SRC_CRBASE_BASE_PATHS_WIN_H_

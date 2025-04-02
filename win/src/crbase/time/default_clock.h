@@ -8,7 +8,7 @@
 #include "crbase/base_export.h"
 #include "crbase/time/clock.h"
 
-namespace crbase {
+namespace cr {
 
 // DefaultClock is a Clock implementation that uses Time::Now().
 class CRBASE_EXPORT DefaultClock : public Clock {
@@ -19,6 +19,6 @@ class CRBASE_EXPORT DefaultClock : public Clock {
   Time Now() const override;
 };
 
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_SRC_CRBASE_TIME_DEFAULT_CLOCK_H_

@@ -63,10 +63,8 @@ class StreamConnection {
    private:
     ~ReadIOBuffer() override;
 
-    crbase::scoped_refptr<GrowableIOBuffer> base_;
+    cr::scoped_refptr<GrowableIOBuffer> base_;
     int max_buffer_size_;
-
-    //DISALLOW_COPY_AND_ASSIGN(ReadIOBuffer);
   };
 
   // IOBuffer of pending data to write which has a queue of pending data. Each
@@ -112,8 +110,6 @@ class StreamConnection {
     std::queue<std::string> pending_data_;
     int total_size_;
     int max_buffer_size_;
-
-    ///DISALLOW_COPY_AND_ASSIGN(QueuedWriteIOBuffer);
   };
 
   StreamConnection(const StreamConnection&) = delete;
@@ -130,9 +126,8 @@ class StreamConnection {
  private:
   const uint32_t id_;
   const std::unique_ptr<StreamSocket> socket_;
-  const crbase::scoped_refptr<ReadIOBuffer> read_buf_;
-  const crbase::scoped_refptr<QueuedWriteIOBuffer> write_buf_;
-  ///DISALLOW_COPY_AND_ASSIGN(HttpConnection);
+  const cr::scoped_refptr<ReadIOBuffer> read_buf_;
+  const cr::scoped_refptr<QueuedWriteIOBuffer> write_buf_;
 };
 
 }  // namespace crnet

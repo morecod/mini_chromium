@@ -14,7 +14,7 @@
 #include "crbase/time/time.h"
 #include "crbase/build_config.h"
 
-namespace crbase {
+namespace cr {
 
 class ProcessFilter;
 
@@ -83,7 +83,7 @@ CRBASE_EXPORT TerminationStatus GetKnownDeadTerminationStatus(
 // Returns true if all the processes exited, false otherwise.
 CRBASE_EXPORT bool WaitForProcessesToExit(
     const FilePath::StringType& executable_name,
-    crbase::TimeDelta wait,
+    cr::TimeDelta wait,
     const ProcessFilter* filter);
 
 // Waits a certain amount of time (can be 0) for all the processes with a given
@@ -93,7 +93,7 @@ CRBASE_EXPORT bool WaitForProcessesToExit(
 // any processes needed to be killed, true if they all exited cleanly within
 // the wait_milliseconds delay.
 CRBASE_EXPORT bool CleanupProcesses(const FilePath::StringType& executable_name,
-                                    crbase::TimeDelta wait,
+                                    cr::TimeDelta wait,
                                     int exit_code,
                                     const ProcessFilter* filter);
 
@@ -119,6 +119,6 @@ CRBASE_EXPORT void EnsureProcessTerminated(Process process);
 CRBASE_EXPORT void EnsureProcessGetsReaped(ProcessId pid);
 #endif
 
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_SRC_CRBASE_PROCESS_KILL_H_

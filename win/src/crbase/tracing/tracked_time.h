@@ -10,7 +10,7 @@
 #include "crbase/base_export.h"
 #include "crbase/time/time.h"
 
-namespace crbase {
+namespace cr {
 namespace tracked_objects {
 
 //------------------------------------------------------------------------------
@@ -24,7 +24,7 @@ namespace tracked_objects {
 // and our interfaces are modeled after what TimeTicks and TimeDelta use (so we
 // can swap them into place if we want to use the "real" classes).
 
-class CRBASE_EXPORT Duration {  // Similar to crbase::TimeDelta.
+class CRBASE_EXPORT Duration {  // Similar to cr::TimeDelta.
  public:
   Duration();
 
@@ -50,7 +50,7 @@ class CRBASE_EXPORT Duration {  // Similar to crbase::TimeDelta.
 class CRBASE_EXPORT TrackedTime {  // Similar to base::TimeTicks.
  public:
   TrackedTime();
-  explicit TrackedTime(const crbase::TimeTicks& time);
+  explicit TrackedTime(const cr::TimeTicks& time);
 
   static TrackedTime Now();
   Duration operator-(const TrackedTime& other) const;
@@ -68,6 +68,6 @@ class CRBASE_EXPORT TrackedTime {  // Similar to base::TimeTicks.
 };
 
 }  // namespace tracked_objects
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_SRC_CRBASE_TRACING_TRACKED_TIME_H_

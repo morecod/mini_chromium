@@ -12,7 +12,7 @@
 
 #include "crbase/stl_util.h"
 
-namespace crbase {
+namespace cr {
 
 // ScopedVector wraps a vector deleting the elements from its
 // destructor.

@@ -53,7 +53,7 @@ bool BindVistaCondVarFunctions() {
 
 }  // namespace.
 
-namespace crbase {
+namespace cr {
 // Abstract base class of the pimpl idiom.
 class ConditionVarImpl {
  public:
@@ -94,7 +94,7 @@ void WinVistaCondVar::Wait() {
 }
 
 void WinVistaCondVar::TimedWait(const TimeDelta& max_time) {
-  ///crbase::ThreadRestrictions::AssertWaitAllowed();
+  ///cr::ThreadRestrictions::AssertWaitAllowed();
   DWORD timeout = static_cast<DWORD>(max_time.InMilliseconds());
   CRITICAL_SECTION* cs = user_lock_.lock_.native_handle();
 
@@ -243,7 +243,7 @@ void WinXPCondVar::Wait() {
 }
 
 void WinXPCondVar::TimedWait(const TimeDelta& max_time) {
-  ///crbase::ThreadRestrictions::AssertWaitAllowed();
+  ///cr::ThreadRestrictions::AssertWaitAllowed();
   Event* waiting_event;
   HANDLE handle;
   {
@@ -667,4 +667,4 @@ void ConditionVariable::Signal() {
   impl_->Signal();
 }
 
-}  // namespace crbase
+}  // namespace cr

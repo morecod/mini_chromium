@@ -4,7 +4,7 @@
 
 #include "crbase/time/default_clock.h"
 
-namespace crbase {
+namespace cr {
 
 DefaultClock::~DefaultClock() {}
 
@@ -12,4 +12,4 @@ Time DefaultClock::Now() const {
   return Time::Now();
 }
 
-}  // namespace crbase
+}  // namespace cr

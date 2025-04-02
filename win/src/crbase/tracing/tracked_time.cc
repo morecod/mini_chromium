@@ -6,7 +6,7 @@
 
 #include <mmsystem.h>  // Declare timeGetTime()... after including build_config.
 
-namespace crbase {
+namespace cr {
 namespace tracked_objects {
 
 Duration::Duration() : ms_(0) {}
@@ -44,13 +44,13 @@ int32_t Duration::InMilliseconds() const {
 
 TrackedTime::TrackedTime() : ms_(0) {}
 TrackedTime::TrackedTime(int32_t ms) : ms_(ms) {}
-TrackedTime::TrackedTime(const crbase::TimeTicks& time)
+TrackedTime::TrackedTime(const cr::TimeTicks& time)
     : ms_(static_cast<int32_t>(
-          (time - crbase::TimeTicks()).InMilliseconds())) {}
+          (time - cr::TimeTicks()).InMilliseconds())) {}
 
 // static
 TrackedTime TrackedTime::Now() {
-  return TrackedTime(crbase::TimeTicks::Now());
+  return TrackedTime(cr::TimeTicks::Now());
 }
 
 Duration TrackedTime::operator-(const TrackedTime& other) const {
@@ -64,4 +64,4 @@ TrackedTime TrackedTime::operator+(const Duration& other) const {
 bool TrackedTime::is_null() const { return ms_ == 0; }
 
 }  // namespace tracked_objects
-}  // namespace crbase
+}  // namespace cr

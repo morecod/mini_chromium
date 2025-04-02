@@ -11,7 +11,7 @@
 #include "crbase/memory/weak_ptr.h"
 #include "crbase/message_loop/message_loop.h"
 
-namespace crbase {
+namespace cr {
 
 class MessagePumpDispatcher;
 
@@ -92,6 +92,6 @@ class CRBASE_EXPORT RunLoop {
   WeakPtrFactory<RunLoop> weak_factory_;
 };
 
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_SRC_CRBASE_RUN_LOOP_H_

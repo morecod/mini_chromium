@@ -9,7 +9,7 @@
 #include "crbase/threading/platform_thread.h"
 #include "crbase/threading/thread_restrictions.h"
 
-namespace crbase {
+namespace cr {
 
 SimpleThread::SimpleThread(const std::string& name_prefix)
     : name_prefix_(name_prefix), name_(name_prefix),
@@ -37,7 +37,7 @@ void SimpleThread::Start() {
                                                  &thread_, options_.priority());
   }
   CR_DCHECK(success);
-  crbase::ThreadRestrictions::ScopedAllowWait allow_wait;
+  cr::ThreadRestrictions::ScopedAllowWait allow_wait;
   event_.Wait();  // Wait for the thread to complete initialization.
 }
 
@@ -49,7 +49,7 @@ void SimpleThread::Join() {
 }
 
 bool SimpleThread::HasBeenStarted() {
-  crbase::ThreadRestrictions::ScopedAllowWait allow_wait;
+  cr::ThreadRestrictions::ScopedAllowWait allow_wait;
   return event_.IsSignaled();
 }
 
@@ -162,4 +162,4 @@ void DelegateSimpleThreadPool::Run() {
   }
 }
 
-}  // namespace crbase
+}  // namespace cr

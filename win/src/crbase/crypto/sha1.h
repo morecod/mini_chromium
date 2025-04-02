@@ -11,7 +11,7 @@
 
 #include "crbase/base_export.h"
 
-namespace crbase {
+namespace cr {
 
 class FilePath;
 
@@ -32,6 +32,6 @@ CRBASE_EXPORT void SHA1HashBytes(const unsigned char* data, size_t len,
 CRBASE_EXPORT bool SHA1HashFile(const FilePath& file_name,
                                 unsigned char* hash);
 
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // #define MINI_CHROMIUM_SRC_CRBASE_CRYPTO_SHA1_H_

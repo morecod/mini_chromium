@@ -7,7 +7,7 @@
 #include <stdlib.h>
 #include <windows.h>
 
-namespace crbase {
+namespace cr {
 namespace debug {
 
 bool BeingDebugged() {
@@ -19,4 +19,4 @@ void BreakDebugger() {
 }
 
 }  // namespace debug
-}  // namespace crbase
+}  // namespace cr

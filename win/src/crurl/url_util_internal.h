@@ -17,7 +17,7 @@ namespace crurl {
 bool CompareSchemeComponent(const char* spec,
                             const Component& component,
                             const char* compare_to);
-bool CompareSchemeComponent(const crbase::char16* spec,
+bool CompareSchemeComponent(const cr::char16* spec,
                             const Component& component,
                             const char* compare_to);
 

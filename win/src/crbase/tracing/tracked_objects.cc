@@ -12,9 +12,9 @@
 #include "crbase/strings/stringprintf.h"
 #include "crbase/tracing/tracking_info.h"
 
-using crbase::TimeDelta;
+using cr::TimeDelta;
 
-namespace crbase {
+namespace cr {
 
 namespace tracked_objects {
 class TimeDelta;
@@ -45,7 +45,7 @@ const ThreadData::Status kInitialStartupState = ThreadData::PROFILING_ACTIVE;
 ///};
 
 // State of the profiler timing enabledness.
-///crbase::subtle::Atomic32 g_profiler_timing_enabled = UNDEFINED_TIMING;
+///cr::subtle::Atomic32 g_profiler_timing_enabled = UNDEFINED_TIMING;
 
 // Returns whether profiler timing is enabled.  The default is true, but this
 // may be overridden by a command-line flag.  Some platforms may
@@ -57,8 +57,8 @@ const ThreadData::Status kInitialStartupState = ThreadData::PROFILING_ACTIVE;
 ///  // Reading |g_profiler_timing_enabled| is done without barrier because
 ///  // multiple initialization is not an issue while the barrier can be relatively
 ///  // costly given that this method is sometimes called in a tight loop.
-///  crbase::subtle::Atomic32 current_timing_enabled =
-///    crbase::subtle::NoBarrier_Load(&g_profiler_timing_enabled);
+///  cr::subtle::Atomic32 current_timing_enabled =
+///    cr::subtle::NoBarrier_Load(&g_profiler_timing_enabled);
 ///  return current_timing_enabled == ENABLED_TIMING;
 ///}
 
@@ -118,24 +118,24 @@ void DeathData::RecordDeath(const int32_t queue_duration,
                             const uint32_t random_number) {
   // We'll just clamp at INT_MAX, but we should note this in the UI as such.
   if (count_ < INT_MAX)
-    crbase::subtle::NoBarrier_Store(&count_, count_ + 1);
+    cr::subtle::NoBarrier_Store(&count_, count_ + 1);
 
   int sample_probability_count =
-      crbase::subtle::NoBarrier_Load(&sample_probability_count_);
+      cr::subtle::NoBarrier_Load(&sample_probability_count_);
   if (sample_probability_count < INT_MAX)
     ++sample_probability_count;
-  crbase::subtle::NoBarrier_Store(&sample_probability_count_,
+  cr::subtle::NoBarrier_Store(&sample_probability_count_,
                                    sample_probability_count);
 
-  crbase::subtle::NoBarrier_Store(&queue_duration_sum_,
+  cr::subtle::NoBarrier_Store(&queue_duration_sum_,
                                    queue_duration_sum_ + queue_duration);
-  crbase::subtle::NoBarrier_Store(&run_duration_sum_,
+  cr::subtle::NoBarrier_Store(&run_duration_sum_,
                                    run_duration_sum_ + run_duration);
 
   if (queue_duration_max() < queue_duration)
-    crbase::subtle::NoBarrier_Store(&queue_duration_max_, queue_duration);
+    cr::subtle::NoBarrier_Store(&queue_duration_max_, queue_duration);
   if (run_duration_max() < run_duration)
-    crbase::subtle::NoBarrier_Store(&run_duration_max_, run_duration);
+    cr::subtle::NoBarrier_Store(&run_duration_max_, run_duration);
 
   // Take a uniformly distributed sample over all durations ever supplied during
   // the current profiling phase.
@@ -147,8 +147,8 @@ void DeathData::RecordDeath(const int32_t queue_duration,
   // used them to generate random_number).
   CR_CHECK_GT(sample_probability_count, 0);
   if (0 == (random_number % sample_probability_count)) {
-    crbase::subtle::NoBarrier_Store(&queue_duration_sample_, queue_duration);
-    crbase::subtle::NoBarrier_Store(&run_duration_sample_, run_duration);
+    cr::subtle::NoBarrier_Store(&queue_duration_sample_, queue_duration);
+    cr::subtle::NoBarrier_Store(&run_duration_sample_, run_duration);
   }
 }
 
@@ -184,9 +184,9 @@ void DeathData::OnProfilingPhaseCompleted(int profiling_phase) {
   // If there were no inconsistencies caused by race conditions, we never send a
   // sample for the previous phase in the next phase's snapshot because
   // ThreadData::SnapshotExecutedTasks doesn't send deltas with 0 count.
-  crbase::subtle::NoBarrier_Store(&sample_probability_count_, 0);
-  crbase::subtle::NoBarrier_Store(&run_duration_max_, 0);
-  crbase::subtle::NoBarrier_Store(&queue_duration_max_, 0);
+  cr::subtle::NoBarrier_Store(&sample_probability_count_, 0);
+  cr::subtle::NoBarrier_Store(&run_duration_max_, 0);
+  cr::subtle::NoBarrier_Store(&queue_duration_max_, 0);
 }
 
 //------------------------------------------------------------------------------
@@ -273,7 +273,7 @@ bool ThreadData::now_function_is_time_ = false;
 // We do a fake initialization here (zeroing out data), and then the real
 // in-place construction happens when we call tls_index_.Initialize().
 // static
-crbase::ThreadLocalStorage::StaticSlot ThreadData::tls_index_ = 
+cr::ThreadLocalStorage::StaticSlot ThreadData::tls_index_ = 
     CR_TLS_INITIALIZER;
 
 // static
@@ -292,11 +292,11 @@ ThreadData* ThreadData::all_thread_data_list_head_ = NULL;
 ThreadData* ThreadData::first_retired_worker_ = NULL;
 
 // static
-crbase::LazyInstance<crbase::Lock>::Leaky
+cr::LazyInstance<cr::Lock>::Leaky
     ThreadData::list_lock_ = CR_LAZY_INSTANCE_INITIALIZER;
 
 // static
-crbase::subtle::Atomic32 ThreadData::status_ = ThreadData::UNINITIALIZED;
+cr::subtle::Atomic32 ThreadData::status_ = ThreadData::UNINITIALIZED;
 
 ThreadData::ThreadData(const std::string& suggested_name)
     : next_(NULL),
@@ -316,7 +316,7 @@ ThreadData::ThreadData(int thread_number)
       incarnation_count_for_pool_(-1),
       current_stopwatch_(NULL) {
   CR_CHECK_GT(thread_number, 0);
-  crbase::StringAppendF(&thread_name_, "WorkerThread-%d", thread_number);
+  cr::StringAppendF(&thread_name_, "WorkerThread-%d", thread_number);
   PushToHeadOfList();  // Which sets real incarnation_count_for_pool_.
 }
 
@@ -332,7 +332,7 @@ void ThreadData::PushToHeadOfList() {
   random_number_ ^= (Now() - TrackedTime()).InMilliseconds();
 
   CR_DCHECK(!next_);
-  crbase::AutoLock lock(*list_lock_.Pointer());
+  cr::AutoLock lock(*list_lock_.Pointer());
   incarnation_count_for_pool_ = incarnation_counter_;
   next_ = all_thread_data_list_head_;
   all_thread_data_list_head_ = this;
@@ -340,7 +340,7 @@ void ThreadData::PushToHeadOfList() {
 
 // static
 ThreadData* ThreadData::first() {
-  crbase::AutoLock lock(*list_lock_.Pointer());
+  cr::AutoLock lock(*list_lock_.Pointer());
   return all_thread_data_list_head_;
 }
 
@@ -369,7 +369,7 @@ ThreadData* ThreadData::Get() {
   ThreadData* worker_thread_data = NULL;
   int worker_thread_number = 0;
   {
-    crbase::AutoLock lock(*list_lock_.Pointer());
+    cr::AutoLock lock(*list_lock_.Pointer());
     if (first_retired_worker_) {
       worker_thread_data = first_retired_worker_;
       first_retired_worker_ = first_retired_worker_->next_retired_worker_;
@@ -401,7 +401,7 @@ void ThreadData::OnThreadTermination(void* thread_data) {
 void ThreadData::OnThreadTerminationCleanup() {
   // The list_lock_ was created when we registered the callback, so it won't be
   // allocated here despite the lazy reference.
-  crbase::AutoLock lock(*list_lock_.Pointer());
+  cr::AutoLock lock(*list_lock_.Pointer());
   if (incarnation_counter_ != incarnation_count_for_pool_)
     return;  // ThreadData was constructed in an earlier unit test.
   ++cleanup_count_;
@@ -478,7 +478,7 @@ Births* ThreadData::TallyABirth(const Location& location) {
     child = new Births(location, *this);  // Leak this.
     // Lock since the map may get relocated now, and other threads sometimes
     // snapshot it (but they lock before copying it).
-    crbase::AutoLock lock(map_lock_);
+    cr::AutoLock lock(map_lock_);
     birth_map_[location] = child;
   }
 
@@ -512,7 +512,7 @@ void ThreadData::TallyADeath(const Births& births,
   if (it != death_map_.end()) {
     death_data = &it->second;
   } else {
-    crbase::AutoLock lock(map_lock_);  // Lock as the map may get relocated now.
+    cr::AutoLock lock(map_lock_);  // Lock as the map may get relocated now.
     death_data = &death_map_[&births];
   }  // Release lock ASAP.
   death_data->RecordDeath(queue_duration, run_duration, random_number_);
@@ -530,7 +530,7 @@ Births* ThreadData::TallyABirthIfActive(const Location& location) {
 
 // static
 void ThreadData::TallyRunOnNamedThreadIfTracking(
-    const crbase::TrackingInfo& completed_task,
+    const cr::TrackingInfo& completed_task,
     const TaskStopwatch& stopwatch) {
   // Even if we have been DEACTIVATED, we will process any pending births so
   // that our data structures (which counted the outstanding births) remain
@@ -646,7 +646,7 @@ void ThreadData::SnapshotExecutedTasks(
 void ThreadData::SnapshotMaps(int profiling_phase,
                               BirthMap* birth_map,
                               DeathsSnapshot* deaths) {
-  crbase::AutoLock lock(map_lock_);
+  cr::AutoLock lock(map_lock_);
 
   for (const auto& birth : birth_map_)
     (*birth_map)[birth.first] = birth.second;
@@ -666,7 +666,7 @@ void ThreadData::SnapshotMaps(int profiling_phase,
 }
 
 void ThreadData::OnProfilingPhaseCompletedOnThread(int profiling_phase) {
-  crbase::AutoLock lock(map_lock_);
+  cr::AutoLock lock(map_lock_);
 
   for (auto& death : death_map_) {
     death.second.OnProfilingPhaseCompleted(profiling_phase);
@@ -680,7 +680,7 @@ void ThreadData::OnProfilingPhaseCompletedOnThread(int profiling_phase) {
 ///}
 
 void ThreadData::Initialize() {
-  if (crbase::subtle::Acquire_Load(&status_) >= DEACTIVATED)
+  if (cr::subtle::Acquire_Load(&status_) >= DEACTIVATED)
     return;  // Someone else did the initialization.
   // Due to racy lazy initialization in tests, we'll need to recheck status_
   // after we acquire the lock.
@@ -688,8 +688,8 @@ void ThreadData::Initialize() {
   // Ensure that we don't double initialize tls.  We are called when single
   // threaded in the product, but some tests may be racy and lazy about our
   // initialization.
-  crbase::AutoLock lock(*list_lock_.Pointer());
-  if (crbase::subtle::Acquire_Load(&status_) >= DEACTIVATED)
+  cr::AutoLock lock(*list_lock_.Pointer());
+  if (cr::subtle::Acquire_Load(&status_) >= DEACTIVATED)
     return;  // Someone raced in here and beat us.
 
   // Put an alternate timer in place if the environment calls for it, such as
@@ -702,12 +702,12 @@ void ThreadData::Initialize() {
   // Perform the "real" TLS initialization now, and leave it intact through
   // process termination.
   if (!tls_index_.initialized()) {  // Testing may have initialized this.
-    CR_DCHECK_EQ(crbase::subtle::NoBarrier_Load(&status_), UNINITIALIZED);
+    CR_DCHECK_EQ(cr::subtle::NoBarrier_Load(&status_), UNINITIALIZED);
     tls_index_.Initialize(&ThreadData::OnThreadTermination);
     CR_DCHECK(tls_index_.initialized());
   } else {
     // TLS was initialzed for us earlier.
-    CR_DCHECK_EQ(crbase::subtle::NoBarrier_Load(&status_), 
+    CR_DCHECK_EQ(cr::subtle::NoBarrier_Load(&status_), 
                       DORMANT_DURING_TESTS);
   }
 
@@ -718,8 +718,8 @@ void ThreadData::Initialize() {
   // The lock is not critical for setting status_, but it doesn't hurt.  It also
   // ensures that if we have a racy initialization, that we'll bail as soon as
   // we get the lock earlier in this method.
-  crbase::subtle::Release_Store(&status_, kInitialStartupState);
-  CR_DCHECK(crbase::subtle::NoBarrier_Load(&status_) != UNINITIALIZED);
+  cr::subtle::Release_Store(&status_, kInitialStartupState);
+  CR_DCHECK(cr::subtle::NoBarrier_Load(&status_) != UNINITIALIZED);
 }
 
 // static
@@ -731,18 +731,18 @@ void ThreadData::InitializeAndSetTrackingStatus(Status status) {
 
   if (status > DEACTIVATED)
     status = PROFILING_ACTIVE;
-  crbase::subtle::Release_Store(&status_, status);
+  cr::subtle::Release_Store(&status_, status);
 }
 
 // static
 ThreadData::Status ThreadData::status() {
   return static_cast<ThreadData::Status>(
-      crbase::subtle::Acquire_Load(&status_));
+      cr::subtle::Acquire_Load(&status_));
 }
 
 // static
 bool ThreadData::TrackingStatus() {
-  return crbase::subtle::Acquire_Load(&status_) > DEACTIVATED;
+  return cr::subtle::Acquire_Load(&status_) > DEACTIVATED;
 }
 
 // static
@@ -754,7 +754,7 @@ bool ThreadData::TrackingStatus() {
 
 // static
 ///void ThreadData::EnableProfilerTiming() {
-///  crbase::subtle::NoBarrier_Store(&g_profiler_timing_enabled, ENABLED_TIMING);
+///  cr::subtle::NoBarrier_Store(&g_profiler_timing_enabled, ENABLED_TIMING);
 ///}
 
 // static
@@ -768,7 +768,7 @@ TrackedTime ThreadData::Now() {
 
 // static
 void ThreadData::EnsureCleanupWasCalled(int major_threads_shutdown_count) {
-  crbase::AutoLock lock(*list_lock_.Pointer());
+  cr::AutoLock lock(*list_lock_.Pointer());
   if (worker_thread_data_creation_count_ == 0)
     return;  // We haven't really run much, and couldn't have leaked.
 
@@ -790,7 +790,7 @@ void ThreadData::ShutdownSingleThreadedCleanup(bool leak) {
 
   ThreadData* thread_data_list;
   {
-    crbase::AutoLock lock(*list_lock_.Pointer());
+    cr::AutoLock lock(*list_lock_.Pointer());
     thread_data_list = all_thread_data_list_head_;
     all_thread_data_list_head_ = NULL;
     ++incarnation_counter_;
@@ -808,7 +808,7 @@ void ThreadData::ShutdownSingleThreadedCleanup(bool leak) {
   cleanup_count_ = 0;
   tls_index_.Set(NULL);
   // Almost UNINITIALIZED.
-  crbase::subtle::Release_Store(&status_, DORMANT_DURING_TESTS);
+  cr::subtle::Release_Store(&status_, DORMANT_DURING_TESTS);
 
   // To avoid any chance of racing in unit tests, which is the only place we
   // call this function, we may sometimes leak all the data structures we
@@ -990,4 +990,4 @@ ProcessDataSnapshot::~ProcessDataSnapshot() {
 }
 
 }  // namespace tracked_objects
-}  // namespace crbase
+}  // namespace cr

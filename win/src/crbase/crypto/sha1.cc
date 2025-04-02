@@ -12,7 +12,7 @@
 #include "crbase/files/file_path.h"
 #include "crbase/files/file.h"
 
-namespace crbase {
+namespace cr {
 
 // Implementation of SHA-1. Only handles data in byte-sized blocks,
 // which simplifies the code a fair bit.
@@ -237,4 +237,4 @@ void SHA1HashBytes(const unsigned char* data, size_t len,
    return true;
 }
 
-}  // namespace crbase
+}  // namespace cr

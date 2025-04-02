@@ -8,7 +8,7 @@
 #include "crbase/win/scoped_handle.h"
 #include "crbase/win/windows_version.h"
 
-namespace crbase {
+namespace cr {
 namespace win {
 
 namespace {
@@ -143,4 +143,4 @@ HANDLE ScopedProcessInformation::TakeThreadHandle() {
 }
 
 }  // namespace win
-}  // namespace crbase
+}  // namespace cr

@@ -8,10 +8,10 @@
 
 #include "crbase/strings/utf_string_conversions.h"
 
-namespace crbase {
+namespace cr {
 
 std::ostream& operator<<(std::ostream& out, const NullableString16& value) {
   return value.is_null() ? out << "(null)" : out << UTF16ToUTF8(value.string());
 }
 
-}  // namespace crbase
+}  // namespace cr

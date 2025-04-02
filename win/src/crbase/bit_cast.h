@@ -57,7 +57,7 @@
 // WARNING: if Dest or Source is a non-POD type, the result of the memcpy
 // is likely to surprise you.
 
-namespace crbase {
+namespace cr {
 
 template <class Dest, class Source>
 inline Dest bit_cast(const Source& source) {
@@ -69,6 +69,6 @@ inline Dest bit_cast(const Source& source) {
   return dest;
 }
 
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_SRC_CRBASE_BIT_CAST_H_

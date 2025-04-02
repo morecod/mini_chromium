@@ -7,7 +7,7 @@
 #include "crbase/files/file_path.h"
 #include "crbase/macros.h"
 
-namespace crbase {
+namespace cr {
 
 #if defined(FILE_PATH_USES_WIN_SEPARATORS)
 const FilePath::CharType FilePath::kSeparators[] = FILE_PATH_LITERAL("\\/");
@@ -25,4 +25,4 @@ const FilePath::CharType FilePath::kParentDirectory[]
 const FilePath::CharType FilePath::kExtensionSeparator
     = FILE_PATH_LITERAL('.');
 
-}  // namespace crbase
+}  // namespace cr

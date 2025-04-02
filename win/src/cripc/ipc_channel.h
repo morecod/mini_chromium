@@ -154,7 +154,7 @@ class CRIPC_EXPORT Channel : public Endpoint {
   virtual void Close() = 0;
 
   // Get its own process id. This value is told to the peer.
-  virtual crbase::ProcessId GetSelfPID() const = 0;
+  virtual cr::ProcessId GetSelfPID() const = 0;
 
   // Overridden from ipc::Sender.
   // Send a message over the Channel to the listener on the other end.

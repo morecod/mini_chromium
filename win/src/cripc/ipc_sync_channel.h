@@ -19,10 +19,10 @@
 #include "cripc/ipc_sync_message.h"
 #include "cripc/ipc_sync_message_filter.h"
 
-namespace crbase {
+namespace cr {
 class RunLoop;
 class WaitableEvent;
-};  // namespace crbase
+};  // namespace cr
 
 namespace cripc {
 
@@ -79,27 +79,27 @@ class CRIPC_EXPORT SyncChannel : public ChannelProxy {
       const ChannelHandle& channel_handle,
       Channel::Mode mode,
       Listener* listener,
-      const crbase::scoped_refptr<crbase::SingleThreadTaskRunner>& 
+      const cr::scoped_refptr<cr::SingleThreadTaskRunner>& 
           ipc_task_runner,
       bool create_pipe_now,
-      crbase::WaitableEvent* shutdown_event);
+      cr::WaitableEvent* shutdown_event);
 
   static std::unique_ptr<SyncChannel> Create(
       std::unique_ptr<ChannelFactory> factory,
       Listener* listener,
-      const crbase::scoped_refptr<crbase::SingleThreadTaskRunner>& 
+      const cr::scoped_refptr<cr::SingleThreadTaskRunner>& 
           ipc_task_runner,
       bool create_pipe_now,
-      crbase::WaitableEvent* shutdown_event);
+      cr::WaitableEvent* shutdown_event);
 
   // Creates an uninitialized sync channel. Call ChannelProxy::Init to
   // initialize the channel. This two-step setup allows message filters to be
   // added before any messages are sent or received.
   static std::unique_ptr<SyncChannel> Create(
       Listener* listener,
-      const crbase::scoped_refptr<crbase::SingleThreadTaskRunner>& 
+      const cr::scoped_refptr<cr::SingleThreadTaskRunner>& 
           ipc_task_runner,
-      crbase::WaitableEvent* shutdown_event);
+      cr::WaitableEvent* shutdown_event);
 
   ~SyncChannel() override;
 
@@ -125,7 +125,7 @@ class CRIPC_EXPORT SyncChannel : public ChannelProxy {
   // Creates a new IPC::SyncMessageFilter and adds it to this SyncChannel.
   // This should be used instead of directly constructing a new
   // SyncMessageFilter.
-  crbase::scoped_refptr<SyncMessageFilter> CreateSyncMessageFilter();
+  cr::scoped_refptr<SyncMessageFilter> CreateSyncMessageFilter();
 
  protected:
   class ReceivedSyncMsgQueue;
@@ -138,9 +138,9 @@ class CRIPC_EXPORT SyncChannel : public ChannelProxy {
    public:
     SyncContext(
         Listener* listener,
-        const crbase::scoped_refptr<crbase::SingleThreadTaskRunner>& 
+        const cr::scoped_refptr<cr::SingleThreadTaskRunner>& 
             ipc_task_runner,
-        crbase::WaitableEvent* shutdown_event);
+        cr::WaitableEvent* shutdown_event);
 
     // Adds information about an outgoing sync message to the context so that
     // we know how to deserialize the reply.
@@ -152,11 +152,11 @@ class CRIPC_EXPORT SyncChannel : public ChannelProxy {
 
     // Returns a Mojo Event that signals when a sync send is complete or timed
     // out or the process shut down.
-    crbase::WaitableEvent* GetSendDoneEvent();
+    cr::WaitableEvent* GetSendDoneEvent();
 
     // Returns a Mojo Event that signals when an incoming message that's not the
     // pending reply needs to get dispatched (by calling DispatchMessages.)
-    crbase::WaitableEvent* GetDispatchEvent();
+    cr::WaitableEvent* GetDispatchEvent();
 
     void DispatchMessages();
 
@@ -165,7 +165,7 @@ class CRIPC_EXPORT SyncChannel : public ChannelProxy {
     // returned. Otherwise the function returns false.
     bool TryToUnblockListener(const Message* msg);
 
-    crbase::WaitableEvent* shutdown_event() { return shutdown_event_; }
+    cr::WaitableEvent* shutdown_event() { return shutdown_event_; }
 
     ReceivedSyncMsgQueue* received_sync_msgs() {
       return received_sync_msgs_.get();
@@ -179,8 +179,8 @@ class CRIPC_EXPORT SyncChannel : public ChannelProxy {
       return restrict_dispatch_group_;
     }
 
-    void OnSendDoneEventSignaled(crbase::RunLoop* nested_loop,
-                                 crbase::WaitableEvent* event);
+    void OnSendDoneEventSignaled(cr::RunLoop* nested_loop,
+                                 cr::WaitableEvent* event);
 
    private:
     ~SyncContext() override;
@@ -198,29 +198,29 @@ class CRIPC_EXPORT SyncChannel : public ChannelProxy {
     // Cancels all pending Send calls.
     void CancelPendingSends();
 
-    void OnShutdownEventSignaled(crbase::WaitableEvent* event);
+    void OnShutdownEventSignaled(cr::WaitableEvent* event);
 
     typedef std::deque<PendingSyncMsg> PendingSyncMessageQueue;
     PendingSyncMessageQueue deserializers_;
     bool reject_new_deserializers_ = false;
-    crbase::Lock deserializers_lock_;
+    cr::Lock deserializers_lock_;
 
-    crbase::scoped_refptr<ReceivedSyncMsgQueue> received_sync_msgs_;
+    cr::scoped_refptr<ReceivedSyncMsgQueue> received_sync_msgs_;
 
-    crbase::WaitableEvent* shutdown_event_;
-    crbase::WaitableEventWatcher shutdown_watcher_;
-    crbase::WaitableEventWatcher::EventCallback shutdown_watcher_callback_;
+    cr::WaitableEvent* shutdown_event_;
+    cr::WaitableEventWatcher shutdown_watcher_;
+    cr::WaitableEventWatcher::EventCallback shutdown_watcher_callback_;
     int restrict_dispatch_group_;
   };
 
  private:
   SyncChannel(
       Listener* listener,
-      const crbase::scoped_refptr<crbase::SingleThreadTaskRunner>& 
+      const cr::scoped_refptr<cr::SingleThreadTaskRunner>& 
           ipc_task_runner,
-      crbase::WaitableEvent* shutdown_event);
+      cr::WaitableEvent* shutdown_event);
 
-  void OnDispatchEventSignaled(crbase::WaitableEvent* event);
+  void OnDispatchEventSignaled(cr::WaitableEvent* event);
 
   SyncContext* sync_context() {
     return reinterpret_cast<SyncContext*>(context());
@@ -242,11 +242,11 @@ class CRIPC_EXPORT SyncChannel : public ChannelProxy {
   void OnChannelInit() override;
 
   // Used to signal events between the IPC and listener threads.
-  crbase::WaitableEventWatcher dispatch_watcher_;
-  crbase::WaitableEventWatcher::EventCallback dispatch_watcher_callback_;
+  cr::WaitableEventWatcher dispatch_watcher_;
+  cr::WaitableEventWatcher::EventCallback dispatch_watcher_callback_;
 
   // Tracks SyncMessageFilters created before complete channel initialization.
-  std::vector<crbase::scoped_refptr<SyncMessageFilter>> 
+  std::vector<cr::scoped_refptr<SyncMessageFilter>> 
       pre_init_sync_message_filters_;
 
   ///DISALLOW_COPY_AND_ASSIGN(SyncChannel);

@@ -10,7 +10,7 @@
 #include "crbase/base_export.h"
 #include "crbase/strings/string16.h"
 
-namespace crbase {
+namespace cr {
 
 // This class is a simple wrapper for string16 which also contains a null
 // state.  This should be used only where the difference between null and
@@ -41,6 +41,6 @@ inline bool operator!=(const NullableString16& a, const NullableString16& b) {
 CRBASE_EXPORT std::ostream& operator<<(std::ostream& out,
                                      const NullableString16& value);
 
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_SRC_CRBASE_STRINGS_NULLABLE_STRING16_H_

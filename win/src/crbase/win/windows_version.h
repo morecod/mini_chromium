@@ -18,13 +18,13 @@ using HANDLE = void*;
 struct _OSVERSIONINFOEXW;
 struct _SYSTEM_INFO;
 
-namespace crbase {
+namespace cr {
 namespace win {
 
 // The running version of Windows.  This is declared outside OSInfo for
 // syntactic sugar reasons; see the declaration of GetVersion() below.
 // NOTE: Keep these in order so callers can do things like
-// "if (crbase::win::GetVersion() >= crbase::win::Version::Vista) ...".
+// "if (cr::win::GetVersion() >= cr::win::Version::Vista) ...".
 enum class Version {
   PRE_XP = 0,        // Not supported.
   XP = 1,
@@ -125,7 +125,7 @@ class CRBASE_EXPORT OSInfo {
   // shims from manipulating the version reported.
   static Version Kernel32Version();
   static VersionNumber Kernel32VersionNumber();
-  static crbase::Version Kernel32BaseVersion();
+  static cr::Version Kernel32BaseVersion();
 
   // These helper functions return information about common scenarios of
   // interest in regards to WOW emulation.
@@ -237,6 +237,6 @@ class CRBASE_EXPORT OSInfo {
 CRBASE_EXPORT Version GetVersion();
 
 }  // namespace win
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_SRC_CRBASE_WIN_WINDOWS_VERSION_H_

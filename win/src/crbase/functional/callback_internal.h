@@ -13,7 +13,7 @@
 #include "crbase/macros.h"
 #include "crbase/memory/ref_counted.h"
 
-namespace crbase {
+namespace cr {
 
 struct FakeBindState;
 
@@ -70,7 +70,7 @@ class CRBASE_EXPORT BindStateBase
   // Whitelist subclasses that access the destructor of BindStateBase.
   template <typename Functor, typename... BoundArgs>
   friend struct BindState;
-  friend struct ::crbase::FakeBindState;
+  friend struct ::cr::FakeBindState;
 
   bool IsCancelled() const {
     return is_cancelled_(this);
@@ -157,6 +157,6 @@ extern template class CallbackBase<CopyMode::MoveOnly>;
 extern template class CallbackBase<CopyMode::Copyable>;
 
 }  // namespace internal
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_CRBASE_FUNCTIONAL_CALLBACK_INTERNAL_H_

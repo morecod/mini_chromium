@@ -4,7 +4,7 @@
 
 #include "crbase/strings/string_util.h"
 
-namespace crbase {
+namespace cr {
 
 #define WHITESPACE_UNICODE \
   0x0009, /* CHARACTER TABULATION */      \
@@ -64,4 +64,4 @@ const char16 kWhitespaceASCIIAs16[] = {
 
 const char kUtf8ByteOrderMark[] = "\xEF\xBB\xBF";
 
-}  // namespace crbase
+}  // namespace cr

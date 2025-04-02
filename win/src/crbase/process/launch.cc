@@ -5,7 +5,7 @@
 #include "crbase/process/launch.h"
 #include "crbase/build_config.h"
 
-namespace crbase {
+namespace cr {
 
 LaunchOptions::LaunchOptions()
     : wait(false),
@@ -38,4 +38,4 @@ LaunchOptions::LaunchOptions()
 LaunchOptions::~LaunchOptions() {
 }
 
-}  // namespace crbase
+}  // namespace cr

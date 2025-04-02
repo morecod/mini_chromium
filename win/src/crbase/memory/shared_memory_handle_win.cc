@@ -6,7 +6,7 @@
 
 #include "crbase/logging.h"
 
-namespace crbase {
+namespace cr {
 
 SharedMemoryHandle::SharedMemoryHandle()
     : handle_(nullptr), pid_(kNullProcessId) {}
@@ -65,4 +65,4 @@ ProcessId SharedMemoryHandle::GetPID() const {
   return pid_;
 }
 
-}  // namespace crbase
+}  // namespace cr

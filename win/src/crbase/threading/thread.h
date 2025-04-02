@@ -21,7 +21,7 @@
 #include "crbase/threading/single_thread_task_runner.h"
 #include "crbase/build_config.h"
 
-namespace crbase {
+namespace cr {
 
 class MessagePump;
 
@@ -257,6 +257,6 @@ class CRBASE_EXPORT Thread : PlatformThread::Delegate {
   friend void ThreadQuitHelper();
 };
 
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_SRC_CRBASE_THREADING_THREAD_H_

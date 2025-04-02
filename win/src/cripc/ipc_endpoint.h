@@ -29,7 +29,7 @@ class CRIPC_EXPORT Endpoint : public Sender {
   // in response to a message from the remote side (which guarantees that it's
   // been connected), or you wait for the "connected" notification on the
   // listener.
-  virtual crbase::ProcessId GetPeerPID() const = 0;
+  virtual cr::ProcessId GetPeerPID() const = 0;
 
   // A callback that indicates that is_attachment_broker_endpoint() has been
   // changed.

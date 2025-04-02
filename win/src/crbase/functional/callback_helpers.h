@@ -23,7 +23,7 @@
 #include "crbase/macros.h"
 #include "crbase/memory/ptr_util.h"
 
-namespace crbase {
+namespace cr {
 
 template <typename Signature,
           internal::CopyMode copy_mode,
@@ -59,7 +59,7 @@ class AdaptCallbackForRepeatingHelper final {
 
  private:
   volatile subtle::Atomic32 has_run_ = 0;
-  crbase::OnceCallback<void(Args...)> callback_;
+  cr::OnceCallback<void(Args...)> callback_;
 
   ///DISALLOW_COPY_AND_ASSIGN(AdaptCallbackForRepeatingHelper);
 };
@@ -73,8 +73,8 @@ template <typename... Args>
 RepeatingCallback<void(Args...)> AdaptCallbackForRepeating(
     OnceCallback<void(Args...)> callback) {
   using Helper = internal::AdaptCallbackForRepeatingHelper<Args...>;
-  return crbase::BindRepeating(&Helper::Run,
-                               crbase::MakeUnique<Helper>(std::move(callback)));
+  return cr::BindRepeating(&Helper::Run,
+                           cr::MakeUnique<Helper>(std::move(callback)));
 }
 
 // ScopedClosureRunner is akin to std::unique_ptr<> for Closures. It ensures
@@ -109,6 +109,6 @@ class CRBASE_EXPORT ScopedClosureRunner {
   ///DISALLOW_COPY_AND_ASSIGN(ScopedClosureRunner);
 };
 
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_CRBASE_FUNCTIONAL_CALLBACK_HELPERS_H_

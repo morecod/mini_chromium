@@ -10,7 +10,7 @@
 #include <stddef.h>
 #include <stdint.h>
 
-namespace crbase {
+namespace cr {
 namespace bits {
 
 // Returns the integer i such as 2^i <= n < 2^(i+1)
@@ -46,6 +46,6 @@ inline size_t Align(size_t size, size_t alignment) {
 }
 
 }  // namespace bits
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_SRC_CRBASE_BITS_H_

@@ -33,13 +33,13 @@ FileStream::Context::IOResult::IOResult()
 
 FileStream::Context::IOResult::IOResult(
     int64_t result,
-    crbase_logging::SystemErrorCode os_error)
+    cr_logging::SystemErrorCode os_error)
         : result(result), os_error(os_error) {
 }
 
 // static
 FileStream::Context::IOResult FileStream::Context::IOResult::FromOSError(
-    crbase_logging::SystemErrorCode os_error) {
+    cr_logging::SystemErrorCode os_error) {
   return IOResult(MapSystemError(os_error), os_error);
 }
 
@@ -48,7 +48,7 @@ FileStream::Context::IOResult FileStream::Context::IOResult::FromOSError(
 FileStream::Context::OpenResult::OpenResult() {
 }
 
-FileStream::Context::OpenResult::OpenResult(crbase::File file,
+FileStream::Context::OpenResult::OpenResult(cr::File file,
                                             IOResult error_code)
     : file(std::move(file)), error_code(error_code) {}
 
@@ -78,19 +78,19 @@ void FileStream::Context::Orphan() {
   }
 }
 
-void FileStream::Context::Open(const crbase::FilePath& path,
+void FileStream::Context::Open(const cr::FilePath& path,
                                int open_flags,
                                CompletionOnceCallback callback) {
   CheckNoAsyncInProgress();
 
-  bool posted = crbase::PostTaskAndReplyWithResult(
+  bool posted = cr::PostTaskAndReplyWithResult(
       task_runner_.get(),
       CR_FROM_HERE,
-      crbase::BindOnce(
-          &Context::OpenFileImpl, crbase::Unretained(this), 
+      cr::BindOnce(
+          &Context::OpenFileImpl, cr::Unretained(this), 
           path, open_flags),
-      crbase::BindOnce(
-          &Context::OnOpenCompleted, crbase::Unretained(this), 
+      cr::BindOnce(
+          &Context::OnOpenCompleted, cr::Unretained(this), 
           std::move(callback)));
   CR_DCHECK(posted);
 
@@ -100,12 +100,12 @@ void FileStream::Context::Open(const crbase::FilePath& path,
 
 void FileStream::Context::Close(CompletionOnceCallback callback) {
   CheckNoAsyncInProgress();
-  bool posted = crbase::PostTaskAndReplyWithResult(
+  bool posted = cr::PostTaskAndReplyWithResult(
       task_runner_.get(),
       CR_FROM_HERE,
-      crbase::BindOnce(&Context::CloseFileImpl, crbase::Unretained(this)),
-      crbase::BindOnce(&Context::OnAsyncCompleted,
-                       crbase::Unretained(this),
+      cr::BindOnce(&Context::CloseFileImpl, cr::Unretained(this)),
+      cr::BindOnce(&Context::OnAsyncCompleted,
+                       cr::Unretained(this),
                        IntToInt64(std::move(callback))));
   CR_DCHECK(posted);
 
@@ -117,11 +117,11 @@ void FileStream::Context::Seek(int64_t offset,
                                Int64CompletionOnceCallback callback) {
   CheckNoAsyncInProgress();
 
-  bool posted = crbase::PostTaskAndReplyWithResult(
+  bool posted = cr::PostTaskAndReplyWithResult(
       task_runner_.get(), CR_FROM_HERE,
-      crbase::BindOnce(&Context::SeekFileImpl, crbase::Unretained(this), 
+      cr::BindOnce(&Context::SeekFileImpl, cr::Unretained(this), 
                        offset),
-      crbase::BindOnce(&Context::OnAsyncCompleted, crbase::Unretained(this),
+      cr::BindOnce(&Context::OnAsyncCompleted, cr::Unretained(this),
                        std::move(callback)));
   CR_DCHECK(posted);
 
@@ -132,12 +132,12 @@ void FileStream::Context::Seek(int64_t offset,
 void FileStream::Context::Flush(CompletionOnceCallback callback) {
   CheckNoAsyncInProgress();
 
-  bool posted = crbase::PostTaskAndReplyWithResult(
+  bool posted = cr::PostTaskAndReplyWithResult(
       task_runner_.get(),
       CR_FROM_HERE,
-      crbase::BindOnce(&Context::FlushFileImpl, crbase::Unretained(this)),
-      crbase::BindOnce(&Context::OnAsyncCompleted,
-                 crbase::Unretained(this),
+      cr::BindOnce(&Context::FlushFileImpl, cr::Unretained(this)),
+      cr::BindOnce(&Context::OnAsyncCompleted,
+                 cr::Unretained(this),
                  IntToInt64(std::move(callback))));
   CR_DCHECK(posted);
 
@@ -153,19 +153,19 @@ void FileStream::Context::CheckNoAsyncInProgress() const {
   if (!async_in_progress_)
     return;
   LastOperation state = last_operation_;
-  crbase::debug::Alias(&state);
+  cr::debug::Alias(&state);
   // TODO(xunjieli): Once https://crbug.com/487732 is fixed, use
   // DCHECK(!async_in_progress_) directly at call places.
   CR_CHECK(!async_in_progress_);
 }
 
 FileStream::Context::OpenResult FileStream::Context::OpenFileImpl(
-    const crbase::FilePath& path, int open_flags) {
+    const cr::FilePath& path, int open_flags) {
 #if defined(MINI_CHROMIUM_OS_POSIX)
   // Always use blocking IO.
   open_flags &= ~base::File::FLAG_ASYNC;
 #endif
-  crbase::File file;
+  cr::File file;
 
     // FileStream::Context actually closes the file asynchronously,
     // independently from FileStream's destructor. It can cause problems for
@@ -173,12 +173,12 @@ FileStream::Context::OpenResult FileStream::Context::OpenFileImpl(
     // we are always adding SHARE_DELETE flag to accommodate such use case.
     // TODO(rvargas): This sounds like a bug, as deleting the file would
     // presumably happen on the wrong thread. There should be an async delete.
-    open_flags |= crbase::File::FLAG_SHARE_DELETE;
+    open_flags |= cr::File::FLAG_SHARE_DELETE;
     file.Initialize(path, open_flags);
   if (!file.IsValid())
-    return OpenResult(crbase::File(),
+    return OpenResult(cr::File(),
                       IOResult::FromOSError(
-                            crbase_logging::GetLastSystemErrorCode()));
+                            cr_logging::GetLastSystemErrorCode()));
 
   return OpenResult(std::move(file), IOResult(OK, 0));
 }
@@ -192,7 +192,7 @@ FileStream::Context::IOResult FileStream::Context::FlushFileImpl() {
   if (file_.Flush())
     return IOResult(OK, 0);
 
-  return IOResult::FromOSError(crbase_logging::GetLastSystemErrorCode());
+  return IOResult::FromOSError(cr_logging::GetLastSystemErrorCode());
 }
 
 void FileStream::Context::OnOpenCompleted(CompletionOnceCallback callback,
@@ -213,9 +213,9 @@ void FileStream::Context::CloseAndDelete() {
   if (file_.IsValid()) {
     bool posted = task_runner_.get()->PostTask(
         CR_FROM_HERE, 
-        crbase::BindOnce(
-            crbase::IgnoreResult(&Context::CloseFileImpl), 
-            crbase::Owned(this)));
+        cr::BindOnce(
+            cr::IgnoreResult(&Context::CloseFileImpl), 
+            cr::Owned(this)));
     CR_DCHECK(posted);
   } else {
     delete this;
@@ -224,7 +224,7 @@ void FileStream::Context::CloseAndDelete() {
 
 Int64CompletionOnceCallback FileStream::Context::IntToInt64(
     CompletionOnceCallback callback) {
-  return crbase::BindOnce(&CallInt64ToInt, std::move(callback));
+  return cr::BindOnce(&CallInt64ToInt, std::move(callback));
 }
 
 void FileStream::Context::OnAsyncCompleted(

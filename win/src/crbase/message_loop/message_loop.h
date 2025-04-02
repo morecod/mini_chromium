@@ -34,7 +34,7 @@
 #include "crbase/message_loop/message_pump_libevent.h"
 #endif
 
-namespace crbase {
+namespace cr {
 
 ///class HistogramBase;
 class RunLoop;
@@ -199,7 +199,7 @@ class CRBASE_EXPORT MessageLoop : public MessagePump::Delegate {
   // on the thread that executes MessageLoop::Run().
   template <class T>
   void DeleteSoon(const tracked_objects::Location& from_here, const T* object) {
-    crbase::subtle::DeleteHelperInternal<T, void>::DeleteViaSequencedTaskRunner(
+    cr::subtle::DeleteHelperInternal<T, void>::DeleteViaSequencedTaskRunner(
         this, from_here, object);
   }
 
@@ -228,7 +228,7 @@ class CRBASE_EXPORT MessageLoop : public MessagePump::Delegate {
   template <class T>
   void ReleaseSoon(const tracked_objects::Location& from_here,
                    const T* object) {
-    crbase::subtle::ReleaseHelperInternal<T, void>::
+    cr::subtle::ReleaseHelperInternal<T, void>::
         ReleaseViaSequencedTaskRunner(this, from_here, object);
   }
 
@@ -524,8 +524,8 @@ class CRBASE_EXPORT MessageLoop : public MessagePump::Delegate {
   scoped_refptr<SingleThreadTaskRunner> task_runner_;
   std::unique_ptr<ThreadTaskRunnerHandle> thread_task_runner_handle_;
 
-  template <class T, class R> friend class crbase::subtle::DeleteHelperInternal;
-  template <class T, class R> friend class crbase::subtle::ReleaseHelperInternal;
+  template <class T, class R> friend class cr::subtle::DeleteHelperInternal;
+  template <class T, class R> friend class cr::subtle::ReleaseHelperInternal;
 
   void DeleteSoonInternal(const tracked_objects::Location& from_here,
                           void(*deleter)(const void*),
@@ -633,6 +633,6 @@ class CRBASE_EXPORT MessageLoopForIO : public MessageLoop {
 static_assert(sizeof(MessageLoop) == sizeof(MessageLoopForIO),
               "MessageLoopForIO should not have extra member variables");
 
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_SRC_CRBASE_MESSAGE_LOOP_MESSAGE_LOOP_H_

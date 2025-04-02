@@ -39,7 +39,7 @@
 #include "crbase/base_export.h"
 #include "crbase/build_config.h"
 
-namespace crbase {
+namespace cr {
 namespace subtle {
 
 typedef int32_t Atomic32;
@@ -125,7 +125,7 @@ Atomic64 Acquire_Load(volatile const Atomic64* ptr);
 #endif  // MINI_CHROMIUM_ARCH_CPU_64_BITS
 
 }  // namespace subtle
-}  // namespace crbase
+}  // namespace cr
 
 #include "crbase/atomic/atomicops_internals_portable.h"
 

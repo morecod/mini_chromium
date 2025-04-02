@@ -32,7 +32,7 @@
 #include "crbase/strings/string16.h"
 #include "crbase/strings/string_piece.h"
 
-namespace crbase {
+namespace cr {
 
 class BinaryValue;
 class DictionaryValue;
@@ -564,6 +564,6 @@ CRBASE_EXPORT inline std::ostream& operator<<(std::ostream& out,
   return out << static_cast<const Value&>(value);
 }
 
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_SRC_CRBASE_VALUES_H_

@@ -42,7 +42,7 @@ ChannelWin::ChannelWin(const ChannelHandle& channel_handle,
     : ChannelReader(listener),
       input_state_(this),
       output_state_(this),
-      peer_pid_(crbase::kNullProcessId),
+      peer_pid_(cr::kNullProcessId),
       waiting_connect_(mode & MODE_SERVER_FLAG),
       processing_incoming_(false),
       validate_client_(false),
@@ -67,7 +67,7 @@ void ChannelWin::Close() {
 
   // Make sure all IO has completed.
   while (input_state_.is_pending || output_state_.is_pending) {
-    crbase::MessageLoopForIO::current()->WaitForIOCompletion(INFINITE, this);
+    cr::MessageLoopForIO::current()->WaitForIOCompletion(INFINITE, this);
   }
 
   while (!output_queue_.empty()) {
@@ -112,7 +112,7 @@ bool ChannelWin::ProcessMessageForDelivery(Message* message) {
 }
 
 void ChannelWin::FlushPrelimQueue() {
-  CR_DCHECK_NE(peer_pid_, crbase::kNullProcessId);
+  CR_DCHECK_NE(peer_pid_, cr::kNullProcessId);
 
   // Due to the possibly re-entrant nature of ProcessMessageForDelivery(), it
   // is critical that |prelim_queue_| appears empty.
@@ -136,11 +136,11 @@ void ChannelWin::FlushPrelimQueue() {
   }
 }
 
-crbase::ProcessId ChannelWin::GetPeerPID() const {
+cr::ProcessId ChannelWin::GetPeerPID() const {
   return peer_pid_;
 }
 
-crbase::ProcessId ChannelWin::GetSelfPID() const {
+cr::ProcessId ChannelWin::GetSelfPID() const {
   return GetCurrentProcessId();
 }
 
@@ -197,7 +197,7 @@ void ChannelWin::HandleInternalMessage(const Message& msg) {
   CR_DCHECK_EQ(msg.type(),
                static_cast<unsigned>(Channel::HELLO_MESSAGE_TYPE));
   // The hello message contains one parameter containing the PID.
-  crbase::PickleIterator it(msg);
+  cr::PickleIterator it(msg);
   int32_t claimed_pid;
   bool failed = !it.ReadInt(&claimed_pid);
 
@@ -222,7 +222,7 @@ void ChannelWin::HandleInternalMessage(const Message& msg) {
   FlushPrelimQueue();
 }
 
-crbase::ProcessId ChannelWin::GetSenderPID() {
+cr::ProcessId ChannelWin::GetSenderPID() {
   return GetPeerPID();
 }
 
@@ -232,7 +232,7 @@ bool ChannelWin::DidEmptyInputBuffers() {
 }
 
 // static
-const crbase::string16 ChannelWin::PipeName(const std::string& channel_id,
+const cr::string16 ChannelWin::PipeName(const std::string& channel_id,
                                             int32_t* secret) {
   std::string name("\\\\.\\pipe\\cripc.");
 
@@ -240,25 +240,25 @@ const crbase::string16 ChannelWin::PipeName(const std::string& channel_id,
   size_t index = channel_id.find_first_of('\\');
   if (index != std::string::npos) {
     if (secret)  // Retrieve the secret if asked for.
-      crbase::StringToInt(channel_id.substr(index + 1), secret);
-    return crbase::ASCIIToUTF16(name.append(channel_id.substr(0, index - 1)));
+      cr::StringToInt(channel_id.substr(index + 1), secret);
+    return cr::ASCIIToUTF16(name.append(channel_id.substr(0, index - 1)));
   }
 
   // This case is here to support predictable named pipes in tests.
   if (secret)
     *secret = 0;
-  return crbase::ASCIIToUTF16(name.append(channel_id));
+  return cr::ASCIIToUTF16(name.append(channel_id));
 }
 
 bool ChannelWin::CreatePipe(const ChannelHandle &channel_handle,
                             Mode mode) {
   CR_DCHECK(!pipe_.IsValid());
-  crbase::string16 pipe_name;
+  cr::string16 pipe_name;
   // If we already have a valid pipe for channel just copy it.
   if (channel_handle.pipe.handle) {
     // TODO(rvargas) crbug.com/415294: ChannelHandle should either go away in
     // favor of two independent entities (name/file), or it should be a move-
-    // only type with a crbase::File member. In any case, this code should not
+    // only type with a cr::File member. In any case, this code should not
     // call DuplicateHandle.
     CR_DCHECK(channel_handle.name.empty());
     pipe_name = L"Not Available";  // Just used for LOG
@@ -320,7 +320,7 @@ bool ChannelWin::CreatePipe(const ChannelHandle &channel_handle,
   if (!pipe_.IsValid()) {
     // If this process is being closed, the pipe may be gone already.
     CR_PLOG(WARNING) << "Unable to create pipe \""
-                     << crbase::WideToUTF8(pipe_name) << "\" in "
+                     << cr::WideToUTF8(pipe_name) << "\" in "
                      << (mode & MODE_SERVER_FLAG ? "server" : "client")
                      << " mode";
     return false;
@@ -351,7 +351,7 @@ bool ChannelWin::Connect() {
     return false;
   }
 
-  crbase::MessageLoopForIO::current()->RegisterIOHandler(pipe_.Get(), this);
+  cr::MessageLoopForIO::current()->RegisterIOHandler(pipe_.Get(), this);
 
   // Check to see if there is a client connected to our pipe...
   if (waiting_connect_)
@@ -361,9 +361,9 @@ bool ChannelWin::Connect() {
     // Complete setup asynchronously. By not setting input_state_.is_pending
     // to true, we indicate to OnIOCompleted that this is the special
     // initialization signal.
-    crbase::MessageLoopForIO::current()->PostTask(
+    cr::MessageLoopForIO::current()->PostTask(
         CR_FROM_HERE,
-        crbase::BindOnce(&ChannelWin::OnIOCompleted,
+        cr::BindOnce(&ChannelWin::OnIOCompleted,
                          weak_factory_.GetWeakPtr(),
                          &input_state_.context,
                          0,
@@ -411,7 +411,7 @@ bool ChannelWin::ProcessConnection() {
 }
 
 bool ChannelWin::ProcessOutgoingMessages(
-    crbase::MessageLoopForIO::IOContext* context,
+    cr::MessageLoopForIO::IOContext* context,
     DWORD bytes_written) {
   CR_DCHECK(!waiting_connect_); // Why are we trying to send messages if
                                 // there's no connection?
@@ -475,7 +475,7 @@ bool ChannelWin::ProcessOutgoingMessages(
 }
 
 void ChannelWin::OnIOCompleted(
-    crbase::MessageLoopForIO::IOContext* context,
+    cr::MessageLoopForIO::IOContext* context,
     DWORD bytes_transfered,
     DWORD error) {
   bool ok = true;
@@ -493,7 +493,7 @@ void ChannelWin::OnIOCompleted(
 
     // We don't support recursion through OnMessageReceived yet!
     CR_DCHECK(!processing_incoming_);
-    crbase::AutoReset<bool> auto_reset_processing_incoming(
+    cr::AutoReset<bool> auto_reset_processing_incoming(
         &processing_incoming_, true);
 
     // Process the new data.
@@ -553,11 +553,11 @@ std::string Channel::GenerateVerifiedChannelID(const std::string& prefix) {
 
   int secret;
   do {  // Guarantee we get a non-zero value.
-    secret = crbase::RandInt(0, std::numeric_limits<int>::max());
+    secret = cr::RandInt(0, std::numeric_limits<int>::max());
   } while (secret == 0);
 
   id.append(GenerateUniqueRandomChannelID());
-  return id.append(crbase::StringPrintf("\\%d", secret));
+  return id.append(cr::StringPrintf("\\%d", secret));
 }
 
 }  // namespace cripc

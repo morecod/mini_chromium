@@ -6,7 +6,7 @@
 
 #include "crbase/base_export.h"
 
-namespace crbase {
+namespace cr {
 namespace debug {
 
 // Make the optimizer think that var is aliased. This is to prevent it from
@@ -15,6 +15,6 @@ namespace debug {
 void CRBASE_EXPORT Alias(const void* var);
 
 }  // namespace debug
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_SRC_CRBASE_DEBUG_ALIAS_H_

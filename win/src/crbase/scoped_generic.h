@@ -12,7 +12,7 @@
 #include "crbase/compiler_specific.h"
 #include "crbase/macros.h"
 
-namespace crbase {
+namespace cr {
 
 // This class acts like unique_ptr with a custom deleter (although is slightly
 // less fancy in some of the more escoteric respects) except that it keeps a
@@ -178,6 +178,6 @@ bool operator!=(const T& value, const ScopedGeneric<T, Traits>& scoped) {
   return value != scoped.get();
 }
 
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_CRBASE_SCOPED_GENERIC_H_

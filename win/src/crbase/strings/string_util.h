@@ -21,10 +21,10 @@
 #include "crbase/strings/string16.h"
 #include "crbase/strings/string_piece.h"  // For implicit conversions.
 
-namespace crbase {
+namespace cr {
 
 // C standard-library functions that aren't cross-platform are provided as
-// "crbase::...", and their prototypes are listed below. These functions are
+// "cr::...", and their prototypes are listed below. These functions are
 // then implemented as inline calls to the platform-specific equivalents in the
 // platform-specific headers.
 
@@ -81,7 +81,7 @@ CRBASE_EXPORT size_t wcslcpy(wchar_t* dst, const wchar_t* src, size_t dst_size);
 // Note that there is no portable conversion specifier for char data when
 // working with wprintf.
 //
-// This function is intended to be called from crbase::vswprintf.
+// This function is intended to be called from cr::vswprintf.
 CRBASE_EXPORT bool IsWprintfFormatPortable(const wchar_t* format);
 
 // ASCII-specific tolower.  The standard library's tolower is locale sensitive,
@@ -116,7 +116,7 @@ CRBASE_EXPORT string16 ToUpperASCII(StringPiece16 str);
 // Note that a full Unicode version of this functor is not possible to write
 // because case mappings might change the number of characters, depend on
 // context (combining accents), and require handling UTF-16. If you need
-// proper Unicode support, use crbase::i18n::ToLower/FoldCase and then just
+// proper Unicode support, use cr::i18n::ToLower/FoldCase and then just
 // use a normal operator== on the result.
 template<typename Char> struct CaseInsensitiveCompareASCII {
  public:
@@ -130,13 +130,13 @@ template<typename Char> struct CaseInsensitiveCompareASCII {
 //    0  (a == b)
 //    1  (a > b)
 // (unlike strcasecmp which can return values greater or less than 1/-1). For
-// full Unicode support, use crbase::i18n::ToLower or crbase::i18h::FoldCase
+// full Unicode support, use cr::i18n::ToLower or cr::i18h::FoldCase
 // and then just call the normal string operators on the result.
 CRBASE_EXPORT int CompareCaseInsensitiveASCII(StringPiece a, StringPiece b);
 CRBASE_EXPORT int CompareCaseInsensitiveASCII(StringPiece16 a, StringPiece16 b);
 
 // Equality for ASCII case-insensitive comparisons. For full Unicode support,
-// use crbase::i18n::ToLower or crbase::i18h::FoldCase and then compare with either
+// use cr::i18n::ToLower or cr::i18h::FoldCase and then compare with either
 // == or !=.
 CRBASE_EXPORT bool EqualsCaseInsensitiveASCII(StringPiece a, StringPiece b);
 CRBASE_EXPORT bool EqualsCaseInsensitiveASCII(StringPiece16 a, StringPiece16 b);
@@ -288,7 +288,7 @@ CRBASE_EXPORT bool EqualsASCII(StringPiece16 str, StringPiece ascii);
 // base/i18n so it can use ICU.
 //
 // If you need to do Unicode-aware case-insensitive StartsWith/EndsWith, it's
-// best to call crbase::i18n::ToLower() or crbase::i18n::FoldCase() (see
+// best to call cr::i18n::ToLower() or cr::i18n::FoldCase() (see
 // base/i18n/case_conversion.h for usage advice) on the arguments, and then use
 // the results to a case-sensitive comparison.
 enum class CompareCase {
@@ -350,7 +350,7 @@ CRBASE_EXPORT string16 FormatBytesUnlocalized(int64_t bytes);
 // Starting at |start_offset| (usually 0), replace the first instance of
 // |find_this| with |replace_with|.
 CRBASE_EXPORT void ReplaceFirstSubstringAfterOffset(
-    crbase::string16* str,
+    cr::string16* str,
     size_t start_offset,
     StringPiece16 find_this,
     StringPiece16 replace_with);
@@ -447,6 +447,6 @@ inline int vswprintf(wchar_t* buffer, size_t size,
   return length;
 }
 
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_CRBASE_STRINGS_STRING_UTIL_H_

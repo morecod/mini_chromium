@@ -13,7 +13,7 @@
 #include "crbase/base_export.h"
 #include "crbase/build_config.h"
 
-namespace crbase {
+namespace cr {
 
 // Returns a random number in range [0, UINT64_MAX]. Thread-safe.
 CRBASE_EXPORT uint64_t RandUint64();
@@ -26,7 +26,7 @@ CRBASE_EXPORT int RandInt(int min, int max);
 // Note that this can be used as an adapter for std::random_shuffle():
 // Given a pre-populated |std::vector<int> myvector|, shuffle it as
 //   std::random_shuffle(myvector.begin(), myvector.end(), 
-//                       crbase::RandGenerator);
+//                       cr::RandGenerator);
 CRBASE_EXPORT uint64_t RandGenerator(uint64_t range);
 
 // Returns a random double in range [0, 1). Thread-safe.
@@ -58,6 +58,6 @@ CRBASE_EXPORT std::string RandBytesAsString(size_t length);
 CRBASE_EXPORT int GetUrandomFD();
 #endif
 
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_SRC_CRBASE_RAND_UTIL_H_

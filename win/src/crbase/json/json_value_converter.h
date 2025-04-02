@@ -85,7 +85,7 @@
 //     }
 //   };
 
-namespace crbase {
+namespace cr {
 
 template <typename StructType>
 class JSONValueConverter;
@@ -100,7 +100,7 @@ class FieldConverterBase {
 
   explicit FieldConverterBase(const std::string& path) : field_path_(path) {}
   virtual ~FieldConverterBase() {}
-  virtual bool ConvertField(const crbase::Value& value, StructType* obj)
+  virtual bool ConvertField(const cr::Value& value, StructType* obj)
       const = 0;
   const std::string& field_path() const { return field_path_; }
 
@@ -112,7 +112,7 @@ template <typename FieldType>
 class ValueConverter {
  public:
   virtual ~ValueConverter() {}
-  virtual bool Convert(const crbase::Value& value, FieldType* field) const = 0;
+  virtual bool Convert(const cr::Value& value, FieldType* field) const = 0;
 };
 
 template <typename StructType, typename FieldType>
@@ -129,7 +129,7 @@ class FieldConverter : public FieldConverterBase<StructType> {
         value_converter_(converter) {
   }
 
-  bool ConvertField(const crbase::Value& value, 
+  bool ConvertField(const cr::Value& value, 
                     StructType* dst) const override {
     return value_converter_->Convert(value, &(dst->*field_pointer_));
   }
@@ -149,7 +149,7 @@ class CRBASE_EXPORT BasicValueConverter<int> : public ValueConverter<int> {
   BasicValueConverter& operator=(const BasicValueConverter&) = delete;
   BasicValueConverter() {}
 
-  bool Convert(const crbase::Value& value, int* field) const override;
+  bool Convert(const cr::Value& value, int* field) const override;
 };
 
 template <>
@@ -160,18 +160,18 @@ class CRBASE_EXPORT BasicValueConverter<std::string>
   BasicValueConverter& operator=(const BasicValueConverter&) = delete;
   BasicValueConverter() {}
 
-  bool Convert(const crbase::Value& value, std::string* field) const override;
+  bool Convert(const cr::Value& value, std::string* field) const override;
 };
 
 template <>
-class CRBASE_EXPORT BasicValueConverter<crbase::string16>
-    : public ValueConverter<crbase::string16> {
+class CRBASE_EXPORT BasicValueConverter<cr::string16>
+    : public ValueConverter<cr::string16> {
  public:
   BasicValueConverter(const BasicValueConverter&) = delete;
   BasicValueConverter& operator=(const BasicValueConverter&) = delete;
   BasicValueConverter() {}
 
-  bool Convert(const crbase::Value& value, crbase::string16* field) const override;
+  bool Convert(const cr::Value& value, cr::string16* field) const override;
 };
 
 template <>
@@ -181,7 +181,7 @@ class CRBASE_EXPORT BasicValueConverter<double> : public ValueConverter<double> 
   BasicValueConverter& operator=(const BasicValueConverter&) = delete;
   BasicValueConverter() {}
 
-  bool Convert(const crbase::Value& value, double* field) const override;
+  bool Convert(const cr::Value& value, double* field) const override;
 };
 
 template <>
@@ -191,13 +191,13 @@ class CRBASE_EXPORT BasicValueConverter<bool> : public ValueConverter<bool> {
   BasicValueConverter& operator=(const BasicValueConverter&) = delete;
   BasicValueConverter() {}
 
-  bool Convert(const crbase::Value& value, bool* field) const override;
+  bool Convert(const cr::Value& value, bool* field) const override;
 };
 
 template <typename FieldType>
 class ValueFieldConverter : public ValueConverter<FieldType> {
  public:
-  typedef bool(*ConvertFunc)(const crbase::Value* value, FieldType* field);
+  typedef bool(*ConvertFunc)(const cr::Value* value, FieldType* field);
 
   ValueFieldConverter(const ValueFieldConverter&) = delete;
   ValueFieldConverter& operator=(const ValueFieldConverter&) = delete;
@@ -205,7 +205,7 @@ class ValueFieldConverter : public ValueConverter<FieldType> {
   ValueFieldConverter(ConvertFunc convert_func)
       : convert_func_(convert_func) {}
 
-  bool Convert(const crbase::Value& value, FieldType* field) const override {
+  bool Convert(const cr::Value& value, FieldType* field) const override {
     return convert_func_(&value, field);
   }
 
@@ -224,7 +224,7 @@ class CustomFieldConverter : public ValueConverter<FieldType> {
   CustomFieldConverter(ConvertFunc convert_func)
       : convert_func_(convert_func) {}
 
-  bool Convert(const crbase::Value& value, FieldType* field) const override {
+  bool Convert(const cr::Value& value, FieldType* field) const override {
     std::string string_value;
     return value.GetAsString(&string_value) &&
         convert_func_(string_value, field);
@@ -241,7 +241,7 @@ class NestedValueConverter : public ValueConverter<NestedType> {
   NestedValueConverter& operator=(const NestedValueConverter&) = delete;
   NestedValueConverter() {}
 
-  bool Convert(const crbase::Value& value, NestedType* field) const override {
+  bool Convert(const cr::Value& value, NestedType* field) const override {
     return converter_.Convert(value, field);
   }
 
@@ -256,9 +256,9 @@ class RepeatedValueConverter : public ValueConverter<ScopedVector<Element> > {
   RepeatedValueConverter& operator=(const RepeatedValueConverter&) = delete;
   RepeatedValueConverter() {}
 
-  bool Convert(const crbase::Value& value,
+  bool Convert(const cr::Value& value,
                ScopedVector<Element>* field) const override {
-    const crbase::ListValue* list = NULL;
+    const cr::ListValue* list = NULL;
     if (!value.GetAsList(&list)) {
       // The field is not a list.
       return false;
@@ -266,7 +266,7 @@ class RepeatedValueConverter : public ValueConverter<ScopedVector<Element> > {
 
     field->reserve(list->GetSize());
     for (size_t i = 0; i < list->GetSize(); ++i) {
-      const crbase::Value* element = NULL;
+      const cr::Value* element = NULL;
       if (!list->Get(i, &element))
         continue;
 
@@ -292,15 +292,15 @@ class RepeatedMessageConverter
   RepeatedMessageConverter& operator=(const RepeatedMessageConverter&) = delete;
   RepeatedMessageConverter() {}
 
-  bool Convert(const crbase::Value& value,
+  bool Convert(const cr::Value& value,
                ScopedVector<NestedType>* field) const override {
-    const crbase::ListValue* list = NULL;
+    const cr::ListValue* list = NULL;
     if (!value.GetAsList(&list))
       return false;
 
     field->reserve(list->GetSize());
     for (size_t i = 0; i < list->GetSize(); ++i) {
-      const crbase::Value* element = NULL;
+      const cr::Value* element = NULL;
       if (!list->Get(i, &element))
         continue;
 
@@ -322,7 +322,7 @@ template <typename NestedType>
 class RepeatedCustomValueConverter
     : public ValueConverter<ScopedVector<NestedType> > {
  public:
-  typedef bool(*ConvertFunc)(const crbase::Value* value, NestedType* field);
+  typedef bool(*ConvertFunc)(const cr::Value* value, NestedType* field);
   RepeatedCustomValueConverter(const RepeatedCustomValueConverter&) = delete;
   RepeatedCustomValueConverter& operator=(
       const RepeatedCustomValueConverter&) = delete;
@@ -330,15 +330,15 @@ class RepeatedCustomValueConverter
   RepeatedCustomValueConverter(ConvertFunc convert_func)
       : convert_func_(convert_func) {}
 
-  bool Convert(const crbase::Value& value,
+  bool Convert(const cr::Value& value,
                ScopedVector<NestedType>* field) const override {
-    const crbase::ListValue* list = NULL;
+    const cr::ListValue* list = NULL;
     if (!value.GetAsList(&list))
       return false;
 
     field->reserve(list->GetSize());
     for (size_t i = 0; i < list->GetSize(); ++i) {
-      const crbase::Value* element = NULL;
+      const cr::Value* element = NULL;
       if (!list->Get(i, &element))
         continue;
 
@@ -423,7 +423,7 @@ class JSONValueConverter {
   void RegisterCustomValueField(
       const std::string& field_name,
       FieldType StructType::* field,
-      bool (*convert_func)(const crbase::Value*, FieldType*)) {
+      bool (*convert_func)(const cr::Value*, FieldType*)) {
     fields_.push_back(new internal::FieldConverter<StructType, FieldType>(
         field_name,
         field,
@@ -473,7 +473,7 @@ class JSONValueConverter {
   void RegisterRepeatedCustomValue(
       const std::string& field_name,
       ScopedVector<NestedType> StructType::* field,
-      bool (*convert_func)(const crbase::Value*, NestedType*)) {
+      bool (*convert_func)(const cr::Value*, NestedType*)) {
     fields_.push_back(
         new internal::FieldConverter<StructType, ScopedVector<NestedType> >(
             field_name,
@@ -492,7 +492,7 @@ class JSONValueConverter {
             new internal::RepeatedMessageConverter<NestedType>));
   }
 
-  bool Convert(const crbase::Value& value, StructType* output) const {
+  bool Convert(const cr::Value& value, StructType* output) const {
     const DictionaryValue* dictionary_value = NULL;
     if (!value.GetAsDictionary(&dictionary_value))
       return false;
@@ -500,7 +500,7 @@ class JSONValueConverter {
     for(size_t i = 0; i < fields_.size(); ++i) {
       const internal::FieldConverterBase<StructType>* field_converter =
           fields_[i];
-      const crbase::Value* field = NULL;
+      const cr::Value* field = NULL;
       if (dictionary_value->Get(field_converter->field_path(), &field)) {
         if (!field_converter->ConvertField(*field, output)) {
           return false;
@@ -514,6 +514,6 @@ class JSONValueConverter {
   ScopedVector<internal::FieldConverterBase<StructType> > fields_;
 };
 
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_SRC_CRBASE_JSON_JSON_VALUE_CONVERTER_H_

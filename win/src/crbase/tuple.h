@@ -33,7 +33,7 @@
 #include "crbase/functional/bind_helpers.h"
 #include "crbase/build_config.h"
 
-namespace crbase {
+namespace cr {
 
 // Index sequences
 //
@@ -186,9 +186,9 @@ struct TupleLeaf {
 // Allows accessing an arbitrary tuple element by index.
 //
 // Example usage:
-//   crbase::Tuple<int, double> t2;
-//   crbase::get<0>(t2) = 42;
-//   crbase::get<1>(t2) = 3.14;
+//   cr::Tuple<int, double> t2;
+//   cr::get<0>(t2) = 42;
+//   cr::get<1>(t2) = 3.14;
 
 template <size_t I, typename T>
 T& get(TupleLeaf<I, T>& leaf) {
@@ -249,7 +249,7 @@ inline void DispatchToMethodImpl(ObjT* obj,
                                  Method method,
                                  const Tuple<Ts...>& arg,
                                  IndexSequence<Ns...>) {
-  (obj->*method)(crbase::internal::UnwrapTraits<Ts>::Unwrap(get<Ns>(arg))...);
+  (obj->*method)(cr::internal::UnwrapTraits<Ts>::Unwrap(get<Ns>(arg))...);
 }
 
 template <typename ObjT, typename Method, typename... Ts>
@@ -265,7 +265,7 @@ template <typename Function, typename... Ts, size_t... Ns>
 inline void DispatchToFunctionImpl(Function function,
                                    const Tuple<Ts...>& arg,
                                    IndexSequence<Ns...>) {
-  (*function)(crbase::internal::UnwrapTraits<Ts>::Unwrap(get<Ns>(arg))...);
+  (*function)(cr::internal::UnwrapTraits<Ts>::Unwrap(get<Ns>(arg))...);
 }
 
 template <typename Function, typename... Ts>
@@ -287,7 +287,7 @@ inline void DispatchToMethodImpl(ObjT* obj,
                                  Tuple<OutTs...>* out,
                                  IndexSequence<InNs...>,
                                  IndexSequence<OutNs...>) {
-  (obj->*method)(crbase::internal::UnwrapTraits<InTs>::Unwrap(get<InNs>(in))...,
+  (obj->*method)(cr::internal::UnwrapTraits<InTs>::Unwrap(get<InNs>(in))...,
                  &get<OutNs>(*out)...);
 }
 
@@ -301,6 +301,6 @@ inline void DispatchToMethod(ObjT* obj,
                        MakeIndexSequence<sizeof...(OutTs)>());
 }
 
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_SRC_CRBASE_TUPLE_H_

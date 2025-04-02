@@ -4,7 +4,7 @@
 
 #include "crbase/win/scoped_handle.h"
 
-namespace crbase {
+namespace cr {
 namespace win {
 
 // Static.
@@ -13,4 +13,4 @@ bool HandleTraits::CloseHandle(HANDLE handle) {
 }
 
 }  // namespace win
-}  // namespace crbase
+}  // namespace cr

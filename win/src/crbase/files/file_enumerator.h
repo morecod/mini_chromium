@@ -24,7 +24,7 @@
 #include <unistd.h>
 #endif
 
-namespace crbase {
+namespace cr {
 
 // A class for enumerating the files in a provided path. The order of the
 // results is not guaranteed.
@@ -33,9 +33,9 @@ namespace crbase {
 //
 // Example:
 //
-//   crbase::FileEnumerator enum(my_dir, false, crbase::FileEnumerator::FILES,
-//                               CR_FILE_PATH_LITERAL("*.txt"));
-//   for (crbase::FilePath name = enum.Next(); !name.empty();
+//   cr::FileEnumerator enum(my_dir, false, cr::FileEnumerator::FILES,
+//                           CR_FILE_PATH_LITERAL("*.txt"));
+//   for (cr::FilePath name = enum.Next(); !name.empty();
   //      name = enum.Next())
 //     ...
 class CRBASE_EXPORT FileEnumerator {
@@ -158,6 +158,6 @@ class CRBASE_EXPORT FileEnumerator {
   std::stack<FilePath> pending_paths_;
 };
 
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_SRC_CRBASE_FILES_FILE_ENUMERATOR_H_

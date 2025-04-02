@@ -9,7 +9,7 @@
 #include "crbase/strings/string_number_conversions.h"
 #include "crbase/strings/stringprintf.h"
 
-namespace crbase {
+namespace cr {
 namespace tracked_objects {
 
 Location::Location(const char* function_name,
@@ -38,12 +38,12 @@ Location::Location(const Location& other)
 
 std::string Location::ToString() const {
   return std::string(function_name_) + "@" + file_name_ + ":" +
-      crbase::IntToString(line_number_);
+      cr::IntToString(line_number_);
 }
 
 void Location::Write(bool display_filename, bool display_function_name,
                      std::string* output) const {
-  crbase::StringAppendF(output, "%s[%d] ",
+  cr::StringAppendF(output, "%s[%d] ",
       display_filename ? file_name_ : "line",
       line_number_);
 
@@ -102,4 +102,4 @@ CRBASE_EXPORT const void* GetProgramCounter() {
 }
 
 }  // namespace tracked_objects
-}  // namespace crbase
+}  // namespace cr

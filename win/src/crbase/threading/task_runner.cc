@@ -7,7 +7,7 @@
 #include "crbase/logging.h"
 #include "crbase/threading/post_task_and_reply_impl.h"
 
-namespace crbase {
+namespace cr {
 
 namespace {
 
@@ -64,4 +64,4 @@ void TaskRunnerTraits::Destruct(const TaskRunner* task_runner) {
   task_runner->OnDestruct();
 }
 
-}  // namespace crbase
+}  // namespace cr

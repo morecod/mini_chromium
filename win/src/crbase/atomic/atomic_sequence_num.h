@@ -8,7 +8,7 @@
 #include "crbase/macros.h"
 #include "crbase/atomic/atomicops.h"
 
-namespace crbase {
+namespace cr {
 
 class AtomicSequenceNumber;
 
@@ -23,17 +23,17 @@ class StaticAtomicSequenceNumber {
  public:
   inline int GetNext() {
     return static_cast<int>(
-        crbase::subtle::NoBarrier_AtomicIncrement(&seq_, 1) - 1);
+        cr::subtle::NoBarrier_AtomicIncrement(&seq_, 1) - 1);
   }
 
  private:
   friend class AtomicSequenceNumber;
 
   inline void Reset() {
-    crbase::subtle::Release_Store(&seq_, 0);
+    cr::subtle::Release_Store(&seq_, 0);
   }
 
-  crbase::subtle::Atomic32 seq_;
+  cr::subtle::Atomic32 seq_;
 };
 
 // AtomicSequenceNumber that can be stored and used safely (i.e. its fields are
@@ -57,6 +57,6 @@ class AtomicSequenceNumber {
   StaticAtomicSequenceNumber seq_;
 };
 
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_SRC_CRBASE_ATOMIC_ATOMIC_SEQUENCE_NUM_H_

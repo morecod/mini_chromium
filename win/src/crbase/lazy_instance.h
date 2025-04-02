@@ -50,7 +50,7 @@
 // initialization.
 #define CR_LAZY_INSTANCE_INITIALIZER {0}
 
-namespace crbase {
+namespace cr {
 
 template <typename Type>
 struct LazyInstanceTraitsBase {
@@ -205,7 +205,7 @@ class LazyInstance {
 
   subtle::AtomicWord private_instance_;
   // Preallocated space for the Type instance.
-  crbase::AlignedMemory<sizeof(Type), CR_ALIGNOF(Type)> private_buf_;
+  cr::AlignedMemory<sizeof(Type), CR_ALIGNOF(Type)> private_buf_;
 
  private:
   Type* instance() {
@@ -223,6 +223,6 @@ class LazyInstance {
   }
 };
 
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_CRBASE_LAZY_INSTANCE_H_

@@ -24,7 +24,7 @@ namespace cripc {
 
 class ChannelWin : public Channel,
                    public internal::ChannelReader,
-                   public crbase::MessageLoopForIO::IOHandler {
+                   public cr::MessageLoopForIO::IOHandler {
  public:
   // Mirror methods of Channel, see ipc_channel.h for description.
   // |broker| must outlive the newly created object.
@@ -39,8 +39,8 @@ class ChannelWin : public Channel,
   bool Connect() override;
   void Close() override;
   bool Send(Message* message) override;
-  crbase::ProcessId GetPeerPID() const override;
-  crbase::ProcessId GetSelfPID() const override;
+  cr::ProcessId GetPeerPID() const override;
+  cr::ProcessId GetSelfPID() const override;
 
   static bool IsNamedServerInitialized(const std::string& channel_id);
 
@@ -50,14 +50,14 @@ class ChannelWin : public Channel,
   bool ShouldDispatchInputMessage(Message* msg) override;
   bool DidEmptyInputBuffers() override;
   void HandleInternalMessage(const Message& msg) override;
-  crbase::ProcessId GetSenderPID() override;
+  cr::ProcessId GetSenderPID() override;
 
-  static const crbase::string16 PipeName(const std::string& channel_id,
+  static const cr::string16 PipeName(const std::string& channel_id,
                                          int32_t* secret);
   bool CreatePipe(const ChannelHandle &channel_handle, Mode mode);
 
   bool ProcessConnection();
-  bool ProcessOutgoingMessages(crbase::MessageLoopForIO::IOContext* context,
+  bool ProcessOutgoingMessages(cr::MessageLoopForIO::IOContext* context,
                                DWORD bytes_written);
 
   // Returns |false| on channel error.
@@ -72,7 +72,7 @@ class ChannelWin : public Channel,
   void FlushPrelimQueue();
 
   // MessageLoop::IOHandler implementation.
-  void OnIOCompleted(crbase::MessageLoopForIO::IOContext* context,
+  void OnIOCompleted(cr::MessageLoopForIO::IOContext* context,
                      DWORD bytes_transfered,
                      DWORD error) override;
 
@@ -80,16 +80,16 @@ class ChannelWin : public Channel,
   struct State {
     explicit State(ChannelWin* channel);
     ~State();
-    crbase::MessageLoopForIO::IOContext context;
+    cr::MessageLoopForIO::IOContext context;
     bool is_pending;
   };
 
   State input_state_;
   State output_state_;
 
-  crbase::win::ScopedHandle pipe_;
+  cr::win::ScopedHandle pipe_;
 
-  crbase::ProcessId peer_pid_;
+  cr::ProcessId peer_pid_;
 
   // Messages not yet ready to be sent are queued here. Messages removed from
   // this queue are placed in the output_queue_. The double queue is
@@ -126,7 +126,7 @@ class ChannelWin : public Channel,
   // compatability with existing clients that don't validate the channel.)
   int32_t client_secret_;
 
-  crbase::WeakPtrFactory<ChannelWin> weak_factory_;
+  cr::WeakPtrFactory<ChannelWin> weak_factory_;
 };
 
 }  // namespace cripc

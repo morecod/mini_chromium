@@ -12,7 +12,7 @@
 #include "crbase/threading/platform_thread.h"
 #include "crbase/build_config.h"
 
-namespace crbase {
+namespace cr {
 
 // A convenient wrapper for an OS specific critical section.  The only real
 // intelligence in this class is in debug mode for the support for the
@@ -140,6 +140,6 @@ class AutoUnlock {
   Lock& lock_;
 };
 
-}  // namespace crbase
+}  // namespace cr
 
 #endif  //MINI_CHROMIUM_SRC_CRBASE_SYNCHRONIZATION_LOCK_H_

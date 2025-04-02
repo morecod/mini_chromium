@@ -17,7 +17,7 @@
 #include "crbase/file_descriptor_posix.h"
 #endif
 
-namespace crbase {
+namespace cr {
 
 class Pickle;
 
@@ -69,6 +69,6 @@ class CRBASE_EXPORT SharedMemoryHandle {
 };
 #endif
 
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_SRC_CRBASE_MEMORY_SHARED_MEMORY_HANDLE_H_

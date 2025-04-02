@@ -7,7 +7,7 @@
 
 #include <stddef.h>
 
-namespace crbase {
+namespace cr {
 
 // template definitions from tr1
 
@@ -115,6 +115,27 @@ struct is_class
                             sizeof(internal::YesType)> {
 };
 
-}  // namespace crbase
+// defines for crbase/memory/buffer.h
+// Determines if the given class has zero-argument .data() and .size() methods
+// whose return values are convertible to T* and size_t, respectively.
+template <typename DS, typename T>
+class has_data_and_size {
+ private:
+  template <
+      typename C,
+      typename std::enable_if<
+          std::is_convertible<decltype(std::declval<C>().data()), T*>::value &&
+          std::is_convertible<decltype(std::declval<C>().size()),
+                              std::size_t>::value>::type* = nullptr>
+  static int Test(int) {return int(0);}
+
+  template <typename>
+  static char Test(...) { return char(0); }
+
+ public:
+  static constexpr bool value = std::is_same<decltype(Test<DS>(0)), int>::value;
+};
+
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_SRC_CRBASE_TEMPLATE_UTIL_H_

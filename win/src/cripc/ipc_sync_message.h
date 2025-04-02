@@ -17,9 +17,9 @@
 #include "crbase/build_config.h"
 #include "cripc/ipc_message.h"
 
-namespace crbase {
+namespace cr {
 class WaitableEvent;
-}  // namespace crbase
+}  // namespace cr
 
 namespace cripc {
 
@@ -58,7 +58,7 @@ class CRIPC_EXPORT SyncMessage : public Message {
 
   // Given a reply message, returns an iterator to the beginning of the data
   // (i.e. skips over the synchronous specific data).
-  static crbase::PickleIterator GetDataIterator(const Message* msg);
+  static cr::PickleIterator GetDataIterator(const Message* msg);
 
   // Given a synchronous message (or its reply), returns its id.
   static int GetMessageId(const Message& msg);
@@ -87,18 +87,18 @@ class CRIPC_EXPORT MessageReplyDeserializer {
   // Derived classes need to implement this, using the given iterator (which
   // is skipped past the header for synchronous messages).
   virtual bool SerializeOutputParameters(const Message& msg,
-                                         crbase::PickleIterator iter) = 0;
+                                         cr::PickleIterator iter) = 0;
 };
 
 // When sending a synchronous message, this structure contains an object
 // that knows how to deserialize the response.
 struct PendingSyncMsg {
-  PendingSyncMsg(int id, MessageReplyDeserializer* d, crbase::WaitableEvent* e)
+  PendingSyncMsg(int id, MessageReplyDeserializer* d, cr::WaitableEvent* e)
       : id(id), deserializer(d), done_event(e), send_result(false) {}
 
   int id;
   MessageReplyDeserializer* deserializer;
-  crbase::WaitableEvent* done_event;
+  cr::WaitableEvent* done_event;
   bool send_result;
 };
 

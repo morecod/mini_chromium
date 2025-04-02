@@ -15,7 +15,7 @@
 #include "crbase/strings/string16.h"
 #include "crbase/strings/string_piece.h"
 
-namespace crbase {
+namespace cr {
 namespace win {
 
 // Manages a BSTR string pointer.
@@ -95,6 +95,6 @@ class CRBASE_EXPORT ScopedBstr {
 };
 
 }  // namespace win
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_SRC_CRBASE_WIN_SCOPED_BSTR_H_

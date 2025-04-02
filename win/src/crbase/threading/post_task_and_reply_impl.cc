@@ -9,7 +9,7 @@
 #include "crbase/threading/thread_task_runner_handle.h"
 #include "crbase/tracing/location.h"
 
-namespace crbase {
+namespace cr {
 
 namespace {
 
@@ -41,7 +41,7 @@ class PostTaskAndReplyRelay {
     std::move(task_).Run();
     origin_task_runner_->PostTask(
         from_here_, BindOnce(&PostTaskAndReplyRelay::RunReplyAndSelfDestruct,
-                             crbase::Unretained(this)));
+                             cr::Unretained(this)));
   }
 
  private:
@@ -89,4 +89,4 @@ bool PostTaskAndReplyImpl::PostTaskAndReply(
 
 }  // namespace internal
 
-}  // namespace crbase
+}  // namespace cr

@@ -18,9 +18,9 @@
 // http://blogs.msdn.com/oldnewthing/archive/2004/10/25/247180.aspx
 extern "C" IMAGE_DOS_HEADER __ImageBase;
 
-using crbase::FilePath;
+using cr::FilePath;
 
-namespace crbase {
+namespace cr {
 
 bool PathProviderWin(int key, FilePath* result) {
   // We need to go compute the value. It would be nice to support paths with
@@ -33,12 +33,12 @@ bool PathProviderWin(int key, FilePath* result) {
 
   FilePath cur;
   switch (key) {
-    case crbase::FILE_EXE:
+    case cr::FILE_EXE:
       if (::GetModuleFileNameW(NULL, system_buffer, MAX_PATH) == 0)
         return false;
       cur = FilePath(system_buffer);
       break;
-    case crbase::FILE_MODULE: {
+    case cr::FILE_MODULE: {
       // the resource containing module is assumed to be the one that
       // this code lives in, whether that's a dll or exe
       HMODULE this_module = reinterpret_cast<HMODULE>(&__ImageBase);
@@ -47,35 +47,35 @@ bool PathProviderWin(int key, FilePath* result) {
       cur = FilePath(system_buffer);
       break;
     }
-    case crbase::DIR_WINDOWS:
+    case cr::DIR_WINDOWS:
       ::GetWindowsDirectoryW(system_buffer, MAX_PATH);
       cur = FilePath(system_buffer);
       break;
-    case crbase::DIR_SYSTEM:
+    case cr::DIR_SYSTEM:
       GetSystemDirectoryW(system_buffer, MAX_PATH);
       cur = FilePath(system_buffer);
       break;
-    case crbase::DIR_PROGRAM_FILESX86:
-      if (crbase::win::OSInfo::GetInstance()->GetArchitecture() !=
-              crbase::win::OSInfo::X86_ARCHITECTURE) {
+    case cr::DIR_PROGRAM_FILESX86:
+      if (cr::win::OSInfo::GetInstance()->GetArchitecture() !=
+              cr::win::OSInfo::X86_ARCHITECTURE) {
         if (FAILED(SHGetFolderPathW(NULL, CSIDL_PROGRAM_FILESX86, NULL,
                                     SHGFP_TYPE_CURRENT, system_buffer)))
           return false;
         cur = FilePath(system_buffer);
         break;
       }
-      // Fall through to crbase::DIR_PROGRAM_FILES if we're on an X86 machine.
-    case crbase::DIR_PROGRAM_FILES:
+      // Fall through to cr::DIR_PROGRAM_FILES if we're on an X86 machine.
+    case cr::DIR_PROGRAM_FILES:
       if (FAILED(SHGetFolderPathW(NULL, CSIDL_PROGRAM_FILES, NULL,
                                   SHGFP_TYPE_CURRENT, system_buffer)))
         return false;
       cur = FilePath(system_buffer);
       break;
-    case crbase::DIR_PROGRAM_FILES6432:
+    case cr::DIR_PROGRAM_FILES6432:
 #if !defined(_WIN64)
-      if (crbase::win::OSInfo::GetInstance()->IsWowX86OnAMD64() ||
-          crbase::win::OSInfo::GetInstance()->IsWowX86OnARM64()) {
-        std::unique_ptr<crbase::Environment> env(crbase::Environment::Create());
+      if (cr::win::OSInfo::GetInstance()->IsWowX86OnAMD64() ||
+          cr::win::OSInfo::GetInstance()->IsWowX86OnARM64()) {
+        std::unique_ptr<cr::Environment> env(cr::Environment::Create());
         std::string programfiles_w6432;
         // 32-bit process running in WOW64 sets ProgramW6432 environment
         // variable. See
@@ -92,43 +92,43 @@ bool PathProviderWin(int key, FilePath* result) {
         return false;
       cur = FilePath(system_buffer);
       break;
-    case crbase::DIR_IE_INTERNET_CACHE:
+    case cr::DIR_IE_INTERNET_CACHE:
       if (FAILED(SHGetFolderPathW(NULL, CSIDL_INTERNET_CACHE, NULL,
                                   SHGFP_TYPE_CURRENT, system_buffer)))
         return false;
       cur = FilePath(system_buffer);
       break;
-    case crbase::DIR_COMMON_START_MENU:
+    case cr::DIR_COMMON_START_MENU:
       if (FAILED(SHGetFolderPathW(NULL, CSIDL_COMMON_PROGRAMS, NULL,
                                   SHGFP_TYPE_CURRENT, system_buffer)))
         return false;
       cur = FilePath(system_buffer);
       break;
-    case crbase::DIR_START_MENU:
+    case cr::DIR_START_MENU:
       if (FAILED(SHGetFolderPathW(NULL, CSIDL_PROGRAMS, NULL,
                                   SHGFP_TYPE_CURRENT, system_buffer)))
         return false;
       cur = FilePath(system_buffer);
       break;
-    case crbase::DIR_APP_DATA:
+    case cr::DIR_APP_DATA:
       if (FAILED(SHGetFolderPathW(NULL, CSIDL_APPDATA, NULL, SHGFP_TYPE_CURRENT,
                                   system_buffer)))
         return false;
       cur = FilePath(system_buffer);
       break;
-    case crbase::DIR_COMMON_APP_DATA:
+    case cr::DIR_COMMON_APP_DATA:
       if (FAILED(SHGetFolderPathW(NULL, CSIDL_COMMON_APPDATA, NULL,
                                   SHGFP_TYPE_CURRENT, system_buffer)))
         return false;
       cur = FilePath(system_buffer);
       break;
-    case crbase::DIR_LOCAL_APP_DATA:
+    case cr::DIR_LOCAL_APP_DATA:
       if (FAILED(SHGetFolderPathW(NULL, CSIDL_LOCAL_APPDATA, NULL,
                                   SHGFP_TYPE_CURRENT, system_buffer)))
         return false;
       cur = FilePath(system_buffer);
       break;
-    case crbase::DIR_APP_SHORTCUTS: {
+    case cr::DIR_APP_SHORTCUTS: {
       if (win::GetVersion() < win::Version::WIN8)
         return false;
 
@@ -145,29 +145,29 @@ bool PathProviderWin(int key, FilePath* result) {
       const GUID SHORTCUTS_GUID = {
           0xa3918781, 0xe5f2, 0x4890,
           0xb3, 0xd9, 0xa7, 0xe5, 0x43, 0x32, 0x32, 0x8c};
-      crbase::win::ScopedCoMem<wchar_t> path_buf;
+      cr::win::ScopedCoMem<wchar_t> path_buf;
       if (FAILED(func(SHORTCUTS_GUID, 0, NULL, &path_buf)))
         return false;
 
       cur = FilePath(string16(path_buf));
       break;
     }
-    case crbase::DIR_USER_DESKTOP:
+    case cr::DIR_USER_DESKTOP:
       if (FAILED(SHGetFolderPathW(NULL, CSIDL_DESKTOPDIRECTORY, NULL,
                                   SHGFP_TYPE_CURRENT, system_buffer))) {
         return false;
       }
       cur = FilePath(system_buffer);
       break;
-    case crbase::DIR_COMMON_DESKTOP:
+    case cr::DIR_COMMON_DESKTOP:
       if (FAILED(SHGetFolderPathW(NULL, CSIDL_COMMON_DESKTOPDIRECTORY, NULL,
                                   SHGFP_TYPE_CURRENT, system_buffer))) {
         return false;
       }
       cur = FilePath(system_buffer);
       break;
-    case crbase::DIR_USER_QUICK_LAUNCH:
-      if (!PathService::Get(crbase::DIR_APP_DATA, &cur))
+    case cr::DIR_USER_QUICK_LAUNCH:
+      if (!PathService::Get(cr::DIR_APP_DATA, &cur))
         return false;
       // According to various sources, appending
       // "Microsoft\Internet Explorer\Quick Launch" to %appdata% is the only
@@ -179,13 +179,13 @@ bool PathProviderWin(int key, FilePath* result) {
                 .AppendASCII("Internet Explorer")
                 .AppendASCII("Quick Launch");
       break;
-    case crbase::DIR_TASKBAR_PINS:
-      if (!PathService::Get(crbase::DIR_USER_QUICK_LAUNCH, &cur))
+    case cr::DIR_TASKBAR_PINS:
+      if (!PathService::Get(cr::DIR_USER_QUICK_LAUNCH, &cur))
         return false;
       cur = cur.AppendASCII("User Pinned");
       cur = cur.AppendASCII("TaskBar");
       break;
-    case crbase::DIR_WINDOWS_FONTS:
+    case cr::DIR_WINDOWS_FONTS:
       if (FAILED(SHGetFolderPathW(
               NULL, CSIDL_FONTS, NULL, SHGFP_TYPE_CURRENT, system_buffer))) {
         return false;
@@ -200,4 +200,4 @@ bool PathProviderWin(int key, FilePath* result) {
   return true;
 }
 
-}  // namespace crbase
+}  // namespace cr

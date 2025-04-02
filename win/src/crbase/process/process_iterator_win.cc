@@ -4,7 +4,7 @@
 
 #include "crbase/process/process_iterator.h"
 
-namespace crbase {
+namespace cr {
 
 ProcessIterator::ProcessIterator(const ProcessFilter* filter)
     : started_iteration_(false),
@@ -38,4 +38,4 @@ bool NamedProcessIterator::IncludeEntry() {
          ProcessIterator::IncludeEntry();
 }
 
-}  // namespace crbase
+}  // namespace cr

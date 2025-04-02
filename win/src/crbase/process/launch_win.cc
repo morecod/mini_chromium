@@ -39,7 +39,7 @@
 // userenv.dll is required for CreateEnvironmentBlock().
 ///#pragma comment(lib, "userenv.lib")
 
-namespace crbase {
+namespace cr {
 
 
 namespace {
@@ -128,10 +128,10 @@ bool GetAppOutputInternal(const StringPiece16& cl,
   WaitForSingleObject(proc_info.process_handle(), INFINITE);
 
   int exit_code;
-  crbase::TerminationStatus status = GetTerminationStatus(
+  cr::TerminationStatus status = GetTerminationStatus(
       proc_info.process_handle(), &exit_code);
-  return status != crbase::TERMINATION_STATUS_PROCESS_CRASHED &&
-         status != crbase::TERMINATION_STATUS_ABNORMAL_TERMINATION;
+  return status != cr::TERMINATION_STATUS_PROCESS_CRASHED &&
+         status != cr::TERMINATION_STATUS_ABNORMAL_TERMINATION;
 }
 
 // Launches a process with elevated privileges.  This does not behave exactly
@@ -194,7 +194,7 @@ void RouteStdioToConsole(bool create_console_if_not_found) {
     // This causes NaCl tests to hang on XP for reasons unclear, perhaps due
     // to not being able to inherit handles. Since it's only for debugging,
     // and redirecting still works, punt for now.
-    if (crbase::win::GetVersion() < crbase::win::Version::VISTA)
+    if (cr::win::GetVersion() < cr::win::Version::VISTA)
       return;
 
     intptr_t stdout_handle = _get_osfhandle(_fileno(stdout));
@@ -465,4 +465,4 @@ void RaiseProcessToHighPriority() {
 ///LaunchOptions::~LaunchOptions() {
 ///}
 
-}  // namespace crbase
+}  // namespace cr

@@ -13,7 +13,7 @@
 #include "crbase/strings/string_piece.h"
 #include "crbase/strings/utf_string_conversion_utils.h"
 
-namespace crbase {
+namespace cr {
 
 OffsetAdjuster::Adjustment::Adjustment(size_t original_offset,
                                        size_t original_length,
@@ -220,25 +220,25 @@ bool UTF8ToUTF16WithAdjustments(
     const char* src,
     size_t src_len,
     string16* output,
-    crbase::OffsetAdjuster::Adjustments* adjustments) {
+    cr::OffsetAdjuster::Adjustments* adjustments) {
   PrepareForUTF16Or32Output(src, src_len, output);
   return ConvertUnicode(src, src_len, output, adjustments);
 }
 
 string16 UTF8ToUTF16WithAdjustments(
-    const crbase::StringPiece& utf8,
-    crbase::OffsetAdjuster::Adjustments* adjustments) {
+    const cr::StringPiece& utf8,
+    cr::OffsetAdjuster::Adjustments* adjustments) {
   string16 result;
   UTF8ToUTF16WithAdjustments(utf8.data(), utf8.length(), &result, adjustments);
   return result;
 }
 
 string16 UTF8ToUTF16AndAdjustOffsets(
-    const crbase::StringPiece& utf8,
+    const cr::StringPiece& utf8,
     std::vector<size_t>* offsets_for_adjustment) {
   std::for_each(offsets_for_adjustment->begin(),
                 offsets_for_adjustment->end(),
-                LimitOffset<crbase::StringPiece>(utf8.length()));
+                LimitOffset<cr::StringPiece>(utf8.length()));
   OffsetAdjuster::Adjustments adjustments;
   string16 result = UTF8ToUTF16WithAdjustments(utf8, &adjustments);
   OffsetAdjuster::AdjustOffsets(adjustments, offsets_for_adjustment);
@@ -246,11 +246,11 @@ string16 UTF8ToUTF16AndAdjustOffsets(
 }
 
 std::string UTF16ToUTF8AndAdjustOffsets(
-    const crbase::StringPiece16& utf16,
+    const cr::StringPiece16& utf16,
     std::vector<size_t>* offsets_for_adjustment) {
   std::for_each(offsets_for_adjustment->begin(),
                 offsets_for_adjustment->end(),
-                LimitOffset<crbase::StringPiece16>(utf16.length()));
+                LimitOffset<cr::StringPiece16>(utf16.length()));
   std::string result;
   PrepareForUTF8Output(utf16.data(), utf16.length(), &result);
   OffsetAdjuster::Adjustments adjustments;
@@ -259,4 +259,4 @@ std::string UTF16ToUTF8AndAdjustOffsets(
   return result;
 }
 
-}  // namespace crbase
+}  // namespace cr

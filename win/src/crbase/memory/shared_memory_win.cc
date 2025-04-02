@@ -66,7 +66,7 @@ bool IsSectionSafeToMap(HANDLE handle) {
 
 }  // namespace.
 
-namespace crbase {
+namespace cr {
 
 SharedMemoryCreateOptions::SharedMemoryCreateOptions()
     : name_deprecated(nullptr),
@@ -324,4 +324,4 @@ SharedMemoryHandle SharedMemory::handle() const {
   return SharedMemoryHandle(mapped_file_, GetCurrentProcId());
 }
 
-}  // namespace crbase
+}  // namespace cr

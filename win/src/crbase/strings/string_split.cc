@@ -9,7 +9,7 @@
 #include "crbase/strings/string_util.h"
 #include "crbase/third_party/icu/icu_utf.h"
 
-namespace crbase {
+namespace cr {
 
 namespace {
 
@@ -260,4 +260,4 @@ std::vector<StringPiece> SplitStringPieceUsingSubstr(
   return result;
 }
 
-}  // namespace crbase
+}  // namespace cr

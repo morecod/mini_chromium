@@ -11,7 +11,7 @@
 #include "crbase/macros.h"
 #include "crbase/win/scoped_handle.h"
 
-namespace crbase {
+namespace cr {
 namespace win {
 
 // Manages the closing of process and thread handles from PROCESS_INFORMATION
@@ -79,6 +79,6 @@ class CRBASE_EXPORT ScopedProcessInformation {
 };
 
 }  // namespace win
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_SRC_CRBASE_WIN_SCOPED_PROCESS_INFORMATION_H_

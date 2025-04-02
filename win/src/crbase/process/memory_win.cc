@@ -29,7 +29,7 @@ extern "C" void* (*const malloc_default)(size_t) = &malloc;
 #endif
 #endif  // defined(_MSC_VER)
 
-namespace crbase {
+namespace cr {
 
 namespace {
 
@@ -119,4 +119,4 @@ bool UncheckedMalloc(size_t size, void** result) {
   return *result != NULL;
 }
 
-}  // namespace crbase
+}  // namespace cr

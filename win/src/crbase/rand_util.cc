@@ -15,7 +15,7 @@
 #include "crbase/logging.h"
 #include "crbase/strings/string_util.h"
 
-namespace crbase {
+namespace cr {
 
 int RandInt(int min, int max) {
   CR_DCHECK_LE(min, max);
@@ -75,4 +75,4 @@ std::string RandBytesAsString(size_t length) {
   return result;
 }
 
-}  // namespace crbase
+}  // namespace cr

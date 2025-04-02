@@ -17,7 +17,7 @@ extern "C" IMAGE_DOS_HEADER __ImageBase;
 #include "crbase/strings/string16.h"
 #include "crbase/version.h"
 
-namespace crbase {
+namespace cr {
 
 class FilePath;
 
@@ -37,7 +37,7 @@ class FilePath;
 // a method labeled with __forceinline, but inlining through __forceinline
 // stopped working for Debug builds in VS2013 (http://crbug.com/516359).
 #define CR_CREATE_FILE_VERSION_INFO_FOR_CURRENT_MODULE() \
-    crbase::FileVersionInfo::CreateFileVersionInfoForModule( \
+    cr::FileVersionInfo::CreateFileVersionInfoForModule( \
         reinterpret_cast<HMODULE>(&__ImageBase))
 
 class CRBASE_EXPORT FileVersionInfo {
@@ -110,7 +110,7 @@ class CRBASE_EXPORT FileVersionInfoWin : public FileVersionInfo {
   std::wstring GetStringValue(const wchar_t* name);
 
   // Get file version number in dotted version format.
-  crbase::Version GetFileVersion() const;
+  cr::Version GetFileVersion() const;
 
   // Get the fixed file info if it exists. Otherwise NULL
   VS_FIXEDFILEINFO* fixed_file_info() { return fixed_file_info_; }
@@ -134,6 +134,6 @@ class CRBASE_EXPORT FileVersionInfoWin : public FileVersionInfo {
   VS_FIXEDFILEINFO* fixed_file_info_;
 };
 
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_SRC_CRBASE_FILE_VERSION_INFO_H_

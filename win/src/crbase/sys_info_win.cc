@@ -31,7 +31,7 @@ int64_t AmountOfMemory(DWORDLONG MEMORYSTATUSEX::*memory_field) {
 
 }  // namespace
 
-namespace crbase {
+namespace cr {
 
 // static
 int SysInfo::NumberOfProcessors() {
@@ -124,4 +124,4 @@ void SysInfo::OperatingSystemVersionNumbers(int32_t* major_version,
   *bugfix_version = 0;
 }
 
-}  // namespace crbase
+}  // namespace cr

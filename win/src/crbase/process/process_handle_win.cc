@@ -10,7 +10,7 @@
 #include "crbase/win/scoped_handle.h"
 #include "crbase/win/windows_version.h"
 
-namespace crbase {
+namespace cr {
 
 ProcessId GetCurrentProcId() {
   return ::GetCurrentProcessId();
@@ -41,4 +41,4 @@ ProcessId GetParentProcessId(ProcessHandle process) {
   return 0u;
 }
 
-}  // namespace crbase
+}  // namespace cr

@@ -22,7 +22,7 @@
     __builtin_return_address(0))
 #endif
 
-namespace crbase {
+namespace cr {
 namespace win {
 
 // Generic wrapper for raw handles that takes care of closing handles
@@ -163,6 +163,6 @@ class DummyVerifierTraits {
 typedef GenericScopedHandle<HandleTraits, DummyVerifierTraits> ScopedHandle;
 
 }  // namespace win
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_SRC_CRBASE_WIN_SCOPED_HANDLE_H_

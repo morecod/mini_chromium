@@ -10,7 +10,7 @@
 
 #if CR_DCHECK_IS_ON()
 
-namespace crbase {
+namespace cr {
 
 Lock::Lock() : lock_() {
 }
@@ -33,6 +33,6 @@ void Lock::CheckUnheldAndMark() {
   owning_thread_ref_ = PlatformThread::CurrentRef();
 }
 
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // CR_DCHECK_IS_ON()

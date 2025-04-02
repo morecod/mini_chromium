@@ -73,7 +73,7 @@ class CRNET_EXPORT IPAddress {
 
   // Parses an IP address literal (either IPv4 or IPv6) to its numeric value.
   // Returns true on success and fills |ip_address| with the numeric value.
-  static bool FromIPLiteral(const crbase::StringPiece& ip_literal,
+  static bool FromIPLiteral(const cr::StringPiece& ip_literal,
                             IPAddress* ip_address) CR_WARN_UNUSED_RESULT;
 
   // Returns the underlying byte vector.

@@ -12,7 +12,7 @@
 #include "crbase/time/time.h"
 #include "crbase/functional/callback.h"
 
-namespace crbase {
+namespace cr {
 
 namespace tracked_objects {
 class Location;
@@ -149,6 +149,6 @@ struct CRBASE_EXPORT TaskRunnerTraits {
   static void Destruct(const TaskRunner* task_runner);
 };
 
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_SRC_CRBASE_THREADOMH_TASK_RUNNER_H_

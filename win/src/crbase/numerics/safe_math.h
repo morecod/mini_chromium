@@ -9,7 +9,7 @@
 
 #include "crbase/numerics/safe_math_impl.h"
 
-namespace crbase {
+namespace cr {
 
 namespace internal {
 
@@ -293,6 +293,6 @@ BASE_NUMERIC_ARITHMETIC_OPERATORS(Mod, %, %= )
 
 using internal::CheckedNumeric;
 
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_SRC_CRBASE_NUMERICS_SAFE_MATH_H_

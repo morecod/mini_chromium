@@ -31,7 +31,7 @@
 
 #endif
 
-namespace crbase {
+namespace cr {
 
 // WARNING: This hash function should not be used for any cryptographic purpose.
 CRBASE_EXPORT uint32_t SuperFastHash(const char* data, int len);
@@ -121,6 +121,6 @@ struct IntPairHash<std::pair<Type1, Type2>> {
   }
 };
 
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_CRBASE_HASH_H_

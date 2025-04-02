@@ -187,7 +187,7 @@
 // DeathData that is reset (as synchronously as possible) during each snapshot.
 // This will facilitate displaying a max value for each snapshot period.
 
-namespace crbase {
+namespace cr {
 struct TrackingInfo;
 
 namespace tracked_objects {
@@ -335,24 +335,24 @@ class CRBASE_EXPORT DeathData {
 
   // Metrics and past snapshots accessors, used only for serialization and in
   // tests.
-  int count() const { return crbase::subtle::NoBarrier_Load(&count_); }
+  int count() const { return cr::subtle::NoBarrier_Load(&count_); }
   int32_t run_duration_sum() const {
-    return crbase::subtle::NoBarrier_Load(&run_duration_sum_);
+    return cr::subtle::NoBarrier_Load(&run_duration_sum_);
   }
   int32_t run_duration_max() const {
-    return crbase::subtle::NoBarrier_Load(&run_duration_max_);
+    return cr::subtle::NoBarrier_Load(&run_duration_max_);
   }
   int32_t run_duration_sample() const {
-    return crbase::subtle::NoBarrier_Load(&run_duration_sample_);
+    return cr::subtle::NoBarrier_Load(&run_duration_sample_);
   }
   int32_t queue_duration_sum() const {
-    return crbase::subtle::NoBarrier_Load(&queue_duration_sum_);
+    return cr::subtle::NoBarrier_Load(&queue_duration_sum_);
   }
   int32_t queue_duration_max() const {
-    return crbase::subtle::NoBarrier_Load(&queue_duration_max_);
+    return cr::subtle::NoBarrier_Load(&queue_duration_max_);
   }
   int32_t queue_duration_sample() const {
-    return crbase::subtle::NoBarrier_Load(&queue_duration_sample_);
+    return cr::subtle::NoBarrier_Load(&queue_duration_sample_);
   }
   const DeathDataPhaseSnapshot* last_phase_snapshot() const {
     return last_phase_snapshot_;
@@ -368,28 +368,28 @@ class CRBASE_EXPORT DeathData {
   // frequently used.  This might help a bit with cache lines.
   // Number of runs seen (divisor for calculating averages).
   // Can be incremented only on the death thread.
-  crbase::subtle::Atomic32 count_;
+  cr::subtle::Atomic32 count_;
 
   // Count used in determining probability of selecting exec/queue times from a
   // recorded death as samples.
   // Gets incremented only on the death thread, but can be set to 0 by
   // OnProfilingPhaseCompleted() on the snapshot thread.
-  crbase::subtle::Atomic32 sample_probability_count_;
+  cr::subtle::Atomic32 sample_probability_count_;
 
   // Basic tallies, used to compute averages.  Can be incremented only on the
   // death thread.
-  crbase::subtle::Atomic32 run_duration_sum_;
-  crbase::subtle::Atomic32 queue_duration_sum_;
+  cr::subtle::Atomic32 run_duration_sum_;
+  cr::subtle::Atomic32 queue_duration_sum_;
   // Max values, used by local visualization routines.  These are often read,
   // but rarely updated.  The max values get assigned only on the death thread,
   // but these fields can be set to 0 by OnProfilingPhaseCompleted() on the
   // snapshot thread.
-  crbase::subtle::Atomic32 run_duration_max_;
-  crbase::subtle::Atomic32 queue_duration_max_;
+  cr::subtle::Atomic32 run_duration_max_;
+  cr::subtle::Atomic32 queue_duration_max_;
   // Samples, used by crowd sourcing gatherers.  These are almost never read,
   // and rarely updated.  They can be modified only on the death thread.
-  crbase::subtle::Atomic32 run_duration_sample_;
-  crbase::subtle::Atomic32 queue_duration_sample_;
+  cr::subtle::Atomic32 run_duration_sample_;
+  cr::subtle::Atomic32 queue_duration_sample_;
 
   // Snapshot of this death data made at the last profiling phase completion, if
   // any.  DeathData owns the whole list starting with this pointer.
@@ -495,7 +495,7 @@ class CRBASE_EXPORT ThreadData {
   // The |end_of_run| was just obtained by a call to Now() (just after the task
   // finished).  It is provided as an argument to help with testing.
   static void TallyRunOnNamedThreadIfTracking(
-      const crbase::TrackingInfo& completed_task,
+      const cr::TrackingInfo& completed_task,
       const TaskStopwatch& stopwatch);
 
   // Record the end of a timed run of an object.  The |birth| is the record for
@@ -637,7 +637,7 @@ class CRBASE_EXPORT ThreadData {
   static bool now_function_is_time_;
 
   // We use thread local store to identify which ThreadData to interact with.
-  static crbase::ThreadLocalStorage::StaticSlot tls_index_;
+  static cr::ThreadLocalStorage::StaticSlot tls_index_;
 
   // List of ThreadData instances for use with worker threads.  When a worker
   // thread is done (terminated), we push it onto this list.  When a new worker
@@ -668,10 +668,10 @@ class CRBASE_EXPORT ThreadData {
   // unregistered_thread_data_pool_.  This lock is leaked at shutdown.
   // The lock is very infrequently used, so we can afford to just make a lazy
   // instance and be safe.
-  static crbase::LazyInstance<crbase::Lock>::Leaky list_lock_;
+  static cr::LazyInstance<cr::Lock>::Leaky list_lock_;
 
   // We set status_ to SHUTDOWN when we shut down the tracking service.
-  static crbase::subtle::Atomic32 status_;
+  static cr::subtle::Atomic32 status_;
 
   // Link to next instance (null terminated list).  Used to globally track all
   // registered instances (corresponds to all registered threads where we keep
@@ -711,7 +711,7 @@ class CRBASE_EXPORT ThreadData {
   // thread, or reading from another thread.  For reading from this thread we
   // don't need a lock, as there is no potential for a conflict since the
   // writing is only done from this thread.
-  mutable crbase::Lock map_lock_;
+  mutable cr::Lock map_lock_;
 
   // A random number that we used to select decide which sample to keep as a
   // representative sample in each DeathData instance.  We can't start off with
@@ -812,10 +812,10 @@ struct CRBASE_EXPORT ProcessDataSnapshot {
   ~ProcessDataSnapshot();
 
   PhasedProcessDataSnapshotMap phased_snapshots;
-  crbase::ProcessId process_id;
+  cr::ProcessId process_id;
 };
 
 }  // namespace tracked_objects
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_SRC_CRBASE_TRACING_TRACKED_OBJECTS_H_

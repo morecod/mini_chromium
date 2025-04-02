@@ -13,7 +13,7 @@
 #include "crbase/strings/string16.h"
 #include "crbase/build_config.h"
 
-namespace crbase {
+namespace cr {
   
 namespace env_vars {
 
@@ -83,6 +83,6 @@ CRBASE_EXPORT scoped_ptr<char*[]> AlterEnvironment(
     const EnvironmentMap& changes);
 #endif
 
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_SRC_CRBASE_ENVIRONMENT_H_

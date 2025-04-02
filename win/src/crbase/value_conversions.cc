@@ -13,7 +13,7 @@
 #include "crbase/time/time.h"
 #include "crbase/values.h"
 
-namespace crbase {
+namespace cr {
 
 // |Value| internally stores strings in UTF-8, so we have to convert from the
 // system native code to UTF-8 and back.
@@ -33,18 +33,18 @@ bool GetValueAsFilePath(const Value& value, FilePath* file_path) {
 // |Value| does not support 64-bit integers, and doubles do not have enough
 // precision, so we store the 64-bit time value as a string instead.
 StringValue* CreateTimeDeltaValue(const TimeDelta& time) {
-  std::string string_value = crbase::Int64ToString(time.ToInternalValue());
+  std::string string_value = cr::Int64ToString(time.ToInternalValue());
   return new StringValue(string_value);
 }
 
 bool GetValueAsTimeDelta(const Value& value, TimeDelta* time) {
   std::string str;
   int64_t int_value;
-  if (!value.GetAsString(&str) || !crbase::StringToInt64(str, &int_value))
+  if (!value.GetAsString(&str) || !cr::StringToInt64(str, &int_value))
     return false;
   if (time)
     *time = TimeDelta::FromInternalValue(int_value);
   return true;
 }
 
-}  // namespace crbase
+}  // namespace cr

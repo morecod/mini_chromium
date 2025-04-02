@@ -5,6 +5,7 @@
 #include "crbase/run_loop.h"
 #include "crbase/threading/single_thread_task_runner.h"
 #include "crbase/threading/thread_task_runner_handle.h"
+#include "crbase/strings/string_piece.h"
 
 #include "crnet/base/ip_endpoint.h"
 #include "crnet/base/io_buffer.h"
@@ -33,7 +34,7 @@ class UDPSimpleServer {
   UDPSimpleServer();
   virtual ~UDPSimpleServer();
 
-  int Listen(const crnet::IPEndPoint& address);
+  int SetUp(const cr::StringPiece& address, uint16_t port);
   void StartReading();
   void OnReadComplete(int result);
   void Shutdown();
@@ -53,13 +54,13 @@ class UDPSimpleServer {
   std::unique_ptr<crnet::UDPServerSocket> socket_;
 
   // The target buffer of the current read.
-  crbase::scoped_refptr<crnet::IOBufferWithSize> read_buffer_;
+  cr::scoped_refptr<crnet::IOBufferWithSize> read_buffer_;
 
   // The number of iterations of the read loop that have completed synchronously
   // and without posting a new task to the message loop.
   int synchronous_read_count_;
 
-  crbase::WeakPtrFactory<UDPSimpleServer> weak_factory_;
+  cr::WeakPtrFactory<UDPSimpleServer> weak_factory_;
 };
 
 UDPSimpleServer::UDPSimpleServer()
@@ -74,11 +75,11 @@ UDPSimpleServer::~UDPSimpleServer() {
 
 }
 
-int UDPSimpleServer::Listen(const crnet::IPEndPoint& address) {
+int UDPSimpleServer::SetUp(const cr::StringPiece& address, uint16_t port) {
   std::unique_ptr<crnet::UDPServerSocket> socket(new crnet::UDPServerSocket);
   socket->AllowAddressReuse();
 
-  int net_err = socket->Listen(address);
+  int net_err = socket->ListenWithAddressAndPort(address.as_string(), port);
   if (net_err < 0) {
     CR_LOG(ERROR) << 
         "Listen() failed: " << crnet::ErrorToString(net_err);
@@ -122,7 +123,7 @@ void UDPSimpleServer::StartReading() {
   int result = socket_->RecvFrom(
       read_buffer_.get(), static_cast<int>(read_buffer_->size()), 
       &client_address_,
-      crbase::BindOnce(&UDPSimpleServer::OnReadComplete, crbase::Unretained(this)));
+      cr::BindOnce(&UDPSimpleServer::OnReadComplete, cr::Unretained(this)));
   if (result == crnet::ERR_IO_PENDING) {
     synchronous_read_count_ = 0;
     return;
@@ -133,9 +134,9 @@ void UDPSimpleServer::StartReading() {
     synchronous_read_count_ = 0;
     // Schedule the processing through the message loop to 1) prevent infinite
     // recursion and 2) avoid blocking the thread for too long.
-    crbase::ThreadTaskRunnerHandle::Get()->PostTask(
-        CR_FROM_HERE, crbase::BindOnce(&UDPSimpleServer::OnReadComplete,
-                                       weak_factory_.GetWeakPtr(), result));
+    cr::ThreadTaskRunnerHandle::Get()->PostTask(
+        CR_FROM_HERE, cr::BindOnce(&UDPSimpleServer::OnReadComplete,
+                                   weak_factory_.GetWeakPtr(), result));
   } else {
     OnReadComplete(result);
   }
@@ -178,20 +179,16 @@ int main(int argc, char* argv[]) {
 
   InitLogging();
 
-  crbase::AtExitManager at_exit_manager;
-  crbase::MessageLoop message_loop(crbase::MessageLoop::TYPE_IO);
-
-  crnet::IPAddressNumber address;
-  if (!crnet::ParseIPLiteralToNumber("127.0.0.1", &address))
-    return -1;
+  cr::AtExitManager at_exit_manager;
+  cr::MessageLoop message_loop(cr::MessageLoop::TYPE_IO);
 
   UDPSimpleServer server;
-  if (server.Listen(crnet::IPEndPoint(address, 3939)) < 0)
+  if (server.SetUp("127.0.0.1", 3939) < 0)
     return -1;
 
   server.StartReading();
 
-  crbase::RunLoop run_loop;
+  cr::RunLoop run_loop;
   run_loop.Run();
   return 0;
 }

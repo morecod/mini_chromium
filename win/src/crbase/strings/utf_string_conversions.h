@@ -13,7 +13,7 @@
 #include "crbase/strings/string16.h"
 #include "crbase/strings/string_piece.h"
 
-namespace crbase {
+namespace cr {
 
 // These convert between UTF-8, -16, and -32 strings. They are potentially slow,
 // so avoid unnecessary conversions. The low-level versions return a boolean
@@ -55,6 +55,6 @@ CRBASE_EXPORT string16 ASCIIToUTF16(StringPiece ascii);
 // beforehand.
 CRBASE_EXPORT std::string UTF16ToASCII(StringPiece16 utf16);
 
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_SRC_CRBASE_STRINGS_UTF_STRING_CONVERSIONS_H_

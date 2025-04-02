@@ -13,7 +13,7 @@
 #include <string>
 #include <vector>
 
-namespace crbase {
+namespace cr {
 
 // Clears internal memory of an STL object.
 // STL clear()/reserve(0) does not always free internal memory allocated
@@ -247,6 +247,6 @@ bool STLIncludes(const Arg1& a1, const Arg2& a2) {
                        a2.begin(), a2.end());
 }
 
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_SRC_CRBASE_STL_UTIL_H_

@@ -10,7 +10,7 @@
 
 #include "crbase/base_export.h"
 
-namespace crbase {
+namespace cr {
 
 // Dispatcher is used during a nested invocation of Run to dispatch events when
 // |RunLoop(dispatcher).Run()| is used.  If |RunLoop().Run()| is invoked,
@@ -38,6 +38,6 @@ class CRBASE_EXPORT MessagePumpDispatcher {
   virtual uint32_t Dispatch(const MSG& event) = 0;
 };
 
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_SRC_CRBASE_MESSAGE_LOOP_MESSAGE_PUMP_DISPATCHER_H_

@@ -12,17 +12,17 @@
 #include "crbase/macros.h"
 #include "crbase/synchronization/lock.h"
 
-namespace crbase {
+namespace cr {
 
 // This class provides a facility similar to the CRT atexit(), except that
 // we control when the callbacks are executed. Under Windows for a DLL they
 // happen at a really bad time and under the loader lock. This facility is
-// mostly used by crbase::Singleton.
+// mostly used by cr::Singleton.
 //
 // The usage is simple. Early in the main() or WinMain() scope create an
 // AtExitManager object on the stack:
 // int main(...) {
-//    crbase::AtExitManager exit_manager;
+//    cr::AtExitManager exit_manager;
 //
 // }
 // When the exit_manager object goes out of scope, all the registered
@@ -46,7 +46,7 @@ class CRBASE_EXPORT AtExitManager {
   static void RegisterCallback(AtExitCallbackType func, void* param);
 
   // Registers the specified task to be called at exit.
-  static void RegisterTask(crbase::OnceClosure task);
+  static void RegisterTask(cr::OnceClosure task);
 
   // Calls the functions registered with RegisterCallback in LIFO order. It
   // is possible to register new callbacks after calling this function.
@@ -60,10 +60,10 @@ class CRBASE_EXPORT AtExitManager {
   explicit AtExitManager(bool shadow);
 
  private:
-  crbase::Lock lock_;
-  std::stack<crbase::OnceClosure> stack_;
+  cr::Lock lock_;
+  std::stack<cr::OnceClosure> stack_;
   AtExitManager* next_manager_;  // Stack of managers to allow shadowing.
 };
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_SRC_CRBASE_AT_EXIT_H_

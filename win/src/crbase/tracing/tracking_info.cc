@@ -8,7 +8,7 @@
 
 #include "crbase/tracing/tracked_objects.h"
 
-namespace crbase {
+namespace cr {
 
 TrackingInfo::TrackingInfo()
     : birth_tally(NULL) {
@@ -25,4 +25,4 @@ TrackingInfo::TrackingInfo(
 
 TrackingInfo::~TrackingInfo() {}
 
-}  // namespace crbase
+}  // namespace cr

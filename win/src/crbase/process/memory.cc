@@ -6,7 +6,7 @@
 #include "crbase/debug/alias.h"
 #include "crbase/logging.h"
 
-namespace crbase {
+namespace cr {
 
 namespace {
 
@@ -17,7 +17,7 @@ __declspec(noinline)
 #endif
 void OnNoMemory(size_t size) {
   size_t tmp_size = size;
-  crbase::debug::Alias(&tmp_size);
+  cr::debug::Alias(&tmp_size);
   CR_LOG(FATAL) << "Out of memory. size=" << tmp_size;
 }
 
@@ -43,4 +43,4 @@ bool UncheckedCalloc(size_t num_items, size_t size, void** result) {
   return true;
 }
 
-}  // namespace crbase
+}  // namespace cr

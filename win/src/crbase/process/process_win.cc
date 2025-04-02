@@ -21,7 +21,7 @@ DWORD kBasicProcessAccess = PROCESS_TERMINATE | PROCESS_QUERY_INFORMATION |
 // query UNICODE_STRING only!!
 HRESULT GetProcessInformationString(HANDLE process,
                                     NT_PROCESS_INFORMATION_CLASS info_class,
-                                    crbase::string16* str) {
+                                    cr::string16* str) {
   CR_DCHECK(str);
 
   if (info_class != kProcessCommandLineInformation &&
@@ -40,7 +40,7 @@ HRESULT GetProcessInformationString(HANDLE process,
       process, info_class, buf.get(), buf_len, &buf_len);
   if (SUCCEEDED(hr)) {
     NT_UNICODE_STRING* ustr = reinterpret_cast<NT_UNICODE_STRING*>(buf.get());
-    *str = reinterpret_cast<crbase::string16::value_type*>(ustr->Buffer);
+    *str = reinterpret_cast<cr::string16::value_type*>(ustr->Buffer);
     return S_OK;
   }
 
@@ -71,7 +71,7 @@ HRESULT GetProcessUserCreateParams(HANDLE process,
 
 HRESULT GetProcessUnicodeStringBuffer(HANDLE process,
                                      const NT_UNICODE_STRING& ustr,
-                                     crbase::string16* buf) {
+                                     cr::string16* buf) {
   CR_DCHECK(buf);
 
   SIZE_T buf_len = ustr.BufferLength;
@@ -79,7 +79,7 @@ HRESULT GetProcessUnicodeStringBuffer(HANDLE process,
     return E_FAIL;  // invalid string
   }
 
-  crbase::string16 r;
+  cr::string16 r;
   r.resize(ustr.BufferLength / sizeof(r[0]));
 
   HRESULT hr = NtReadVirtualMemory(
@@ -114,7 +114,7 @@ HRESULT GetProcessUserCreateParams64(HANDLE process,
 
 HRESULT GetProcessUnicodeStringBuffer64(HANDLE process,
                                         const NT_UNICODE_STRING64& ustr,
-                                        crbase::string16* buf) {
+                                        cr::string16* buf) {
   CR_DCHECK(buf);
 
   ULONG64 buf_len = ustr.BufferLength;
@@ -122,7 +122,7 @@ HRESULT GetProcessUnicodeStringBuffer64(HANDLE process,
     return E_FAIL;  // invalid string
   }
 
-  crbase::string16 r;
+  cr::string16 r;
   r.resize(ustr.BufferLength / sizeof(r[0]));
 
   HRESULT hr = NtReadVirtualMemoryWow64(
@@ -139,7 +139,7 @@ HRESULT GetProcessUnicodeStringBuffer64(HANDLE process,
 
 ////////////////////////////////////////////////////////////////////////////////
 
-namespace crbase {
+namespace cr {
 
 Process::Process(ProcessHandle handle)
     : is_current_process_(false),
@@ -464,4 +464,4 @@ int Process::GetPriority() const {
   return ::GetPriorityClass(Handle());
 }
 
-}  // namespace crbase
+}  // namespace cr

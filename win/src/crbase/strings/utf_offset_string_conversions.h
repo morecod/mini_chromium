@@ -14,7 +14,7 @@
 #include "crbase/strings/string16.h"
 #include "crbase/strings/string_piece.h"
 
-namespace crbase {
+namespace cr {
 
 // A helper class and associated data structures to adjust offsets into a
 // string in response to various adjustments one might do to that string
@@ -92,18 +92,18 @@ CRBASE_EXPORT bool UTF8ToUTF16WithAdjustments(
     const char* src,
     size_t src_len,
     string16* output,
-    crbase::OffsetAdjuster::Adjustments* adjustments);
+    cr::OffsetAdjuster::Adjustments* adjustments);
 CRBASE_EXPORT string16 UTF8ToUTF16WithAdjustments(
-    const crbase::StringPiece& utf8,
-    crbase::OffsetAdjuster::Adjustments* adjustments);
+    const cr::StringPiece& utf8,
+    cr::OffsetAdjuster::Adjustments* adjustments);
 // As above, but instead internally examines the adjustments and applies them
 // to |offsets_for_adjustment|.  See comments by AdjustOffsets().
 CRBASE_EXPORT string16 UTF8ToUTF16AndAdjustOffsets(
-    const crbase::StringPiece& utf8,
+    const cr::StringPiece& utf8,
     std::vector<size_t>* offsets_for_adjustment);
 
 CRBASE_EXPORT std::string UTF16ToUTF8AndAdjustOffsets(
-    const crbase::StringPiece16& utf16,
+    const cr::StringPiece16& utf16,
     std::vector<size_t>* offsets_for_adjustment);
 
 // Limiting function callable by std::for_each which will replace any value
@@ -123,6 +123,6 @@ struct LimitOffset {
   size_t limit_;
 };
 
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_SRC_CRBASE_STRINGS_UTF_OFFSET_STRING_CONVERSIONS_H_

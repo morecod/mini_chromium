@@ -15,7 +15,7 @@
 #include "crbase/win/windows_version.h"
 #include "crbase/logging.h"
 
-namespace crbase {
+namespace cr {
 namespace win {
 
 namespace {
@@ -366,4 +366,4 @@ bool UnpinShortcutFromTaskbar(const FilePath& shortcut) {
 }
 
 }  // namespace win
-}  // namespace crbase
+}  // namespace cr

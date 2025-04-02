@@ -47,7 +47,7 @@
 #include <stdlib.h>
 #endif
 
-namespace crbase {
+namespace cr {
 
 // AlignedMemory is specialized for all supported alignments.
 // Make sure we get a compiler error if someone uses an unsupported alignment.
@@ -106,13 +106,13 @@ inline void AlignedFree(void* ptr) {
 }
 
 // Deleter for use with std::unique_ptr. E.g., use as
-//   std::unique_ptr<Foo, crbase::AlignedFreeDeleter> foo;
+//   std::unique_ptr<Foo, cr::AlignedFreeDeleter> foo;
 struct AlignedFreeDeleter {
   inline void operator()(void* ptr) const {
     AlignedFree(ptr);
   }
 };
 
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_SRC_CRBASE_MEMORY_ALIGNED_MEMORY_H_

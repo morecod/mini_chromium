@@ -10,11 +10,11 @@
 
 namespace {
 
-crbase::win::WinProcExceptionFilter s_exception_filter = NULL;
+cr::win::WinProcExceptionFilter s_exception_filter = NULL;
 
 }  // namespace.
 
-namespace crbase {
+namespace cr {
 namespace win {
 
 WinProcExceptionFilter SetWinProcExceptionFilter(
@@ -48,7 +48,7 @@ CRBASE_EXPORT void InitializeWindowClass(
   class_out->cbClsExtra = class_extra;
   class_out->cbWndExtra = window_extra;
   class_out->hInstance =
-      crbase::GetModuleFromAddress(reinterpret_cast<void*>(window_proc));
+      cr::GetModuleFromAddress(reinterpret_cast<void*>(window_proc));
   class_out->hIcon = large_icon;
   class_out->hCursor = cursor;
   class_out->hbrBackground = background;
@@ -61,4 +61,4 @@ CRBASE_EXPORT void InitializeWindowClass(
 }
 
 }  // namespace win
-}  // namespace crbase
+}  // namespace cr

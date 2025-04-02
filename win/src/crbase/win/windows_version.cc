@@ -189,7 +189,7 @@
 #define OS_PRODUCT_XBOX_DURANGOHOSTOS                  0x000000C4
 #define OS_PRODUCT_XBOX_SCARLETTHOSTOS                 0x000000C5
 
-namespace crbase {
+namespace cr {
 namespace win {
 
 namespace {
@@ -470,13 +470,13 @@ OSInfo::VersionNumber OSInfo::Kernel32VersionNumber() {
 // Retrieve a version from kernel32. This is useful because when running in
 // compatibility mode for a down-level version of the OS, the file version of
 // kernel32 will still be the "real" version.
-crbase::Version OSInfo::Kernel32BaseVersion() {
-  static crbase::Version* version([] {
+cr::Version OSInfo::Kernel32BaseVersion() {
+  static cr::Version* version([] {
     // Allow the calls to `Kernel32BaseVersion()` to block, as they only happen
     // once (after which the result is cached in `version`), and reading from
     // kernel32.dll is fast in practice because it is used by all processes and
     // therefore likely to be in the OS's file cache.
-    ///crbase::ScopedAllowBlocking allow_blocking;
+    ///cr::ScopedAllowBlocking allow_blocking;
     std::unique_ptr<FileVersionInfoWin> file_version_info =
         FileVersionInfoWin::CreateFileVersionInfoWin(
             FilePath(FILE_PATH_LITERAL("kernel32.dll")));
@@ -488,7 +488,7 @@ crbase::Version OSInfo::Kernel32BaseVersion() {
           FilePath(FILE_PATH_LITERAL("kernelbase.dll")));
     }
     CR_CHECK(file_version_info);
-    return new crbase::Version(file_version_info->GetFileVersion());
+    return new cr::Version(file_version_info->GetFileVersion());
   }());
   return *version;
 }
@@ -691,4 +691,4 @@ Version GetVersion() {
 }
 
 }  // namespace win
-}  // namespace crbase
+}  // namespace cr

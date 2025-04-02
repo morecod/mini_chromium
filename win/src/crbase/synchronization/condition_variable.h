@@ -75,7 +75,7 @@
 #include <pthread.h>
 #endif
 
-namespace crbase {
+namespace cr {
 
 class ConditionVarImpl;
 class TimeDelta;
@@ -109,6 +109,6 @@ class CRBASE_EXPORT ConditionVariable {
 #endif
 };
 
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_SRC_CRBASE_SYNCHRONIZATION_CONDITION_VARIABLE_H_

@@ -26,7 +26,7 @@
 #include "crbase/synchronization/lock.h"
 #include "crbase/win/windows_version.h"
 
-namespace crbase {
+namespace cr {
 namespace debug {
 
 namespace {
@@ -142,7 +142,7 @@ class SymbolContext {
   void OutputTraceToStream(const void* const* trace,
                            size_t count,
                            std::ostream* os) {
-    crbase::AutoLock lock(lock_);
+    cr::AutoLock lock(lock_);
 
     for (size_t i = 0; (i < count) && os->good(); ++i) {
       const int kMaxNameLength = 256;
@@ -195,7 +195,7 @@ class SymbolContext {
     InitializeSymbols();
   }
 
-  crbase::Lock lock_;
+  cr::Lock lock_;
   ///DISALLOW_COPY_AND_ASSIGN(SymbolContext);
 };
 
@@ -302,4 +302,4 @@ void StackTrace::OutputToStream(std::ostream* os) const {
 }
 
 }  // namespace debug
-}  // namespace crbase
+}  // namespace cr

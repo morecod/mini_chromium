@@ -76,7 +76,7 @@
 #include "crbase/memory/ref_counted.h"
 #include "crbase/template_util.h"
 
-namespace crbase {
+namespace cr {
 
 template <typename T> class SupportsWeakPtr;
 template <typename T> class WeakPtr;
@@ -97,7 +97,7 @@ class CRBASE_EXPORT WeakReference {
     bool IsValid() const;
 
    private:
-    friend class crbase::RefCountedThreadSafe<Flag>;
+    friend class cr::RefCountedThreadSafe<Flag>;
 
     ~Flag();
 
@@ -343,6 +343,6 @@ WeakPtr<Derived> AsWeakPtr(Derived* t) {
   return internal::SupportsWeakPtrBase::StaticAsWeakPtr<Derived>(t);
 }
 
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_SRC_CRBASE_MEMORY_WEAK_PTR_H_

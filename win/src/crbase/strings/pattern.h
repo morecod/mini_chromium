@@ -8,7 +8,7 @@
 #include "crbase/base_export.h"
 #include "crbase/strings/string_piece.h"
 
-namespace crbase {
+namespace cr {
 
 // Returns true if the string passed in matches the pattern. The pattern
 // string can contain wildcards like * and ?
@@ -21,6 +21,6 @@ CRBASE_EXPORT bool MatchPattern(const StringPiece& string,
 CRBASE_EXPORT bool MatchPattern(const StringPiece16& string,
                               const StringPiece16& pattern);
 
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_SRC_CRBASE_STRINGS_PATTERN_H_

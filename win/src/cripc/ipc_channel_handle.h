@@ -17,7 +17,7 @@
 
 // On POSIX, we instead pass around handles to channel endpoints via IPC.
 // When it's time to IPC a new channel endpoint around, we send both the
-// channel name as well as a crbase::FileDescriptor, which is itself a special
+// channel name as well as a cr::FileDescriptor, which is itself a special
 // type that knows how to copy a socket endpoint over IPC.
 //
 // In sum, this data structure can be used to pass channel information by name

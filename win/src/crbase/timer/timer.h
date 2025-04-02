@@ -73,7 +73,7 @@
 #include "crbase/time/tick_clock.h"
 #include "crbase/time/time.h"
 
-namespace crbase {
+namespace cr {
 
 class TickClock;
 
@@ -407,6 +407,6 @@ class DelayTimer {
   ///DISALLOW_COPY_AND_ASSIGN(DelayTimer);
 };
 
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_CRBASE_TIMER_TIMER_H_

@@ -94,7 +94,7 @@ class StreamServer {
   uint32_t last_id_;
   IdToConnectionMap id_to_connection_;
 
-  crbase::WeakPtrFactory<StreamServer> weak_ptr_factory_;
+  cr::WeakPtrFactory<StreamServer> weak_ptr_factory_;
 };
 
 }  // namespace crnet

@@ -18,7 +18,7 @@
 #include <pthread.h>
 #endif
 
-namespace crbase {
+namespace cr {
 
 namespace internal {
 
@@ -123,11 +123,11 @@ class CRBASE_EXPORT ThreadLocalStorage {
     void Set(void* value);
 
     bool initialized() const {
-      return crbase::subtle::Acquire_Load(&initialized_) != 0;
+      return cr::subtle::Acquire_Load(&initialized_) != 0;
     }
 
     // The internals of this struct should be considered private.
-    crbase::subtle::Atomic32 initialized_;
+    cr::subtle::Atomic32 initialized_;
     int slot_;
   };
 
@@ -147,6 +147,6 @@ class CRBASE_EXPORT ThreadLocalStorage {
   };
 };
 
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_SRC_CRBASE_THREADING_THREAD_LOCAL_STORAGE_H_

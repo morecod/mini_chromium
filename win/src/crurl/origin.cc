@@ -39,7 +39,7 @@ Origin::Origin(const GURL& url) : unique_(true) {
   unique_ = tuple_.IsInvalid();
 }
 
-Origin::Origin(crbase::StringPiece scheme, crbase::StringPiece host, 
+Origin::Origin(cr::StringPiece scheme, cr::StringPiece host, 
                uint16_t port)
     : tuple_(scheme, host, port) {
   unique_ = tuple_.IsInvalid();
@@ -50,8 +50,8 @@ Origin::~Origin() {
 
 // static
 Origin Origin::UnsafelyCreateOriginWithoutNormalization(
-    crbase::StringPiece scheme,
-    crbase::StringPiece host,
+    cr::StringPiece scheme,
+    cr::StringPiece host,
     uint16_t port) {
   return Origin(scheme, host, port);
 }

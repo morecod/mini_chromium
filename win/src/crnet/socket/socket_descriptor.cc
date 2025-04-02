@@ -23,8 +23,8 @@ SocketDescriptor CreatePlatformSocket(int family, int type, int protocol) {
   SocketDescriptor result = ::WSASocket(family, type, protocol, nullptr, 0,
                                         WSA_FLAG_OVERLAPPED);
   if (result != kInvalidSocket && family == AF_INET6 &&
-      crbase::win::OSInfo::GetInstance()->version() 
-          >= crbase::win::Version::VISTA) {
+      cr::win::OSInfo::GetInstance()->version() 
+          >= cr::win::Version::VISTA) {
     DWORD value = 0;
     if (setsockopt(result, IPPROTO_IPV6, IPV6_V6ONLY,
                    reinterpret_cast<const char*>(&value), sizeof(value))) {

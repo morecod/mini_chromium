@@ -6,7 +6,7 @@
 #include "crbase/logging.h"
 #include "crbase/threading/platform_thread.h"
 
-namespace crbase {
+namespace cr {
 namespace debug {
 
 static bool is_debug_ui_suppressed = false;
@@ -24,4 +24,4 @@ bool WaitForDebugger(int wait_seconds, bool silent) {
 }
 
 }  // namespace debug
-}  // namespace crbase
+}  // namespace cr

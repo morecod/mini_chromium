@@ -17,7 +17,7 @@
 #endif
 
 
-namespace crbase {
+namespace cr {
 
 // Enables low fragmentation heap (LFH) for every heaps of this process. This
 // won't have any effect on heaps created after this function call. It will not
@@ -78,6 +78,6 @@ CRBASE_EXPORT CR_WARN_UNUSED_RESULT bool UncheckedCalloc(
     size_t size,
     void** result);
 
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_SRC_CRBASE_PROCESS_MEMORY_H_

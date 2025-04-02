@@ -13,7 +13,7 @@
 #include "crbase/threading/thread_restrictions.h"
 #include "crbase/win/scoped_com_initializer.h"
 
-namespace crbase {
+namespace cr {
 
 namespace {
 
@@ -21,7 +21,7 @@ namespace {
 // because its Stop method was called.  This allows us to catch cases where
 // MessageLoop::QuitWhenIdle() is called directly, which is unexpected when
 // using a Thread to setup and run a MessageLoop.
-crbase::LazyInstance<crbase::ThreadLocalBoolean>::Leaky lazy_tls_bool =
+cr::LazyInstance<cr::ThreadLocalBoolean>::Leaky lazy_tls_bool =
     CR_LAZY_INSTANCE_INITIALIZER;
 
 }  // namespace
@@ -127,7 +127,7 @@ bool Thread::StartAndWaitForTesting() {
 bool Thread::WaitUntilThreadStarted() const {
   if (!message_loop_)
     return false;
-  crbase::ThreadRestrictions::ScopedAllowWait allow_wait;
+  cr::ThreadRestrictions::ScopedAllowWait allow_wait;
   start_event_.Wait();
   return true;
 }
@@ -162,12 +162,12 @@ void Thread::StopSoon() {
     return;
 
   stopping_ = true;
-  task_runner()->PostTask(CR_FROM_HERE, crbase::BindOnce(&ThreadQuitHelper));
+  task_runner()->PostTask(CR_FROM_HERE, cr::BindOnce(&ThreadQuitHelper));
 }
 
 PlatformThreadId Thread::GetThreadId() const {
   // If the thread is created but not started yet, wait for |id_| being ready.
-  ///crbase::ThreadRestrictions::ScopedAllowWait allow_wait;
+  ///cr::ThreadRestrictions::ScopedAllowWait allow_wait;
   id_event_.Wait();
   return id_;
 }
@@ -260,4 +260,4 @@ void Thread::ThreadMain() {
   message_loop_ = nullptr;
 }
 
-}  // namespace crbase
+}  // namespace cr

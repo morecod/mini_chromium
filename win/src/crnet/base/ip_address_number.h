@@ -64,7 +64,7 @@ CRNET_EXPORT bool ParseURLHostnameToNumber(const std::string& hostname,
 
 // Parses an IP address literal (either IPv4 or IPv6) to its numeric value.
 // Returns true on success and fills |ip_number| with the numeric value.
-CRNET_EXPORT bool ParseIPLiteralToNumber(const crbase::StringPiece& ip_literal,
+CRNET_EXPORT bool ParseIPLiteralToNumber(const cr::StringPiece& ip_literal,
                                          IPAddressNumber* ip_number);
 
 // Converts an IPv4 address to an IPv4-mapped IPv6 address.

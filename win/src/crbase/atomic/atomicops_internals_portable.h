@@ -31,7 +31,7 @@
 
 #include "crbase/build_config.h"
 
-namespace crbase {
+namespace cr {
 namespace subtle {
 
 // This implementation is transitional and maintains the original API for
@@ -189,6 +189,6 @@ inline Atomic64 Acquire_Load(volatile const Atomic64* ptr) {
 
 #endif  // defined(MINI_CHROMIUM_ARCH_CPU_64_BITS)
 }  // namespace subtle
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_CRBASE_ATOMIC_ATOMICOPS_INTERNALS_PORTABLE_H_

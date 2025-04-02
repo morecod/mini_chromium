@@ -6,7 +6,7 @@
 
 #include "crbase/third_party/icu/icu_utf.h"
 
-namespace crbase {
+namespace cr {
 
 // ReadUnicodeCharacter --------------------------------------------------------
 
@@ -142,4 +142,4 @@ void PrepareForUTF16Or32Output(const char* src,
   PrepareForUTF16Or32Output<std::wstring>(src, src_len, output);
 }
 
-}  // namespace crbase
+}  // namespace cr

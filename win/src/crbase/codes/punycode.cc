@@ -166,14 +166,14 @@ bool encode(Span codepoints, STR& out) {
 }
 
 // decode decodes a string as specified in section 6.2.
-bool decode(crbase::StringPiece input, crbase::string16& out) {
+bool decode(cr::StringPiece input, cr::string16& out) {
   CR_DCHECK(IsStringASCII(input));
 
   if (input.empty())
     return false;
 
   size_t de_pos = input.find_last_of('-');
-  int32_t pos = crbase::StringPiece::npos == de_pos
+  int32_t pos = cr::StringPiece::npos == de_pos
                     ? -1 : static_cast<int32_t>(de_pos);
   pos++;
 
@@ -184,7 +184,7 @@ bool decode(crbase::StringPiece input, crbase::string16& out) {
     size_t len = input.length() - 1;
 
     // copy ascii chars to uni chars.
-    crbase::WriteInto(&out, len + 1);
+    cr::WriteInto(&out, len + 1);
     for (size_t i = 0; i < len; i++)
       out[i] = input[i];
 
@@ -237,7 +237,7 @@ bool decode(crbase::StringPiece input, crbase::string16& out) {
     if (n < 0 || n > 0x0010FFFF /*utf8.MaxRune*/)
       return false;
 
-    out.insert(out.begin() + i, static_cast<crbase::char16>(n));
+    out.insert(out.begin() + i, static_cast<cr::char16>(n));
     i++;
   }
 
@@ -246,7 +246,7 @@ bool decode(crbase::StringPiece input, crbase::string16& out) {
 
 }  // namespace
 
-namespace crbase {
+namespace cr {
 
 bool EncodePunycode(const StringPiece16& input, std::string &out) {
   return encode(input, out);
@@ -260,4 +260,4 @@ bool DecodePunycode(StringPiece input, string16& output) {
   return decode(input, output);
 }
 
-}  // namespace crbase
+}  // namespace cr

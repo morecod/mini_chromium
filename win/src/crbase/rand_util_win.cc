@@ -21,7 +21,7 @@
 
 #include "crbase/logging.h"
 
-namespace crbase {
+namespace cr {
 
 // NOTE: This function must be cryptographically secure. http://crbug.com/140076
 uint64_t RandUint64() {
@@ -44,4 +44,4 @@ void RandBytes(void* output, size_t output_length) {
   }
 }
 
-}  // namespace crbase
+}  // namespace cr

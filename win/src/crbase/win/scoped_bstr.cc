@@ -11,7 +11,7 @@
 #include "crbase/process/memory.h"
 #include "crbase/strings/string_util.h"
 
-namespace crbase {
+namespace cr {
 namespace win {
 
 namespace {
@@ -20,7 +20,7 @@ BSTR AllocBstrOrDie(StringPiece16 non_bstr) {
   BSTR result = ::SysAllocStringLen(non_bstr.data(),
                                     checked_cast<UINT>(non_bstr.length()));
   if (!result) {
-    crbase::TerminateBecauseOutOfMemory((non_bstr.length() + 1) *
+    cr::TerminateBecauseOutOfMemory((non_bstr.length() + 1) *
                                         sizeof(wchar_t));
   }
   return result;
@@ -29,7 +29,7 @@ BSTR AllocBstrOrDie(StringPiece16 non_bstr) {
 BSTR AllocBstrBytesOrDie(size_t bytes) {
   BSTR result = ::SysAllocStringByteLen(nullptr, checked_cast<UINT>(bytes));
   if (!result)
-    crbase::TerminateBecauseOutOfMemory(bytes + sizeof(wchar_t));
+    cr::TerminateBecauseOutOfMemory(bytes + sizeof(wchar_t));
   return result;
 }
 
@@ -93,4 +93,4 @@ size_t ScopedBstr::ByteLength() const {
 }
 
 }  // namespace win
-}  // namespace crbase
+}  // namespace cr

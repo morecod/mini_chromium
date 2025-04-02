@@ -19,7 +19,7 @@
 #endif
 #include <DelayIMP.h>
 
-namespace crbase {
+namespace cr {
 namespace win {
 
 // This class is a wrapper for the Portable Executable File Format (PE).
@@ -260,6 +260,6 @@ inline PIMAGE_EXPORT_DIRECTORY PEImage::GetExportDirectory() const {
 }
 
 }  // namespace win
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_SRC_CRBASE_WIN_PE_IMAGE_H_

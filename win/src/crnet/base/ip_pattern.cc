@@ -92,15 +92,15 @@ bool IPPattern::ParsePattern(const std::string& ip_pattern) {
     is_ipv4_ = false;
   }
 
-  std::vector<crbase::StringPiece> components =
-      crbase::SplitStringPiece(ip_pattern, is_ipv4_ ? "." : ":",
-                               crbase::TRIM_WHITESPACE, 
-                               crbase::SPLIT_WANT_ALL);
+  std::vector<cr::StringPiece> components =
+      cr::SplitStringPiece(ip_pattern, is_ipv4_ ? "." : ":",
+                               cr::TRIM_WHITESPACE, 
+                               cr::SPLIT_WANT_ALL);
   if (components.size() != (is_ipv4_ ? 4u : 8u)) {
     ///CR_DVLOG(1) << "Invalid component count: " << ip_pattern;
     return false;
   }
-  for (crbase::StringPiece component : components) {
+  for (cr::StringPiece component : components) {
     if (component.empty()) {
       ///CR_DVLOG(1) << "Empty component: " << ip_pattern;
       return false;
@@ -139,13 +139,13 @@ bool IPPattern::ParsePattern(const std::string& ip_pattern) {
   return true;
 }
 
-bool IPPattern::ParseComponentPattern(const crbase::StringPiece& text,
+bool IPPattern::ParseComponentPattern(const cr::StringPiece& text,
                                       ComponentPattern* pattern) const {
   // We're given a comma separated set of ranges, some of which may be simple
   // constants.
-  for (const std::string& range : crbase::SplitString(
-           text, ",", crbase::TRIM_WHITESPACE, crbase::SPLIT_WANT_ALL)) {
-    crbase::StringTokenizer range_pair(range, "-");
+  for (const std::string& range : cr::SplitString(
+           text, ",", cr::TRIM_WHITESPACE, cr::SPLIT_WANT_ALL)) {
+    cr::StringTokenizer range_pair(range, "-");
     uint32_t min = 0;
     range_pair.GetNext();
     if (!ValueTextToInt(range_pair.token_piece(), &min))
@@ -165,10 +165,10 @@ bool IPPattern::ParseComponentPattern(const crbase::StringPiece& text,
   return true;
 }
 
-bool IPPattern::ValueTextToInt(const crbase::StringPiece& input,
+bool IPPattern::ValueTextToInt(const cr::StringPiece& input,
                                uint32_t* output) const {
-  bool ok = is_ipv4_ ? crbase::StringToUint(input, output) :
-                       crbase::HexStringToUInt(input, output);
+  bool ok = is_ipv4_ ? cr::StringToUint(input, output) :
+                       cr::HexStringToUInt(input, output);
   if (!ok) {
     ///CR_DVLOG(1) << "Could not convert value to number: " << input;
     return false;

@@ -14,7 +14,7 @@
 #include "crbase/strings/utf_string_conversions.h"
 #include "crbase/values.h"
 
-namespace crbase {
+namespace cr {
 
 const char kPrettyPrintLineEnding[] = "\r\n";
 
@@ -194,4 +194,4 @@ void JSONWriter::IndentLine(size_t depth) {
   json_string_->append(depth * 3U, ' ');
 }
 
-}  // namespace crbase
+}  // namespace cr

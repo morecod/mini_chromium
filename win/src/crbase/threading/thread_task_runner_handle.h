@@ -8,7 +8,7 @@
 #include "crbase/base_export.h"
 #include "crbase/memory/ref_counted.h"
 
-namespace crbase {
+namespace cr {
 
 class SingleThreadTaskRunner;
 
@@ -36,6 +36,6 @@ class CRBASE_EXPORT ThreadTaskRunnerHandle {
   scoped_refptr<SingleThreadTaskRunner> task_runner_;
 };
 
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_SRC_CRBASE_THREADING_THREAD_TASK_RUNNER_HANDLE_H_

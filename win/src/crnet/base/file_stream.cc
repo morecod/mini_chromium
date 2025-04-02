@@ -13,27 +13,27 @@
 namespace crnet {
 
 FileStream::FileStream(const 
-    crbase::scoped_refptr<crbase::TaskRunner>& task_runner)
+    cr::scoped_refptr<cr::TaskRunner>& task_runner)
         : context_(new Context(task_runner)) {
 }
 
 FileStream::FileStream(
-    crbase::File file,
-    const crbase::scoped_refptr<crbase::TaskRunner>& task_runner)
+    cr::File file,
+    const cr::scoped_refptr<cr::TaskRunner>& task_runner)
         : context_(new Context(std::move(file), task_runner)) {}
 
 FileStream::~FileStream() {
   context_.release()->Orphan();
 }
 
-int FileStream::Open(const crbase::FilePath& path, int open_flags,
+int FileStream::Open(const cr::FilePath& path, int open_flags,
                      CompletionOnceCallback callback) {
   if (IsOpen()) {
     CR_DLOG(FATAL) << "File is already open!";
     return ERR_UNEXPECTED;
   }
 
-  CR_DCHECK(open_flags & crbase::File::FLAG_ASYNC);
+  CR_DCHECK(open_flags & cr::File::FLAG_ASYNC);
   context_->Open(path, open_flags, std::move(callback));
   return ERR_IO_PENDING;
 }

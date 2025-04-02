@@ -12,7 +12,7 @@
 #include "crbase/threading/post_task_and_reply_impl.h"
 #include "crbase/tracing/tracked_objects.h"
 
-namespace crbase {
+namespace cr {
 
 namespace {
 
@@ -47,7 +47,7 @@ class WorkerPoolTaskRunner : public TaskRunner {
   // TaskRunner implementation
   bool PostDelayedTask(const tracked_objects::Location& from_here,
                        OnceClosure task,
-                       crbase::TimeDelta delay) override;
+                       cr::TimeDelta delay) override;
   bool RunsTasksOnCurrentThread() const override;
 
  private:
@@ -58,7 +58,7 @@ class WorkerPoolTaskRunner : public TaskRunner {
   bool PostDelayedTaskAssertZeroDelay(
       const tracked_objects::Location& from_here,
       OnceClosure task,
-      crbase::TimeDelta delay);
+      cr::TimeDelta delay);
 
   const bool tasks_are_slow_;
 };
@@ -73,7 +73,7 @@ WorkerPoolTaskRunner::~WorkerPoolTaskRunner() {
 bool WorkerPoolTaskRunner::PostDelayedTask(
     const tracked_objects::Location& from_here,
     OnceClosure task,
-    crbase::TimeDelta delay) {
+    cr::TimeDelta delay) {
   return PostDelayedTaskAssertZeroDelay(from_here, std::move(task), delay);
 }
 
@@ -84,7 +84,7 @@ bool WorkerPoolTaskRunner::RunsTasksOnCurrentThread() const {
 bool WorkerPoolTaskRunner::PostDelayedTaskAssertZeroDelay(
     const tracked_objects::Location& from_here,
     OnceClosure task,
-    crbase::TimeDelta delay) {
+    cr::TimeDelta delay) {
   CR_DCHECK_EQ(delay.InMillisecondsRoundedUp(), 0)
       << "WorkerPoolTaskRunner does not support non-zero delays";
   return WorkerPool::PostTask(from_here, std::move(task), tasks_are_slow_);
@@ -98,7 +98,7 @@ struct TaskRunnerHolder {
   scoped_refptr<TaskRunner> taskrunners_[2];
 };
 
-crbase::LazyInstance<TaskRunnerHolder>::Leaky
+cr::LazyInstance<TaskRunnerHolder>::Leaky
     g_taskrunners = CR_LAZY_INSTANCE_INITIALIZER;
 
 }  // namespace
@@ -123,4 +123,4 @@ WorkerPool::GetTaskRunner(bool tasks_are_slow) {
   return g_taskrunners.Get().taskrunners_[tasks_are_slow];
 }
 
-}  // namespace crbase
+}  // namespace cr

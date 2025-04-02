@@ -21,7 +21,7 @@
 #include "cripc/ipc_listener.h"
 #include "cripc/ipc_sender.h"
 
-namespace crbase {
+namespace cr {
 class SingleThreadTaskRunner;
 }
 
@@ -69,7 +69,7 @@ class SendCallbackHelper;
 // paid if the underlying channel supports thread-safe |Send|.
 //
 class CRIPC_EXPORT ChannelProxy : public Endpoint, 
-                                  public crbase::NonThreadSafe {
+                                  public cr::NonThreadSafe {
  public:
   // Initializes a channel proxy.  The channel_handle and mode parameters are
   // passed directly to the underlying IPC::Channel.  The listener is called on
@@ -83,13 +83,13 @@ class CRIPC_EXPORT ChannelProxy : public Endpoint,
       const ChannelHandle& channel_handle,
       Channel::Mode mode,
       Listener* listener,
-      const crbase::scoped_refptr<crbase::SingleThreadTaskRunner>&
+      const cr::scoped_refptr<cr::SingleThreadTaskRunner>&
           ipc_task_runner);
 
   static std::unique_ptr<ChannelProxy> Create(
       std::unique_ptr<ChannelFactory> factory,
       Listener* listener,
-      const crbase::scoped_refptr<crbase::SingleThreadTaskRunner>&
+      const cr::scoped_refptr<cr::SingleThreadTaskRunner>&
           ipc_task_runner);
 
   ~ChannelProxy() override;
@@ -133,7 +133,7 @@ class CRIPC_EXPORT ChannelProxy : public Endpoint,
   void ClearIPCTaskRunner();
 
   // Endpoint overrides.
-  crbase::ProcessId GetPeerPID() const override;
+  cr::ProcessId GetPeerPID() const override;
   ///void OnSetAttachmentBrokerEndpoint() override;
 
  protected:
@@ -143,18 +143,18 @@ class CRIPC_EXPORT ChannelProxy : public Endpoint,
   ChannelProxy(Context* context);
 
   ChannelProxy(Listener* listener,
-               const crbase::scoped_refptr<crbase::SingleThreadTaskRunner>&
+               const cr::scoped_refptr<cr::SingleThreadTaskRunner>&
                    ipc_task_runner);
 
   // Used internally to hold state that is referenced on the IPC thread.
-  class Context : public crbase::RefCountedThreadSafe<Context>,
+  class Context : public cr::RefCountedThreadSafe<Context>,
                   public Listener {
    public:
     Context(Listener* listener,
-            const crbase::scoped_refptr<crbase::SingleThreadTaskRunner>& 
+            const cr::scoped_refptr<cr::SingleThreadTaskRunner>& 
                 ipc_thread);
     void ClearIPCTaskRunner();
-    crbase::SingleThreadTaskRunner* ipc_task_runner() const {
+    cr::SingleThreadTaskRunner* ipc_task_runner() const {
       return ipc_task_runner_.get();
     }
     const std::string& channel_id() const { return channel_id_; }
@@ -169,7 +169,7 @@ class CRIPC_EXPORT ChannelProxy : public Endpoint,
     bool IsChannelSendThreadSafe() const;
 
    protected:
-    friend class crbase::RefCountedThreadSafe<Context>;
+    friend class cr::RefCountedThreadSafe<Context>;
     ~Context() override;
 
     // IPC::Listener methods:
@@ -220,12 +220,12 @@ class CRIPC_EXPORT ChannelProxy : public Endpoint,
     void SendFromThisThread(Message* message);
     void ClearChannel();
 
-    crbase::scoped_refptr<crbase::SingleThreadTaskRunner> listener_task_runner_;
+    cr::scoped_refptr<cr::SingleThreadTaskRunner> listener_task_runner_;
     Listener* listener_;
 
     // List of filters.  This is only accessed on the IPC thread.
-    std::vector<crbase::scoped_refptr<MessageFilter> > filters_;
-    crbase::scoped_refptr<crbase::SingleThreadTaskRunner> ipc_task_runner_;
+    std::vector<cr::scoped_refptr<MessageFilter> > filters_;
+    cr::scoped_refptr<cr::SingleThreadTaskRunner> ipc_task_runner_;
 
     // Note, channel_ may be set on the Listener thread or the IPC thread.
     // But once it has been set, it must only be read or cleared on the IPC
@@ -237,7 +237,7 @@ class CRIPC_EXPORT ChannelProxy : public Endpoint,
 
     // Lock for |channel_| value. This is only relevant in the context of
     // thread-safe send.
-    crbase::Lock channel_lifetime_lock_;
+    cr::Lock channel_lifetime_lock_;
     // Indicates the thread-safe send availability. This is constant once
     // |channel_| is set.
     bool channel_send_thread_safe_;
@@ -248,13 +248,13 @@ class CRIPC_EXPORT ChannelProxy : public Endpoint,
 
     // Holds filters between the AddFilter call on the listerner thread and the
     // IPC thread when they're added to filters_.
-    std::vector<crbase::scoped_refptr<MessageFilter> > pending_filters_;
+    std::vector<cr::scoped_refptr<MessageFilter> > pending_filters_;
     // Lock for pending_filters_.
-    crbase::Lock pending_filters_lock_;
+    cr::Lock pending_filters_lock_;
 
     // Cached copy of the peer process ID. Set on IPC but read on both IPC and
     // listener threads.
-    crbase::ProcessId peer_pid_;
+    cr::ProcessId peer_pid_;
 
     // Whether this channel is used as an endpoint for sending and receiving
     // brokerable attachment messages to/from the broker process.
@@ -275,7 +275,7 @@ class CRIPC_EXPORT ChannelProxy : public Endpoint,
   // By maintaining this indirection (ref-counted) to our internal state, we
   // can safely be destroyed while the background thread continues to do stuff
   // that involves this data.
-  crbase::scoped_refptr<Context> context_;
+  cr::scoped_refptr<Context> context_;
 
   // Whether the channel has been initialized.
   bool did_init_;

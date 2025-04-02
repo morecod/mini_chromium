@@ -11,7 +11,7 @@
 #include "crbase/functional/callback.h"
 #include "crbase/logging.h"
 
-namespace crbase {
+namespace cr {
 
 // Keep a stack of registered AtExitManagers.  We always operate on the most
 // recent, and we should never have more than one outside of testing (for a
@@ -44,11 +44,11 @@ AtExitManager::~AtExitManager() {
 // static
 void AtExitManager::RegisterCallback(AtExitCallbackType func, void* param) {
   CR_DCHECK(func);
-  RegisterTask(crbase::BindOnce(func, param));
+  RegisterTask(cr::BindOnce(func, param));
 }
 
 // static
-void AtExitManager::RegisterTask(crbase::OnceClosure task) {
+void AtExitManager::RegisterTask(cr::OnceClosure task) {
   if (!g_top_manager) {
     CR_NOTREACHED() 
         << "Tried to RegisterCallback without an AtExitManager";
@@ -87,4 +87,4 @@ AtExitManager::AtExitManager(bool shadow) : next_manager_(g_top_manager) {
   g_top_manager = this;
 }
 
-}  // namespace crbase
+}  // namespace cr

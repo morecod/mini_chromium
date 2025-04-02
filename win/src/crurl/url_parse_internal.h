@@ -12,13 +12,13 @@
 namespace crurl {
 
 // We treat slashes and backslashes the same for IE compatibility.
-inline bool IsURLSlash(crbase::char16 ch) {
+inline bool IsURLSlash(cr::char16 ch) {
   return ch == '/' || ch == '\\';
 }
 
 // Returns true if we should trim this character from the URL because it is a
 // space or a control character.
-inline bool ShouldTrimFromURL(crbase::char16 ch) {
+inline bool ShouldTrimFromURL(cr::char16 ch) {
   return ch <= ' ';
 }
 
@@ -67,7 +67,7 @@ void ParsePathInternal(const char* spec,
                        Component* filepath,
                        Component* query,
                        Component* ref);
-void ParsePathInternal(const crbase::char16* spec,
+void ParsePathInternal(const cr::char16* spec,
                        const Component& path,
                        Component* filepath,
                        Component* query,
@@ -81,7 +81,7 @@ void ParseAfterScheme(const char* spec,
                       int spec_len,
                       int after_scheme,
                       Parsed* parsed);
-void ParseAfterScheme(const crbase::char16* spec,
+void ParseAfterScheme(const cr::char16* spec,
                       int spec_len,
                       int after_scheme,
                       Parsed* parsed);

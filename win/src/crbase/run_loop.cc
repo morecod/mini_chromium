@@ -8,7 +8,7 @@
 #include "crbase/tracing/tracked_objects.h"
 #include "crbase/message_loop/message_pump_dispatcher.h"
 
-namespace crbase {
+namespace cr {
 
 RunLoop::RunLoop()
     : loop_(MessageLoop::current()),
@@ -96,4 +96,4 @@ void RunLoop::AfterRun() {
     loop_->QuitNow();
 }
 
-}  // namespace crbase
+}  // namespace cr

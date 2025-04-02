@@ -19,7 +19,7 @@
 
 #include <stdint.h>
 
-namespace crbase_icu {
+namespace cr_icu {
 
 typedef int32_t UChar32;
 typedef uint16_t UChar;
@@ -108,7 +108,7 @@ extern const uint8_t utf8_countTrailBytes[256];
  * @internal
  */
 #define CBU8_COUNT_TRAIL_BYTES(leadByte) \
-  (crbase_icu::utf8_countTrailBytes[(uint8_t)leadByte])
+  (cr_icu::utf8_countTrailBytes[(uint8_t)leadByte])
 
 /**
  * Mask a UTF-8 lead byte, leave only the lower bits that form part of the code point value.
@@ -198,7 +198,7 @@ UChar32 utf8_nextCharSafeBody(const uint8_t* s,
     (c) = (s)[(i)++];                                                    \
     if (((uint8_t)(c)) >= 0x80) {                                        \
       if (CBU8_IS_LEAD(c)) {                                             \
-        (c) = crbase_icu::utf8_nextCharSafeBody((const uint8_t*)s, &(i),   \
+        (c) = cr_icu::utf8_nextCharSafeBody((const uint8_t*)s, &(i),     \
                                               (int32_t)(length), c, -1); \
       } else {                                                           \
         (c) = CBU_SENTINEL;                                              \
@@ -302,7 +302,7 @@ UChar32 utf8_nextCharSafeBody(const uint8_t* s,
  * @stable ICU 2.4
  */
 #define CBU16_GET_SUPPLEMENTARY(lead, trail) \
-    (((crbase_icu::UChar32)(lead)<<10UL)+(crbase_icu::UChar32)(trail)-CBU16_SURROGATE_OFFSET)
+    (((cr_icu::UChar32)(lead)<<10UL)+(cr_icu::UChar32)(trail)-CBU16_SURROGATE_OFFSET)
 
 
 /**
@@ -313,7 +313,7 @@ UChar32 utf8_nextCharSafeBody(const uint8_t* s,
  * @stable ICU 2.4
  */
 #define CBU16_LEAD(supplementary) \
-    (crbase_icu::UChar)(((supplementary)>>10)+0xd7c0)
+    (cr_icu::UChar)(((supplementary)>>10)+0xd7c0)
 
 /**
  * Get the trail surrogate (0xdc00..0xdfff) for a
@@ -323,7 +323,7 @@ UChar32 utf8_nextCharSafeBody(const uint8_t* s,
  * @stable ICU 2.4
  */
 #define CBU16_TRAIL(supplementary) \
-    (crbase_icu::UChar)(((supplementary)&0x3ff)|0xdc00)
+    (cr_icu::UChar)(((supplementary)&0x3ff)|0xdc00)
 
 /**
  * How many 16-bit code units are used to encode this Unicode code point? (1 or 2)

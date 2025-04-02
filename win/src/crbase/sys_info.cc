@@ -8,7 +8,7 @@
 #include "crbase/strings/string_util.h"
 #include "crbase/time/time.h"
 
-namespace crbase {
+namespace cr {
 
 static const int kLowMemoryDeviceThresholdMB = 1024;
 
@@ -35,4 +35,4 @@ TimeDelta SysInfo::Uptime() {
   return TimeDelta::FromMicroseconds(uptime_in_microseconds);
 }
 
-}  // namespace crbase
+}  // namespace cr

@@ -10,7 +10,7 @@
 #include "crbase/macros.h"
 #include "crbase/logging.h"
 
-namespace crbase {
+namespace cr {
 namespace win {
 
 // A PROPVARIANT that is automatically initialized and cleared upon respective
@@ -57,6 +57,6 @@ class ScopedPropVariant {
 };
 
 }  // namespace win
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_SRC_CRBASE_WIN_SCOPED_PROPVARIANT_H_

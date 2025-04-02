@@ -6,7 +6,7 @@
 
 #include "crbase/files/file_util.h"
 
-namespace crbase {
+namespace cr {
 
 FileEnumerator::FileInfo::~FileInfo() {
 }
@@ -18,4 +18,4 @@ bool FileEnumerator::ShouldSkip(const FilePath& path) {
           !(INCLUDE_DOT_DOT & file_type_));
 }
 
-}  // namespace crbase
+}  // namespace cr

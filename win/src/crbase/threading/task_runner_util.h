@@ -13,7 +13,7 @@
 #include "crbase/logging.h"
 #include "crbase/threading/task_runner.h"
 
-namespace crbase {
+namespace cr {
 
 namespace internal {
 
@@ -79,6 +79,6 @@ bool PostTaskAndReplyWithResult(TaskRunner* task_runner,
       OnceCallback<void(ReplyArgType)>(std::move(reply)));
 }
 
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_CRBASE_THREADING_TASK_RUNNER_UTIL_H_

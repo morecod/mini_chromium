@@ -37,7 +37,7 @@ class WinsockInitSingleton {
   }
 };
 
-static crbase::LazyInstance<WinsockInitSingleton>::Leaky 
+static cr::LazyInstance<WinsockInitSingleton>::Leaky 
     g_winsock_init_singleton = CR_LAZY_INSTANCE_INITIALIZER;
 
 }  // namespace

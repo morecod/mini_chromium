@@ -15,7 +15,7 @@
 #include <pthread.h>
 #endif
 
-namespace crbase {
+namespace cr {
 namespace internal {
 
 // This class implements the underlying platform-specific spin-lock mechanism
@@ -52,6 +52,6 @@ class CRBASE_EXPORT LockImpl {
 };
 
 }  // namespace internal
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_SRC_CRBASE_SYNCHRONIZATION_LOCK_IMPL_H_

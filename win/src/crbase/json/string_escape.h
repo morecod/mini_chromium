@@ -12,7 +12,7 @@
 #include "crbase/base_export.h"
 #include "crbase/strings/string_piece.h"
 
-namespace crbase {
+namespace cr {
 
 // Appends to |dest| an escaped version of |str|. Valid UTF-8 code units will
 // pass through from the input to the output. Invalid code units will be
@@ -56,6 +56,6 @@ CRBASE_EXPORT std::string EscapeBytesAsInvalidJSONString(
     const StringPiece& str,
     bool put_in_quotes);
 
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_SRC_CRBASE_JSON_STRING_ESCAPE_H_

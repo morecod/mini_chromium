@@ -12,7 +12,7 @@
 
 #include "crbase/numerics/safe_conversions_impl.h"
 
-namespace crbase {
+namespace cr {
 
 // Convenience function that returns true if the supplied value is in range
 // for the destination type.
@@ -108,9 +108,9 @@ inline Dst strict_cast(Src value) {
                 "The numeric conversion is out of range for this type. You "
                 "should probably use one of the following conversion "
                 "mechanisms on the value you want to pass:\n"
-                "- crbase::checked_cast\n"
-                "- crbase::saturated_cast\n"
-                "- crbase::CheckedNumeric");
+                "- cr::checked_cast\n"
+                "- cr::saturated_cast\n"
+                "- cr::CheckedNumeric");
 
   return static_cast<Dst>(value);
 }
@@ -156,6 +156,6 @@ class StrictNumeric {
 // Explicitly make a shorter size_t typedef for convenience.
 typedef StrictNumeric<size_t> SizeT;
 
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_SRC_CRBASE_NUMERICS_SAFE_CONVERSIONS_H_

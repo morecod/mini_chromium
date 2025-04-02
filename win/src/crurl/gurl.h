@@ -46,7 +46,7 @@
 class CRURL_EXPORT GURL {
  public:
   typedef crurl::StringPieceReplacements<std::string> Replacements;
-  typedef crurl::StringPieceReplacements<crbase::string16> ReplacementsW;
+  typedef crurl::StringPieceReplacements<cr::string16> ReplacementsW;
 
   // Creates an empty, invalid URL.
   GURL();
@@ -57,7 +57,7 @@ class CRURL_EXPORT GURL {
 
   // The strings to this contructor should be UTF-8 / UTF-16.
   explicit GURL(const std::string& url_string);
-  explicit GURL(const crbase::string16& url_string);
+  explicit GURL(const cr::string16& url_string);
 
   // Constructor for URLs that have already been parsed and canonicalized. This
   // is used for conversions from KURL, for example. The caller must supply all
@@ -155,7 +155,7 @@ class CRURL_EXPORT GURL {
   // It is an error to resolve a URL relative to an invalid URL. The result
   // will be the empty URL.
   GURL Resolve(const std::string& relative) const;
-  GURL Resolve(const crbase::string16& relative) const;
+  GURL Resolve(const cr::string16& relative) const;
 
   // Creates a new GURL by replacing the current URL's components with the
   // supplied versions. See the Replacements class in url_canon.h for more.
@@ -171,7 +171,7 @@ class CRURL_EXPORT GURL {
   GURL ReplaceComponents(
       const crurl::Replacements<char>& replacements) const;
   GURL ReplaceComponents(
-      const crurl::Replacements<crbase::char16>& replacements) const;
+      const crurl::Replacements<cr::char16>& replacements) const;
 
   // A helper function that is equivalent to replacing the path with a slash
   // and clearing out everything after that. We sometimes need to know just the
@@ -211,7 +211,7 @@ class CRURL_EXPORT GURL {
   // Returns true if the given parameter (should be lower-case ASCII to match
   // the canonicalized scheme) is the scheme for this URL. Do not include a
   // colon.
-  bool SchemeIs(crbase::StringPiece lower_ascii_scheme) const;
+  bool SchemeIs(cr::StringPiece lower_ascii_scheme) const;
 
   // Returns true if the scheme is "http" or "https".
   bool SchemeIsHTTPOrHTTPS() const;
@@ -263,7 +263,7 @@ class CRURL_EXPORT GURL {
   std::string scheme() const {
     return ComponentString(parsed_.scheme);
   }
-  crbase::StringPiece scheme_piece() const {
+  cr::StringPiece scheme_piece() const {
     return ComponentStringPiece(parsed_.scheme);
   }
 
@@ -273,7 +273,7 @@ class CRURL_EXPORT GURL {
   std::string username() const {
     return ComponentString(parsed_.username);
   }
-  crbase::StringPiece username_piece() const {
+  cr::StringPiece username_piece() const {
     return ComponentStringPiece(parsed_.username);
   }
 
@@ -283,7 +283,7 @@ class CRURL_EXPORT GURL {
   std::string password() const {
     return ComponentString(parsed_.password);
   }
-  crbase::StringPiece password_piece() const {
+  cr::StringPiece password_piece() const {
     return ComponentStringPiece(parsed_.password);
   }
 
@@ -297,7 +297,7 @@ class CRURL_EXPORT GURL {
   std::string host() const {
     return ComponentString(parsed_.host);
   }
-  crbase::StringPiece host_piece() const {
+  cr::StringPiece host_piece() const {
     return ComponentStringPiece(parsed_.host);
   }
 
@@ -310,7 +310,7 @@ class CRURL_EXPORT GURL {
   std::string port() const {
     return ComponentString(parsed_.port);
   }
-  crbase::StringPiece port_piece() const {
+  cr::StringPiece port_piece() const {
     return ComponentStringPiece(parsed_.port);
   }
 
@@ -322,7 +322,7 @@ class CRURL_EXPORT GURL {
   std::string path() const {
     return ComponentString(parsed_.path);
   }
-  crbase::StringPiece path_piece() const {
+  cr::StringPiece path_piece() const {
     return ComponentStringPiece(parsed_.path);
   }
 
@@ -333,7 +333,7 @@ class CRURL_EXPORT GURL {
   std::string query() const {
     return ComponentString(parsed_.query);
   }
-  crbase::StringPiece query_piece() const {
+  cr::StringPiece query_piece() const {
     return ComponentStringPiece(parsed_.query);
   }
 
@@ -345,7 +345,7 @@ class CRURL_EXPORT GURL {
   std::string ref() const {
     return ComponentString(parsed_.ref);
   }
-  crbase::StringPiece ref_piece() const {
+  cr::StringPiece ref_piece() const {
     return ComponentStringPiece(parsed_.ref);
   }
 
@@ -379,7 +379,7 @@ class CRURL_EXPORT GURL {
   // scheme. This call is more efficient than getting the host and check
   // whether host has the specific domain or not because no copies or
   // object constructions are done.
-  bool DomainIs(crbase::StringPiece lower_ascii_domain) const;
+  bool DomainIs(cr::StringPiece lower_ascii_domain) const;
 
   // Swaps the contents of this GURL object with |other|, without doing
   // any memory allocations.
@@ -417,11 +417,10 @@ class CRURL_EXPORT GURL {
       return std::string();
     return std::string(spec_, comp.begin, comp.len);
   }
-  crbase::StringPiece ComponentStringPiece(
-      const crurl::Component& comp) const {
+  cr::StringPiece ComponentStringPiece(const crurl::Component& comp) const {
     if (comp.len <= 0)
-      return crbase::StringPiece();
-    return crbase::StringPiece(&spec_[comp.begin], comp.len);
+      return cr::StringPiece();
+    return cr::StringPiece(&spec_[comp.begin], comp.len);
   }
 
   // The actual text of the URL, in canonical ASCII form.

@@ -17,7 +17,7 @@
 #include "crbase/strings/utf_string_conversions.h"
 #include "crbase/third_party/double-conversion/double-conversion.h"
 
-namespace crbase {
+namespace cr {
 
 namespace {
 
@@ -522,4 +522,4 @@ bool HexStringToBytes(const StringPiece& input, std::vector<uint8_t>* output) {
   return HexStringToBytesT(input, output);
 }
 
-}  // namespace crbase
+}  // namespace cr

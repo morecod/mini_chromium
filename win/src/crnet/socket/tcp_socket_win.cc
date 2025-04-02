@@ -147,7 +147,7 @@ void CheckSupportAndMaybeEnableTCPFastOpen(bool user_enabled) {}
 // destroyed while an operation is in progress, the Core is detached and it
 // lives until the operation completes and the OS doesn't reference any resource
 // declared on this class anymore.
-class TCPSocketWin::Core : public crbase::RefCounted<Core> {
+class TCPSocketWin::Core : public cr::RefCounted<Core> {
  public:
   Core(const Core&) = delete;
   Core& operator=(const Core&) = delete;
@@ -168,17 +168,17 @@ class TCPSocketWin::Core : public crbase::RefCounted<Core> {
   OVERLAPPED write_overlapped_;
 
   // The buffers used in Read() and Write().
-  crbase::scoped_refptr<IOBuffer> read_iobuffer_;
-  crbase::scoped_refptr<IOBuffer> write_iobuffer_;
+  cr::scoped_refptr<IOBuffer> read_iobuffer_;
+  cr::scoped_refptr<IOBuffer> write_iobuffer_;
   int read_buffer_length_;
   int write_buffer_length_;
 
   bool non_blocking_reads_initialized_;
 
  private:
-  friend class crbase::RefCounted<Core>;
+  friend class cr::RefCounted<Core>;
 
-  class ReadDelegate : public crbase::win::ObjectWatcher::Delegate {
+  class ReadDelegate : public cr::win::ObjectWatcher::Delegate {
    public:
     explicit ReadDelegate(Core* core) : core_(core) {}
     ~ReadDelegate() override {}
@@ -190,12 +190,12 @@ class TCPSocketWin::Core : public crbase::RefCounted<Core> {
     Core* const core_;
   };
 
-  class WriteDelegate : public crbase::win::ObjectWatcher::Delegate {
+  class WriteDelegate : public cr::win::ObjectWatcher::Delegate {
    public:
     explicit WriteDelegate(Core* core) : core_(core) {}
     ~WriteDelegate() override {}
 
-    // crbase::ObjectWatcher::Delegate methods:
+    // cr::ObjectWatcher::Delegate methods:
     void OnObjectSignaled(HANDLE object) override;
 
    private:
@@ -213,9 +213,9 @@ class TCPSocketWin::Core : public crbase::RefCounted<Core> {
   WriteDelegate writer_;
 
   // |read_watcher_| watches for events from Connect() and Read().
-  crbase::win::ObjectWatcher read_watcher_;
+  cr::win::ObjectWatcher read_watcher_;
   // |write_watcher_| watches for events from Write();
-  crbase::win::ObjectWatcher write_watcher_;
+  cr::win::ObjectWatcher write_watcher_;
 
   ///DISALLOW_COPY_AND_ASSIGN(Core);
 };
@@ -615,7 +615,7 @@ void TCPSocketWin::SetDefaultOptionsForClient() {
   //    http://blogs.msdn.com/wndp/archive/2006/05/05/Winhec-blog-tcpip-2.aspx
   // Since Vista's auto-tune is better than any static value we can could set,
   // only change these on pre-vista machines.
-  if (crbase::win::GetVersion() < crbase::win::Version::VISTA) {
+  if (cr::win::GetVersion() < cr::win::Version::VISTA) {
     const int32_t kSocketBufferSize = 64 * 1024;
     SetSocketReceiveBufferSize(socket_, kSocketBufferSize);
     SetSocketSendBufferSize(socket_, kSocketBufferSize);
@@ -727,7 +727,7 @@ void TCPSocketWin::Close() {
 }
 
 void TCPSocketWin::DetachFromThread() {
-  crbase::NonThreadSafe::DetachFromThread();
+  cr::NonThreadSafe::DetachFromThread();
 }
 
 ///void TCPSocketWin::StartLoggingMultipleConnectAttempts(
@@ -796,7 +796,7 @@ void TCPSocketWin::OnObjectSignaled(HANDLE object) {
     if (result != ERR_IO_PENDING) {
       accept_socket_ = NULL;
       accept_address_ = NULL;
-      crbase::ResetAndReturn(&accept_callback_).Run(result);
+      cr::ResetAndReturn(&accept_callback_).Run(result);
     }
   } else {
     // This happens when a client opens a connection and closes it before we
@@ -985,7 +985,7 @@ void TCPSocketWin::DidCompleteConnect() {
   ///    FROM_HERE_WITH_EXPLICIT_FUNCTION(
   ///        "462784 TCPSocketWin::DidCompleteConnect -> read_callback_"));
   CR_DCHECK_NE(result, ERR_IO_PENDING);
-  crbase::ResetAndReturn(&read_callback_).Run(result);
+  cr::ResetAndReturn(&read_callback_).Run(result);
 }
 
 void TCPSocketWin::DidCompleteWrite() {
@@ -1022,7 +1022,7 @@ void TCPSocketWin::DidCompleteWrite() {
   core_->write_iobuffer_ = NULL;
 
   CR_DCHECK_NE(rv, ERR_IO_PENDING);
-  crbase::ResetAndReturn(&write_callback_).Run(rv);
+  cr::ResetAndReturn(&write_callback_).Run(rv);
 }
 
 void TCPSocketWin::DidSignalRead() {
@@ -1073,10 +1073,10 @@ void TCPSocketWin::DidSignalRead() {
   core_->read_buffer_length_ = 0;
 
   CR_DCHECK_NE(rv, ERR_IO_PENDING);
-  crbase::ResetAndReturn(&read_callback_).Run(rv);
+  cr::ResetAndReturn(&read_callback_).Run(rv);
 }
 
-bool TCPSocketWin::GetEstimatedRoundTripTime(crbase::TimeDelta* out_rtt) const {
+bool TCPSocketWin::GetEstimatedRoundTripTime(cr::TimeDelta* out_rtt) const {
   CR_DCHECK(out_rtt);
   // TODO(bmcquade): Consider implementing using
   // GetPerTcpConnectionEStats/GetPerTcp6ConnectionEStats.

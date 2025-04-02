@@ -40,7 +40,7 @@ namespace crnet {
 // is destroyed while an operation is in progress, the Core is detached and it
 // lives until the operation completes and the OS doesn't reference any resource
 // declared on this class anymore.
-class UDPSocketWin::Core : public crbase::RefCounted<Core> {
+class UDPSocketWin::Core : public cr::RefCounted<Core> {
  public:
   Core(const Core&) = delete;
   Core& operator=(const Core&) = delete;
@@ -59,16 +59,16 @@ class UDPSocketWin::Core : public crbase::RefCounted<Core> {
   OVERLAPPED write_overlapped_;
 
   // The buffers used in Read() and Write().
-  crbase::scoped_refptr<IOBuffer> read_iobuffer_;
-  crbase::scoped_refptr<IOBuffer> write_iobuffer_;
+  cr::scoped_refptr<IOBuffer> read_iobuffer_;
+  cr::scoped_refptr<IOBuffer> write_iobuffer_;
 
   // The address storage passed to WSARecvFrom().
   SockaddrStorage recv_addr_storage_;
 
  private:
-  friend class crbase::RefCounted<Core>;
+  friend class cr::RefCounted<Core>;
 
-  class ReadDelegate : public crbase::win::ObjectWatcher::Delegate {
+  class ReadDelegate : public cr::win::ObjectWatcher::Delegate {
    public:
     explicit ReadDelegate(Core* core) : core_(core) {}
     ~ReadDelegate() override {}
@@ -80,7 +80,7 @@ class UDPSocketWin::Core : public crbase::RefCounted<Core> {
     Core* const core_;
   };
 
-  class WriteDelegate : public crbase::win::ObjectWatcher::Delegate {
+  class WriteDelegate : public cr::win::ObjectWatcher::Delegate {
    public:
     explicit WriteDelegate(Core* core) : core_(core) {}
     ~WriteDelegate() override {}
@@ -103,9 +103,9 @@ class UDPSocketWin::Core : public crbase::RefCounted<Core> {
   WriteDelegate writer_;
 
   // |read_watcher_| watches for events from Read().
-  crbase::win::ObjectWatcher read_watcher_;
+  cr::win::ObjectWatcher read_watcher_;
   // |write_watcher_| watches for events from Write();
-  crbase::win::ObjectWatcher write_watcher_;
+  cr::win::ObjectWatcher write_watcher_;
 
   ///DISALLOW_COPY_AND_ASSIGN(Core);
 };
@@ -185,7 +185,7 @@ QwaveAPI::QwaveAPI() : qwave_supported_(false) {
 }
 
 QwaveAPI& QwaveAPI::Get() {
-  static crbase::LazyInstance<QwaveAPI>::Leaky lazy_qwave =
+  static cr::LazyInstance<QwaveAPI>::Leaky lazy_qwave =
       CR_LAZY_INSTANCE_INITIALIZER;
   return lazy_qwave.Get();
 }
@@ -324,7 +324,7 @@ void UDPSocketWin::Close() {
   recv_from_address_ = NULL;
   write_callback_.Reset();
 
-  crbase::TimeTicks start_time = crbase::TimeTicks::Now();
+  cr::TimeTicks start_time = cr::TimeTicks::Now();
   closesocket(socket_);
   ///UMA_HISTOGRAM_TIMES("Net.UDPSocketWinClose",
   ///                    base::TimeTicks::Now() - start_time);
@@ -1191,7 +1191,7 @@ int UDPSocketWin::SetDiffServCodePoint(DiffServCodePoint dscp) {
 }
 
 void UDPSocketWin::DetachFromThread() {
-  crbase::NonThreadSafe::DetachFromThread();
+  cr::NonThreadSafe::DetachFromThread();
 }
 
 void UDPSocketWin::UseNonBlockingIO() {

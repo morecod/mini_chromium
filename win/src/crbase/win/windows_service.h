@@ -12,7 +12,7 @@
 #include "crbase/win/scoped_sc_handle.h"
 #include "crbase/macros.h"
 
-namespace crbase {
+namespace cr {
 namespace win {
 
 class WindowsService {
@@ -20,7 +20,7 @@ class WindowsService {
   WindowsService(const WindowsService&) = delete;
   WindowsService& operator=(const WindowsService&) = delete;
 
-  WindowsService(const crbase::StringPiece16& service_name);
+  WindowsService(const cr::StringPiece16& service_name);
   virtual ~WindowsService();
 
   // Creates a service object and adds it to the specified service control
@@ -29,8 +29,8 @@ class WindowsService {
   // |service_type| : see define from SERVICE_KERNEL_DRIVER
   // |start_type|   : see define from SERVICE_AUTO_START
   // |error_control|: see define from SERVICE_ERROR_NORMAL
-  DWORD InstallService(const crbase::FilePath& service_binary_path,
-                       const crbase::StringPiece16& display_name,
+  DWORD InstallService(const cr::FilePath& service_binary_path,
+                       const cr::StringPiece16& display_name,
                        DWORD service_type,
                        DWORD start_type,
                        DWORD error_control,
@@ -100,6 +100,6 @@ class WindowsService {
 };
 
 }  // namespace win
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_SRC_CRBASE_WIN_OS_SERVICE_MANAGER_H_

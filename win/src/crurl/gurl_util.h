@@ -82,13 +82,13 @@ CRURL_EXPORT bool GetValueForKeyInQuery(const GURL& url,
 
 
 // Returns the hostname by trimming the ending dot, if one exists.
-CRURL_EXPORT std::string TrimEndingDot(const crbase::StringPiece& host);
+CRURL_EXPORT std::string TrimEndingDot(const cr::StringPiece& host);
 
 // Extracts the unescaped username/password from |url|, saving the results
 // into |*username| and |*password|.
 CRURL_EXPORT void GetIdentityFromURL(const GURL& url,
-                                     crbase::string16* username,
-                                     crbase::string16* password);
+                                     cr::string16* username,
+                                     cr::string16* password);
 
 }  // namespace crurl
 

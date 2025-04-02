@@ -11,7 +11,7 @@
 #include "crbase/functional/callback_forward.h"
 #include "crbase/tracing/location.h"
 
-namespace crbase {
+namespace cr {
 namespace internal {
 
 // Inherit from this in a class that implements PostTask appropriately
@@ -21,8 +21,8 @@ namespace internal {
 // MessageLoop.
 //
 // If you're looking for a concrete implementation of
-// PostTaskAndReply, you probably want crbase::SingleThreadTaskRunner, or you
-// may want crbase::WorkerPool.
+// PostTaskAndReply, you probably want cr::SingleThreadTaskRunner, or you
+// may want cr::WorkerPool.
 class PostTaskAndReplyImpl {
  public:
   virtual ~PostTaskAndReplyImpl() = default;
@@ -39,6 +39,6 @@ class PostTaskAndReplyImpl {
 };
 
 }  // namespace internal
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_SRC_CRBASE_THREADING_POST_TASK_AND_REPLY_IMPL_H_

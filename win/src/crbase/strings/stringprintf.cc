@@ -13,7 +13,7 @@
 #include "crbase/strings/string_util.h"
 #include "crbase/strings/utf_string_conversions.h"
 
-namespace crbase {
+namespace cr {
 
 namespace {
 
@@ -27,14 +27,14 @@ inline int vsnprintfT(char* buffer,
                       size_t buf_size,
                       const char* format,
                       va_list argptr) {
-  return crbase::vsnprintf(buffer, buf_size, format, argptr);
+  return cr::vsnprintf(buffer, buf_size, format, argptr);
 }
 
 inline int vsnprintfT(wchar_t* buffer,
                       size_t buf_size,
                       const wchar_t* format,
                       va_list argptr) {
-  return crbase::vswprintf(buffer, buf_size, format, argptr);
+  return cr::vswprintf(buffer, buf_size, format, argptr);
 }
 
 // Templatized backend for StringPrintF/StringAppendF. This does not finalize
@@ -163,4 +163,4 @@ void StringAppendV(std::wstring* dst, const wchar_t* format, va_list ap) {
   StringAppendVT(dst, format, ap);
 }
 
-}  // namespace crbase
+}  // namespace cr

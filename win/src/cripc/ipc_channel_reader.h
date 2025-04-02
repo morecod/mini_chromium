@@ -108,7 +108,7 @@ class CRIPC_EXPORT ChannelReader {
   virtual void HandleInternalMessage(const Message& msg) = 0;
 
   // Exposed for testing purposes only.
-  crbase::ScopedVector<Message>* get_queued_messages() {
+  cr::ScopedVector<Message>* get_queued_messages() {
     return &queued_messages_;
   }
 
@@ -116,7 +116,7 @@ class CRIPC_EXPORT ChannelReader {
   virtual void DispatchMessage(Message* m);
 
   // Get the process ID for the sender of the message.
-  virtual crbase::ProcessId GetSenderPID() = 0;
+  virtual cr::ProcessId GetSenderPID() = 0;
 
  private:
   // Takes the data received from the IPC channel and translates it into
@@ -164,7 +164,7 @@ class CRIPC_EXPORT ChannelReader {
   // These messages are waiting to be dispatched. If this vector is non-empty,
   // then the front Message must be blocked on receiving an attachment from the
   // AttachmentBroker.
-  crbase::ScopedVector<Message> queued_messages_;
+  cr::ScopedVector<Message> queued_messages_;
 };
 
 }  // namespace internal

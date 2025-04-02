@@ -19,10 +19,10 @@
 #include "crnet/base/completion_once_callback.h"
 #include "crnet/base/net_export.h"
 
-namespace crbase {
+namespace cr {
 class FilePath;
 class TaskRunner;
-}  // namespace crbase
+}  // namespace cr
 
 namespace crnet {
 
@@ -36,12 +36,12 @@ class CRNET_EXPORT FileStream {
   // Creates a FileStream.
   // Uses |task_runner| for asynchronous operations.
   explicit FileStream(
-      const crbase::scoped_refptr<crbase::TaskRunner>& task_runner);
+      const cr::scoped_refptr<cr::TaskRunner>& task_runner);
 
   // Construct a FileStream with an existing valid |file|.
   // Uses |task_runner| for asynchronous operations.
-  FileStream(crbase::File file,
-             const crbase::scoped_refptr<crbase::TaskRunner>& task_runner);
+  FileStream(cr::File file,
+             const cr::scoped_refptr<cr::TaskRunner>& task_runner);
 
   // The underlying file is closed automatically.
   virtual ~FileStream();
@@ -59,7 +59,7 @@ class CRNET_EXPORT FileStream {
   // automatically closed when FileStream is destructed in an asynchronous
   // manner (i.e. the file stream is closed in the background but you don't
   // know when).
-  virtual int Open(const crbase::FilePath& path, int open_flags,
+  virtual int Open(const cr::FilePath& path, int open_flags,
                    CompletionOnceCallback callback);
 
   // Returns ERR_IO_PENDING and closes the file asynchronously, calling

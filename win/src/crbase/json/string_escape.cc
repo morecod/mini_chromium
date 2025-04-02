@@ -17,7 +17,7 @@
 #include "crbase/strings/utf_string_conversions.h"
 #include "crbase/third_party/icu/icu_utf.h"
 
-namespace crbase {
+namespace cr {
 
 namespace {
 
@@ -103,7 +103,7 @@ bool EscapeJSONStringImpl(const S& str, bool put_in_quotes, std::string* dest) {
 
     // Escape non-printing characters.
     if (code_point < 32)
-      crbase::StringAppendF(dest, kU16EscapeFormat, code_point);
+      cr::StringAppendF(dest, kU16EscapeFormat, code_point);
     else
       WriteUnicodeCharacter(code_point, dest);
   }
@@ -166,4 +166,4 @@ std::string EscapeBytesAsInvalidJSONString(const StringPiece& str,
   return dest;
 }
 
-}  // namespace crbase
+}  // namespace cr

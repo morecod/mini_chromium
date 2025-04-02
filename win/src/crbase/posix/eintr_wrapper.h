@@ -13,8 +13,8 @@
 // Don't wrap close calls in HANDLE_EINTR. Use IGNORE_EINTR if the return
 // value of close is significant. See http://crbug.com/269623.
 
-#ifndef MINI_CHROMIUM_CRBASE_POSIX_EINTR_WRAPPER_H_
-#define MINI_CHROMIUM_CRBASE_POSIX_EINTR_WRAPPER_H_
+#ifndef MINI_CHROMIUM_SRC_CRBASE_POSIX_EINTR_WRAPPER_H_
+#define MINI_CHROMIUM_SRC_CRBASE_POSIX_EINTR_WRAPPER_H_
 
 #include "crbase/build_config.h"
 
@@ -64,4 +64,4 @@
 
 #endif  // MINI_CHROMIUM_OS_POSIX
 
-#endif  // MINI_CHROMIUM_CRBASE_POSIX_EINTR_WRAPPER_H_
+#endif  // MINI_CHROMIUM_SRC_CRBASE_POSIX_EINTR_WRAPPER_H_

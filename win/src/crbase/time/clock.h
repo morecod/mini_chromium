@@ -8,7 +8,7 @@
 #include "crbase/base_export.h"
 #include "crbase/time/time.h"
 
-namespace crbase {
+namespace cr {
 
 // A Clock is an interface for objects that vend Times.  It is
 // intended to be able to test the behavior of classes with respect to
@@ -35,6 +35,6 @@ class CRBASE_EXPORT Clock {
   virtual Time Now() const = 0;
 };
 
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_SRC_CRBASE_TIME_CLOCK_H_

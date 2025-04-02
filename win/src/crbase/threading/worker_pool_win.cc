@@ -13,11 +13,11 @@
 ///#include "crbase/trace_event/trace_event.h"
 #include "crbase/tracing/tracked_objects.h"
 
-namespace crbase {
+namespace cr {
 
 namespace {
 
-crbase::LazyInstance<ThreadLocalBoolean>::Leaky
+cr::LazyInstance<ThreadLocalBoolean>::Leaky
     g_worker_pool_running_on_this_thread = CR_LAZY_INSTANCE_INITIALIZER;
 
 DWORD CALLBACK WorkItemCallback(void* param) {
@@ -71,4 +71,4 @@ bool WorkerPool::RunsTasksOnCurrentThread() {
   return g_worker_pool_running_on_this_thread.Get().Get();
 }
 
-}  // namespace crbase
+}  // namespace cr

@@ -12,7 +12,7 @@
 
 #include "crbase/logging.h"
 
-namespace crbase {
+namespace cr {
 namespace {
 
 // For each character in characters_wanted, sets the index corresponding
@@ -466,4 +466,4 @@ StringPiece16 substr(const StringPiece16& self,
 }
 
 }  // namespace internal
-}  // namespace crbase
+}  // namespace cr

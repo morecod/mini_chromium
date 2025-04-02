@@ -13,7 +13,7 @@
 #include "crbase/strings/string16.h"
 #include "crbase/strings/string_piece.h"
 
-namespace crbase {
+namespace cr {
 
 enum WhitespaceHandling {
   KEEP_WHITESPACE,
@@ -41,8 +41,8 @@ enum SplitResult {
 //
 // To split on either commas or semicolons, keeping all whitespace:
 //
-//   std::vector<std::string> tokens = crbase::SplitString(
-//       input, ",;", crbase::KEEP_WHITESPACE, crbase::SPLIT_WANT_ALL);
+//   std::vector<std::string> tokens = cr::SplitString(
+//       input, ",;", cr::KEEP_WHITESPACE, cr::SPLIT_WANT_ALL);
 CRBASE_EXPORT std::vector<std::string> SplitString(
     StringPiece input,
     StringPiece separators,
@@ -62,9 +62,9 @@ CRBASE_EXPORT std::vector<string16> SplitString(
 // To iterate through all whitespace-separated tokens in an input string:
 //
 //   for (const auto& cur :
-//        crbase::SplitStringPiece(input, crbase::kWhitespaceASCII,
-//                                 crbase::KEEP_WHITESPACE,
-//                                 crbase::SPLIT_WANT_NONEMPTY)) {
+//        cr::SplitStringPiece(input, cr::kWhitespaceASCII,
+//                             cr::KEEP_WHITESPACE,
+//                             cr::SPLIT_WANT_NONEMPTY)) {
 //     ...
 CRBASE_EXPORT std::vector<StringPiece> SplitStringPiece(
     StringPiece input,
@@ -109,9 +109,9 @@ CRBASE_EXPORT void SplitStringUsingSubstr(StringPiece input,
 // To iterate through all newline-separated tokens in an input string:
 //
 //   for (const auto& cur :
-//        crbase::SplitStringUsingSubstr(input, "\r\n",
-//                                       crbase::KEEP_WHITESPACE,
-//                                       crbase::SPLIT_WANT_NONEMPTY)) {
+//        cr::SplitStringUsingSubstr(input, "\r\n",
+//                                   cr::KEEP_WHITESPACE,
+//                                   cr::SPLIT_WANT_NONEMPTY)) {
 //     ...
 CRBASE_EXPORT std::vector<StringPiece16> SplitStringPieceUsingSubstr(
     StringPiece16 input,
@@ -124,6 +124,6 @@ CRBASE_EXPORT std::vector<StringPiece> SplitStringPieceUsingSubstr(
     WhitespaceHandling whitespace,
     SplitResult result_type);
 
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_SRC_CRBASE_STRINGS_STRING_SPLIT_H_

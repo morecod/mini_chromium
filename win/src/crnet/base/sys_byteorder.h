@@ -21,7 +21,7 @@ namespace crnet {
 // returns the result.
 inline uint16_t NetToHost16(uint16_t x) {
 #if defined(MINI_CHROMIUM_ARCH_CPU_LITTLE_ENDIAN)
-  return crbase::ByteSwap(x);
+  return cr::ByteSwap(x);
 #else
   return x;
 #endif
@@ -29,7 +29,7 @@ inline uint16_t NetToHost16(uint16_t x) {
 
 inline uint32_t NetToHost32(uint32_t x) {
 #if defined(MINI_CHROMIUM_ARCH_CPU_LITTLE_ENDIAN)
-  return crbase::ByteSwap(x);
+  return cr::ByteSwap(x);
 #else
   return x;
 #endif
@@ -37,7 +37,7 @@ inline uint32_t NetToHost32(uint32_t x) {
 
 inline uint64_t NetToHost64(uint64_t x) {
 #if defined(MINI_CHROMIUM_ARCH_CPU_LITTLE_ENDIAN)
-  return crbase::ByteSwap(x);
+  return cr::ByteSwap(x);
 #else
   return x;
 #endif
@@ -47,7 +47,7 @@ inline uint64_t NetToHost64(uint64_t x) {
 // returns the result.
 inline uint16_t HostToNet16(uint16_t x) {
 #if defined(MINI_CHROMIUM_ARCH_CPU_LITTLE_ENDIAN)
-  return crbase::ByteSwap(x);
+  return cr::ByteSwap(x);
 #else
   return x;
 #endif
@@ -55,7 +55,7 @@ inline uint16_t HostToNet16(uint16_t x) {
 
 inline uint32_t HostToNet32(uint32_t x) {
 #if defined(MINI_CHROMIUM_ARCH_CPU_LITTLE_ENDIAN)
-  return crbase::ByteSwap(x);
+  return cr::ByteSwap(x);
 #else
   return x;
 #endif
@@ -63,7 +63,7 @@ inline uint32_t HostToNet32(uint32_t x) {
 
 inline uint64_t HostToNet64(uint64_t x) {
 #if defined(MINI_CHROMIUM_ARCH_CPU_LITTLE_ENDIAN)
-  return crbase::ByteSwap(x);
+  return cr::ByteSwap(x);
 #else
   return x;
 #endif

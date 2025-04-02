@@ -60,7 +60,7 @@
 #include <pthread.h>
 #endif
 
-namespace crbase {
+namespace cr {
 namespace internal {
 
 // Helper functions that abstract the cross-platform APIs.  Do not use directly.
@@ -129,6 +129,6 @@ class ThreadLocalBoolean {
   ThreadLocalPointer<void> tlp_;
 };
 
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_SRC_CRBASE_THREADING_THREAD_LOCAL_H_

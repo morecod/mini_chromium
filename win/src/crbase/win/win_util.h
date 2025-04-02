@@ -33,7 +33,7 @@
 struct IPropertyStore;
 struct _tagpropertykey;
 
-namespace crbase {
+namespace cr {
 namespace win {
 
 typedef _tagpropertykey PROPERTYKEY;
@@ -100,18 +100,18 @@ CRBASE_EXPORT bool SetAppIdForPropertyStore(IPropertyStore* property_store,
 // Adds the specified |command| using the specified |name| to the AutoRun key.
 // |root_key| could be HKCU or HKLM or the root of any user hive.
 CRBASE_EXPORT bool AddCommandToAutoRun(HKEY root_key, 
-                                       const crbase::string16& name,
-                                       const crbase::string16& command);
+                                       const cr::string16& name,
+                                       const cr::string16& command);
 // Removes the command specified by |name| from the AutoRun key. |root_key|
 // could be HKCU or HKLM or the root of any user hive.
 CRBASE_EXPORT bool RemoveCommandFromAutoRun(HKEY root_key, 
-                                            const crbase::string16& name);
+                                            const cr::string16& name);
 
 // Reads the command specified by |name| from the AutoRun key. |root_key|
 // could be HKCU or HKLM or the root of any user hive. Used for unit-tests.
 CRBASE_EXPORT bool ReadCommandFromAutoRun(HKEY root_key,
-                                          const crbase::string16& name,
-                                          crbase::string16* command);
+                                          const cr::string16& name,
+                                          cr::string16* command);
 
 // Sets whether to crash the process during exit. This is inspected by DLLMain
 // and used to intercept unexpected terminations of the process (via calls to
@@ -162,6 +162,6 @@ CRBASE_EXPORT void SetDomainStateForTesting(bool state);
 CRBASE_EXPORT bool MaybeHasSHA256Support();
 
 }  // namespace win
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_SRC_CRBASE_WIN_WIN_UTIL_H_

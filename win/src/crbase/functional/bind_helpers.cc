@@ -6,9 +6,9 @@
 
 #include "crbase/functional/callback.h"
 
-namespace crbase {
+namespace cr {
 
 void DoNothing() {
 }
 
-}  // namespace crbase
+}  // namespace cr

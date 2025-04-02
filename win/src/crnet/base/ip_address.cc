@@ -45,7 +45,7 @@ std::string IPAddress::ToString() const {
 }
 
 // static
-bool IPAddress::FromIPLiteral(const crbase::StringPiece& ip_literal,
+bool IPAddress::FromIPLiteral(const cr::StringPiece& ip_literal,
                               IPAddress* ip_address) {
   std::vector<uint8_t> number;
   if (!ParseIPLiteralToNumber(ip_literal, &number))

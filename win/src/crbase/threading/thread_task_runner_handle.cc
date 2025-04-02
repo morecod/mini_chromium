@@ -8,11 +8,11 @@
 #include "crbase/threading/single_thread_task_runner.h"
 #include "crbase/threading/thread_local.h"
 
-namespace crbase {
+namespace cr {
 
 namespace {
 
-crbase::LazyInstance<crbase::ThreadLocalPointer<ThreadTaskRunnerHandle> >::Leaky
+cr::LazyInstance<cr::ThreadLocalPointer<ThreadTaskRunnerHandle> >::Leaky
     lazy_tls_ptr = CR_LAZY_INSTANCE_INITIALIZER;
 
 }  // namespace

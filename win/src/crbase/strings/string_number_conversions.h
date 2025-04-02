@@ -27,7 +27,7 @@
 // write code that doesn't properly handle the error conditions.
 // ----------------------------------------------------------------------------
 
-namespace crbase {
+namespace cr {
 
 // Number -> string conversions ------------------------------------------------
 
@@ -135,6 +135,6 @@ CRBASE_EXPORT bool HexStringToUInt64(const StringPiece& input, uint64_t* output)
 CRBASE_EXPORT bool HexStringToBytes(const StringPiece& input,
                                     std::vector<uint8_t>* output);
 
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_SRC_CRBASE_STRINGS_STRING_NUMBER_CONVERSIONS_H_

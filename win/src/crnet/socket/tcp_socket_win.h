@@ -27,8 +27,8 @@ class IOBuffer;
 class IPEndPoint;
 
 class CRNET_EXPORT TCPSocketWin 
-    : MSVC_NON_EXPORTED_BASE(public crbase::NonThreadSafe),
-                             public crbase::win::ObjectWatcher::Delegate  {
+    : MSVC_NON_EXPORTED_BASE(public cr::NonThreadSafe),
+                             public cr::win::ObjectWatcher::Delegate  {
  public:
   ///TCPSocketWin(NetLog* net_log, const NetLog::Source& source);
   // Added by johao.
@@ -84,7 +84,7 @@ class CRNET_EXPORT TCPSocketWin
 
   // Gets the estimated RTT. Returns false if the RTT is
   // unavailable. May also return false when estimated RTT is 0.
-  bool GetEstimatedRoundTripTime(crbase::TimeDelta* out_rtt) const
+  bool GetEstimatedRoundTripTime(cr::TimeDelta* out_rtt) const
       CR_WARN_UNUSED_RESULT;
 
   void Close();
@@ -119,7 +119,7 @@ class CRNET_EXPORT TCPSocketWin
  private:
   class Core;
 
-  // crbase::ObjectWatcher::Delegate implementation.
+  // cr::ObjectWatcher::Delegate implementation.
   void OnObjectSignaled(HANDLE object) override;
 
   int AcceptInternal(std::unique_ptr<TCPSocketWin>* socket,
@@ -139,7 +139,7 @@ class CRNET_EXPORT TCPSocketWin
   SOCKET socket_;
 
   HANDLE accept_event_;
-  crbase::win::ObjectWatcher accept_watcher_;
+  cr::win::ObjectWatcher accept_watcher_;
 
   std::unique_ptr<TCPSocketWin>* accept_socket_;
   IPEndPoint* accept_address_;
@@ -153,7 +153,7 @@ class CRNET_EXPORT TCPSocketWin
   // The core of the socket that can live longer than the socket itself. We pass
   // resources to the Windows async IO functions and we have to make sure that
   // they are not destroyed while the OS still references them.
-  crbase::scoped_refptr<Core> core_;
+  cr::scoped_refptr<Core> core_;
 
   // External callback; called when connect or read is complete.
   CompletionOnceCallback read_callback_;

@@ -8,7 +8,7 @@
 #include "crbase/files/file_util.h"
 #include "crbase/path_service.h"
 
-namespace crbase {
+namespace cr {
 
 bool PathProvider(int key, FilePath* result) {
   // NOTE: DIR_CURRENT is a special case in PathService::Get
@@ -34,4 +34,4 @@ bool PathProvider(int key, FilePath* result) {
   }
 }
 
-}  // namespace crbase
+}  // namespace cr

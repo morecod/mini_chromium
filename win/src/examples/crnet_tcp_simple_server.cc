@@ -91,14 +91,14 @@ int main(int argc, char* argv) {
 
   InitLogging();
 
-  crbase::AtExitManager at_exit_manager;
-  crbase::MessageLoop message_loop(crbase::MessageLoop::TYPE_IO);
+  cr::AtExitManager at_exit_manager;
+  cr::MessageLoop message_loop(cr::MessageLoop::TYPE_IO);
   
   TCPSimpleServer server;
   if (!server.SetUp())
     return 1;
 
-  crbase::RunLoop run_loop;
+  cr::RunLoop run_loop;
   run_loop.Run();
   return 0;
 }

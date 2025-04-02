@@ -30,9 +30,9 @@
 //   MyWidget(const MyWidget&) = delete;
 //   MyWidget& operator=(const MyWidget&) = delete;
 //
-//   typedef crbase::Callback<void(const Foo&)> OnFooCallback;
+//   typedef cr::Callback<void(const Foo&)> OnFooCallback;
 //
-//   std::unique_ptr<crbase::CallbackList<void(const Foo&)>::Subscription>
+//   std::unique_ptr<cr::CallbackList<void(const Foo&)>::Subscription>
 //   RegisterCallback(const OnFooCallback& cb) {
 //     return callback_list_.Add(cb);
 //   }
@@ -42,7 +42,7 @@
 //      callback_list_.Notify(foo);
 //   }
 //
-//   crbase::RepeatingCallbackList<void(const Foo&)> callback_list_;
+//   cr::RepeatingCallbackList<void(const Foo&)> callback_list_;
 // };
 //
 //
@@ -53,7 +53,7 @@
 //
 //   MyWidgetListener::MyWidgetListener() {
 //     foo_subscription_ = MyWidget::GetCurrent()->RegisterCallback(
-//             crbase::BindRepeating(&MyWidgetListener::OnFoo, this)));
+//             cr::BindRepeating(&MyWidgetListener::OnFoo, this)));
 //   }
 //
 //   MyWidgetListener::~MyWidgetListener() {
@@ -66,12 +66,12 @@
 //     // Do something.
 //   }
 //
-//   std::unique_ptr<crbase::RepeatingCallbackList<void(const Foo&)>::
+//   std::unique_ptr<cr::RepeatingCallbackList<void(const Foo&)>::
 //                       Subscription>
 //       foo_subscription_;
 // };
 
-namespace crbase {
+namespace cr {
 
 namespace internal {
 
@@ -230,6 +230,6 @@ class RepeatingCallbackList<void(Args...)>
   }
 };
 
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_CRBASE_FUNCTIONAL_CALLBACK_LIST_H_

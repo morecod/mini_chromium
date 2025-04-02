@@ -18,7 +18,7 @@
 //
 // See //docs/callback.md for documentation.
 
-namespace crbase {
+namespace cr {
 
 namespace internal {
 
@@ -93,6 +93,6 @@ class Callback<R(Args...), copy_mode, repeat_mode>
   }
 };
 
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_CRBASE_FUNCTIONAL_CALLBACK_H_

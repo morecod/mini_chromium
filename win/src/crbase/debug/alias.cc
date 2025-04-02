@@ -4,7 +4,7 @@
 
 #include "crbase/debug/alias.h"
 
-namespace crbase {
+namespace cr {
 namespace debug {
 
 #if defined(_MSC_VER)
@@ -19,4 +19,4 @@ void Alias(const void* var) {
 #endif
 
 }  // namespace debug
-}  // namespace crbase
+}  // namespace cr

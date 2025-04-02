@@ -28,7 +28,7 @@
 #include <windows.h>
 #endif
 
-namespace crbase {
+namespace cr {
 
 class CommandLine;
 
@@ -263,6 +263,6 @@ CRBASE_EXPORT pid_t ForkWithFlags(unsigned long flags, pid_t* ptid,
                                   pid_t* ctid);
 #endif
 
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_SRC_CRBASE_PROCESS_LAUNCH_H_

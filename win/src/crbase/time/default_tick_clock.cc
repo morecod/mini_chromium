@@ -4,7 +4,7 @@
 
 #include "crbase/time/default_tick_clock.h"
 
-namespace crbase {
+namespace cr {
 
 DefaultTickClock::~DefaultTickClock() {}
 
@@ -12,4 +12,4 @@ TimeTicks DefaultTickClock::NowTicks() const {
   return TimeTicks::Now();
 }
 
-}  // namespace crbase
+}  // namespace cr

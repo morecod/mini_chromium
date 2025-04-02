@@ -36,17 +36,17 @@
 
 #if defined(CR_WCHAR_T_IS_UTF16)
 
-namespace crbase {
+namespace cr {
 
 typedef wchar_t char16;
 typedef std::wstring string16;
 typedef std::char_traits<wchar_t> string16_char_traits;
 
-}  // namespace crbase
+}  // namespace cr
 
 #elif defined(CR_WCHAR_T_IS_UTF32)
 
-namespace crbase {
+namespace cr {
 
 typedef uint16_t char16;
 
@@ -138,7 +138,7 @@ CRBASE_EXPORT extern std::ostream& operator<<(std::ostream& out,
 // This is required by googletest to print a readable output on test failures.
 CRBASE_EXPORT extern void PrintTo(const string16& str, std::ostream* out);
 
-}  // namespace crbase
+}  // namespace cr
 
 // The string class will be explicitly instantiated only once, in string16.cc.
 //
@@ -180,8 +180,8 @@ CRBASE_EXPORT extern void PrintTo(const string16& str, std::ostream* out);
 // TODO(mark): File this bug with Apple and update this note with a bug number.
 
 extern template
-class CRBASE_EXPORT std::basic_string<crbase::char16, 
-                                      crbase::string16_char_traits>;
+class CRBASE_EXPORT std::basic_string<cr::char16, 
+                                      cr::string16_char_traits>;
 
 #endif  // CR_WCHAR_T_IS_UTF32
 

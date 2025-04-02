@@ -16,7 +16,7 @@
 namespace {
 
 // Global atomic used to guarantee channel IDs are unique.
-crbase::StaticAtomicSequenceNumber g_last_id;
+cr::StaticAtomicSequenceNumber g_last_id;
 
 }  // namespace
 
@@ -31,11 +31,11 @@ std::string Channel::GenerateUniqueRandomChannelID() {
   // the creator, an identifier for the child instance, and a strong random
   // component. The strong random component prevents other processes from
   // hijacking or squatting on predictable channel names.
-  int process_id = crbase::GetCurrentProcId();
-  return crbase::StringPrintf("%d.%u.%d",
+  int process_id = cr::GetCurrentProcId();
+  return cr::StringPrintf("%d.%u.%d",
       process_id,
       g_last_id.GetNext(),
-      crbase::RandInt(0, std::numeric_limits<int32_t>::max()));
+      cr::RandInt(0, std::numeric_limits<int32_t>::max()));
 }
 
 Channel::OutputElement::OutputElement(Message* message)

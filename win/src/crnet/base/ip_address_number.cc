@@ -118,9 +118,9 @@ std::string IPAddressToStringWithPort(const uint8_t* address,
 
   if (address_len == kIPv6AddressSize) {
     // Need to bracket IPv6 addresses since they contain colons.
-    return crbase::StringPrintf("[%s]:%d", address_str.c_str(), port);
+    return cr::StringPrintf("[%s]:%d", address_str.c_str(), port);
   }
-  return crbase::StringPrintf("%s:%d", address_str.c_str(), port);
+  return cr::StringPrintf("%s:%d", address_str.c_str(), port);
 }
 
 std::string IPAddressToString(const IPAddressNumber& addr) {
@@ -159,11 +159,11 @@ bool ParseURLHostnameToNumber(const std::string& hostname,
   return family == crurl::CanonHostInfo::IPV4;
 }
 
-bool ParseIPLiteralToNumber(const crbase::StringPiece& ip_literal,
+bool ParseIPLiteralToNumber(const cr::StringPiece& ip_literal,
                             IPAddressNumber* ip_number) {
   // |ip_literal| could be either a IPv4 or an IPv6 literal. If it contains
   // a colon however, it must be an IPv6 address.
-  if (ip_literal.find(':') != crbase::StringPiece::npos) {
+  if (ip_literal.find(':') != cr::StringPiece::npos) {
     // GURL expects IPv6 hostnames to be surrounded with brackets.
     std::string host_brackets = "[";
     ip_literal.AppendToString(&host_brackets);
@@ -227,8 +227,8 @@ bool ParseCIDRBlock(const std::string& cidr_literal,
   //   <IPv4-literal> "/" <number of bits>
   //   <IPv6-literal> "/" <number of bits>
 
-  std::vector<crbase::StringPiece> parts = crbase::SplitStringPiece(
-      cidr_literal, "/", crbase::TRIM_WHITESPACE, crbase::SPLIT_WANT_ALL);
+  std::vector<cr::StringPiece> parts = cr::SplitStringPiece(
+      cidr_literal, "/", cr::TRIM_WHITESPACE, cr::SPLIT_WANT_ALL);
   if (parts.size() != 2)
     return false;
 
@@ -238,7 +238,7 @@ bool ParseCIDRBlock(const std::string& cidr_literal,
 
   // Parse the prefix length.
   int number_of_bits = -1;
-  if (!crbase::StringToInt(parts[1], &number_of_bits))
+  if (!cr::StringToInt(parts[1], &number_of_bits))
     return false;
 
   // Make sure the prefix length is in a valid range.

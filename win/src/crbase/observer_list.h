@@ -54,13 +54,13 @@
 //     }
 //
 //    private:
-//     crbase::ObserverList<Observer> observer_list_;
+//     cr::ObserverList<Observer> observer_list_;
 //   };
 //
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-namespace crbase {
+namespace cr {
   
 template <typename ObserverType>
 class ObserverListThreadSafe;
@@ -234,7 +234,7 @@ class ObserverList : public ObserverListBase<ObserverType> {
 #define CR_FOR_EACH_OBSERVER(ObserverType, observer_list, func)          \
   do {                                                                   \
     if ((observer_list).might_have_observers()) {                        \
-      crbase::ObserverListBase<ObserverType>::Iterator                   \
+      cr::ObserverListBase<ObserverType>::Iterator                   \
           it_inside_observer_macro(&observer_list);                      \
       ObserverType* obs;                                                 \
       while ((obs = it_inside_observer_macro.GetNext()) != nullptr)      \
@@ -242,6 +242,6 @@ class ObserverList : public ObserverListBase<ObserverType> {
     }                                                                    \
   } while (0)
 
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_SRC_CRBASE_OBSERVER_LIST_H_

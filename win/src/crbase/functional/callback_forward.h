@@ -5,7 +5,7 @@
 #ifndef MINI_CHROMIUM_CRBASE_FUNCTIONAL_CALLBACK_FORWARD_H_
 #define MINI_CHROMIUM_CRBASE_FUNCTIONAL_CALLBACK_FORWARD_H_
 
-namespace crbase {
+namespace cr {
 namespace internal {
 
 // CopyMode is used to control the copyablity of a Callback.
@@ -43,6 +43,6 @@ using RepeatingCallback = Callback<Signature,
 using OnceClosure = OnceCallback<void()>;
 using RepeatingClosure = RepeatingCallback<void()>;
 
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_CRBASE_FUNCTIONAL_CALLBACK_FORWARD_H_

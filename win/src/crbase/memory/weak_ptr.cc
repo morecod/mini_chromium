@@ -4,7 +4,7 @@
 
 #include "crbase/memory/weak_ptr.h"
 
-namespace crbase {
+namespace cr {
 namespace internal {
 
 WeakReference::Flag::Flag() : is_valid_(true) {
@@ -69,4 +69,4 @@ WeakPtrBase::WeakPtrBase(const WeakReference& ref) : ref_(ref) {
 }
 
 }  // namespace internal
-}  // namespace crbase
+}  // namespace cr

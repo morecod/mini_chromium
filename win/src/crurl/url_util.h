@@ -90,7 +90,7 @@ CRURL_EXPORT bool FindAndCompareScheme(const char* str,
                                        int str_len,
                                        const char* compare,
                                        Component* found_scheme);
-CRURL_EXPORT bool FindAndCompareScheme(const crbase::char16* str,
+CRURL_EXPORT bool FindAndCompareScheme(const cr::char16* str,
                                        int str_len,
                                        const char* compare,
                                        Component* found_scheme);
@@ -100,7 +100,7 @@ inline bool FindAndCompareScheme(const std::string& str,
   return FindAndCompareScheme(str.data(), static_cast<int>(str.size()),
                               compare, found_scheme);
 }
-inline bool FindAndCompareScheme(const crbase::string16& str,
+inline bool FindAndCompareScheme(const cr::string16& str,
                                  const char* compare,
                                  Component* found_scheme) {
   return FindAndCompareScheme(str.data(), static_cast<int>(str.size()),
@@ -110,7 +110,7 @@ inline bool FindAndCompareScheme(const crbase::string16& str,
 // Returns true if the given scheme identified by |scheme| within |spec| is in
 // the list of known standard-format schemes (see AddStandardScheme).
 CRURL_EXPORT bool IsStandard(const char* spec, const Component& scheme);
-CRURL_EXPORT bool IsStandard(const crbase::char16* spec, const Component& scheme);
+CRURL_EXPORT bool IsStandard(const cr::char16* spec, const Component& scheme);
 
 // Returns true and sets |type| to the SchemeType of the given scheme
 // identified by |scheme| within |spec| if the scheme is in the list of known
@@ -137,7 +137,7 @@ CRURL_EXPORT bool Canonicalize(const char* spec,
                                CharsetConverter* charset_converter,
                                CanonOutput* output,
                                Parsed* output_parsed);
-CRURL_EXPORT bool Canonicalize(const crbase::char16* spec,
+CRURL_EXPORT bool Canonicalize(const cr::char16* spec,
                                int spec_len,
                                bool trim_path_end,
                                CharsetConverter* charset_converter,
@@ -165,7 +165,7 @@ CRURL_EXPORT bool ResolveRelative(const char* base_spec,
 CRURL_EXPORT bool ResolveRelative(const char* base_spec,
                                   int base_spec_len,
                                   const Parsed& base_parsed,
-                                  const crbase::char16* relative,
+                                  const cr::char16* relative,
                                   int relative_length,
                                   CharsetConverter* charset_converter,
                                   CanonOutput* output,
@@ -186,7 +186,7 @@ CRURL_EXPORT bool ReplaceComponents(
     const char* spec,
     int spec_len,
     const Parsed& parsed,
-    const Replacements<crbase::char16>& replacements,
+    const Replacements<cr::char16>& replacements,
     CharsetConverter* charset_converter,
     CanonOutput* output,
     Parsed* out_parsed);

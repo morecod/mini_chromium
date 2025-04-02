@@ -11,9 +11,9 @@
 #include "crbase/memory/ref_counted.h"
 
 #define CR_SCOPED_COMPTR(Interface) \
-  crbase::win::ScopedComPtr<Interface, &IID_##Interface>
+  cr::win::ScopedComPtr<Interface, &IID_##Interface>
 
-namespace crbase {
+namespace cr {
 namespace win {
 
 // A fairly minimalistic smart class for COM interface pointers.
@@ -168,6 +168,6 @@ class ScopedComPtr : public scoped_refptr<Interface> {
 };
 
 }  // namespace win
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_SRC_CRBASE_WIN_SCOPED_COMPTR_H_

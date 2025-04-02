@@ -22,7 +22,7 @@ struct _EXCEPTION_POINTERS;
 struct _CONTEXT;
 #endif
 
-namespace crbase {
+namespace cr {
 namespace debug {
 
 // Enables stack dump to console output on exception and signals.
@@ -112,6 +112,6 @@ CRBASE_EXPORT char *itoa_r(intptr_t i,
 }  // namespace internal
 
 }  // namespace debug
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_CRBASE_DEBUG_STACK_TRACE_H_

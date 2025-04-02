@@ -8,10 +8,10 @@
 // Note: This algorithm is also in Blink under Source/wtf/StringHasher.h.
 extern "C" uint32_t SuperFastHash(const char* data, int len);
 
-namespace crbase {
+namespace cr {
 
 uint32_t SuperFastHash(const char* data, int len) {
   return ::SuperFastHash(data, len);
 }
 
-}  // namespace crbase
+}  // namespace cr

@@ -13,7 +13,7 @@
 #include "crbase/synchronization/lock.h"
 #include "crbase/threading/platform_thread.h"
 
-namespace crbase {
+namespace cr {
 namespace internal {
 
 class IncomingTaskQueue;
@@ -35,10 +35,10 @@ class CRBASE_EXPORT MessageLoopTaskRunner : public SingleThreadTaskRunner {
   // SingleThreadTaskRunner implementation
   bool PostDelayedTask(const tracked_objects::Location& from_here,
                        OnceClosure task,
-                       crbase::TimeDelta delay) override;
+                       cr::TimeDelta delay) override;
   bool PostNonNestableDelayedTask(const tracked_objects::Location& from_here,
                                   OnceClosure task,
-                                  crbase::TimeDelta delay) override;
+                                  cr::TimeDelta delay) override;
   bool RunsTasksOnCurrentThread() const override;
 
  private:
@@ -55,6 +55,6 @@ class CRBASE_EXPORT MessageLoopTaskRunner : public SingleThreadTaskRunner {
 };
 
 }  // namespace internal
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_SRC_CRBASE_MESSAGE_LOOP_MESSAGE_LOOP_TASK_RUNNER_H_

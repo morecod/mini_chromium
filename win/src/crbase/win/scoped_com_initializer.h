@@ -9,7 +9,7 @@
 #include "crbase/macros.h"
 #include "crbase/logging.h"
 
-namespace crbase {
+namespace cr {
 namespace win {
 
 // Initializes COM in the constructor (STA or MTA), and uninitializes COM in the
@@ -73,6 +73,6 @@ class ScopedCOMInitializer {
 };
 
 }  // namespace win
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_SRC_CRBASE_WIN_SCOPED_COM_INITIALIZER_H_

@@ -17,7 +17,7 @@
 #include "crbase/process/process_iterator.h"
 #include "crbase/win/object_watcher.h"
 
-namespace crbase {
+namespace cr {
 
 namespace {
 
@@ -200,4 +200,4 @@ void EnsureProcessTerminated(Process process) {
       TimeDelta::FromMilliseconds(kWaitInterval));
 }
 
-}  // namespace crbase
+}  // namespace cr

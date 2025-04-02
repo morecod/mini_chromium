@@ -56,28 +56,28 @@ class CRURL_EXPORT StdStringCanonOutput : public CanonOutput {
 template<typename STR>
 class StringPieceReplacements : public Replacements<typename STR::value_type> {
  public:
-  void SetSchemeStr(const crbase::BasicStringPiece<STR>& s) {
+  void SetSchemeStr(const cr::BasicStringPiece<STR>& s) {
     this->SetScheme(s.data(), Component(0, static_cast<int>(s.length())));
   }
-  void SetUsernameStr(const crbase::BasicStringPiece<STR>& s) {
+  void SetUsernameStr(const cr::BasicStringPiece<STR>& s) {
     this->SetUsername(s.data(), Component(0, static_cast<int>(s.length())));
   }
-  void SetPasswordStr(const crbase::BasicStringPiece<STR>& s) {
+  void SetPasswordStr(const cr::BasicStringPiece<STR>& s) {
     this->SetPassword(s.data(), Component(0, static_cast<int>(s.length())));
   }
-  void SetHostStr(const crbase::BasicStringPiece<STR>& s) {
+  void SetHostStr(const cr::BasicStringPiece<STR>& s) {
     this->SetHost(s.data(), Component(0, static_cast<int>(s.length())));
   }
-  void SetPortStr(const crbase::BasicStringPiece<STR>& s) {
+  void SetPortStr(const cr::BasicStringPiece<STR>& s) {
     this->SetPort(s.data(), Component(0, static_cast<int>(s.length())));
   }
-  void SetPathStr(const crbase::BasicStringPiece<STR>& s) {
+  void SetPathStr(const cr::BasicStringPiece<STR>& s) {
     this->SetPath(s.data(), Component(0, static_cast<int>(s.length())));
   }
-  void SetQueryStr(const crbase::BasicStringPiece<STR>& s) {
+  void SetQueryStr(const cr::BasicStringPiece<STR>& s) {
     this->SetQuery(s.data(), Component(0, static_cast<int>(s.length())));
   }
-  void SetRefStr(const crbase::BasicStringPiece<STR>& s) {
+  void SetRefStr(const cr::BasicStringPiece<STR>& s) {
     this->SetRef(s.data(), Component(0, static_cast<int>(s.length())));
   }
 };

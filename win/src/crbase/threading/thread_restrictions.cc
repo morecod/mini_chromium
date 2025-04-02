@@ -10,7 +10,7 @@
 #include "crbase/logging.h"
 #include "crbase/threading/thread_local.h"
 
-namespace crbase {
+namespace cr {
 
 namespace {
 
@@ -81,6 +81,6 @@ bool ThreadRestrictions::SetWaitAllowed(bool allowed) {
   return !previous_disallowed;
 }
 
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // ENABLE_CR_THREAD_RESTRICTIONS

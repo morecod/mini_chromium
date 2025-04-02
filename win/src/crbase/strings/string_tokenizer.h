@@ -10,7 +10,7 @@
 
 #include "crbase/strings/string_piece.h"
 
-namespace crbase {
+namespace cr {
 
 // StringTokenizerT is a simple string tokenizer class.  It works like an
 // iterator that with each step (see the Advance method) updates members that
@@ -147,9 +147,9 @@ class StringTokenizerT {
   const_iterator token_begin() const { return token_begin_; }
   const_iterator token_end() const { return token_end_; }
   str token() const { return str(token_begin_, token_end_); }
-  crbase::StringPiece token_piece() const {
-    return crbase::StringPiece(&*token_begin_,
-                               std::distance(token_begin_, token_end_));
+  cr::StringPiece token_piece() const {
+    return cr::StringPiece(&*token_begin_,
+                           std::distance(token_begin_, token_end_));
   }
 
  private:
@@ -255,6 +255,6 @@ typedef StringTokenizerT<std::wstring, std::wstring::const_iterator>
     WStringTokenizer;
 typedef StringTokenizerT<std::string, const char*> CStringTokenizer;
 
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_SRC_CRBASE_STRINGS_STRING_TOKENIZER_H_

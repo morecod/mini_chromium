@@ -10,7 +10,7 @@
 #include "crbase/base_export.h"
 #include "crbase/strings/string_piece.h"
 
-namespace crbase {
+namespace cr {
 
 // Encodes the input string in base64. The encoding can be done in-place.
 CRBASE_EXPORT void Base64Encode(const StringPiece& input, std::string* output);
@@ -20,6 +20,6 @@ CRBASE_EXPORT void Base64Encode(const StringPiece& input, std::string* output);
 // be done in-place.
 CRBASE_EXPORT bool Base64Decode(const StringPiece& input, std::string* output);
 
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_SRC_CRBASE_CODES_BASE64_H_

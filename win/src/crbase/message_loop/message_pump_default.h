@@ -11,7 +11,7 @@
 #include "crbase/synchronization/waitable_event.h"
 #include "crbase/time/time.h"
 
-namespace crbase {
+namespace cr {
 
 class CRBASE_EXPORT MessagePumpDefault : public MessagePump {
  public:
@@ -38,6 +38,6 @@ class CRBASE_EXPORT MessagePumpDefault : public MessagePump {
   TimeTicks delayed_work_time_;
 };
 
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_SRC_CRBASE_MESSAGE_LOOP_MESSAGE_PUMP_DEFAULT_H_

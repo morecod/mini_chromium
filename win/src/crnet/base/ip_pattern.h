@@ -44,10 +44,10 @@ class CRNET_EXPORT IPPattern {
 
   // IPv6 addresses have 8 components, while IPv4 addresses have 4 components.
   // ComponentPattern is used to define patterns to match individual components.
-  bool ParseComponentPattern(const crbase::StringPiece& text,
+  bool ParseComponentPattern(const cr::StringPiece& text,
                              ComponentPattern* pattern) const;
   // Convert IP component to an int.  Assume hex vs decimal for IPV6 vs V4.
-  bool ValueTextToInt(const crbase::StringPiece& input, uint32_t* output) const;
+  bool ValueTextToInt(const cr::StringPiece& input, uint32_t* output) const;
 
   bool is_ipv4_;
   // The |ip_mask_| indicates, for each component, if this pattern requires an

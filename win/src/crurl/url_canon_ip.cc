@@ -650,10 +650,10 @@ bool FindIPv4Components(const char* spec,
   return DoFindIPv4Components<char, unsigned char>(spec, host, components);
 }
 
-bool FindIPv4Components(const crbase::char16* spec,
+bool FindIPv4Components(const cr::char16* spec,
                         const Component& host,
                         Component components[4]) {
-  return DoFindIPv4Components<crbase::char16, crbase::char16>(
+  return DoFindIPv4Components<cr::char16, cr::char16>(
       spec, host, components);
 }
 
@@ -669,14 +669,14 @@ void CanonicalizeIPAddress(const char* spec,
     return;
 }
 
-void CanonicalizeIPAddress(const crbase::char16* spec,
+void CanonicalizeIPAddress(const cr::char16* spec,
                            const Component& host,
                            CanonOutput* output,
                            CanonHostInfo* host_info) {
-  if (DoCanonicalizeIPv4Address<crbase::char16, crbase::char16>(
+  if (DoCanonicalizeIPv4Address<cr::char16, cr::char16>(
           spec, host, output, host_info))
     return;
-  if (DoCanonicalizeIPv6Address<crbase::char16, crbase::char16>(
+  if (DoCanonicalizeIPv6Address<cr::char16, cr::char16>(
           spec, host, output, host_info))
     return;
 }
@@ -688,11 +688,11 @@ CanonHostInfo::Family IPv4AddressToNumber(const char* spec,
   return DoIPv4AddressToNumber<char>(spec, host, address, num_ipv4_components);
 }
 
-CanonHostInfo::Family IPv4AddressToNumber(const crbase::char16* spec,
+CanonHostInfo::Family IPv4AddressToNumber(const cr::char16* spec,
                                           const Component& host,
                                           unsigned char address[4],
                                           int* num_ipv4_components) {
-  return DoIPv4AddressToNumber<crbase::char16>(
+  return DoIPv4AddressToNumber<cr::char16>(
       spec, host, address, num_ipv4_components);
 }
 
@@ -702,10 +702,10 @@ bool IPv6AddressToNumber(const char* spec,
   return DoIPv6AddressToNumber<char, unsigned char>(spec, host, address);
 }
 
-bool IPv6AddressToNumber(const crbase::char16* spec,
+bool IPv6AddressToNumber(const cr::char16* spec,
                          const Component& host,
                          unsigned char address[16]) {
-  return DoIPv6AddressToNumber<crbase::char16, crbase::char16>(
+  return DoIPv6AddressToNumber<cr::char16, cr::char16>(
       spec, host, address);
 }
 

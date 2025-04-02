@@ -16,7 +16,7 @@
 #include "crbase/time/time.h"
 #include "crbase/win/scoped_handle.h"
 
-namespace crbase {
+namespace cr {
 
 // MessagePumpWin serves as the base for specialized versions of the MessagePump
 // for Windows. It provides basic functionality like handling of observers and
@@ -335,6 +335,6 @@ class CRBASE_EXPORT MessagePumpForIO : public MessagePumpWin {
   ObserverList<IOObserver> io_observers_;
 };
 
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_SRC_CRBASE_MESSAGE_LOOP_MESSAGE_PUMP_WIN_H_

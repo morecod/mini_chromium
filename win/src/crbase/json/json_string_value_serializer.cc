@@ -7,9 +7,9 @@
 #include "crbase/json/json_reader.h"
 #include "crbase/json/json_writer.h"
 
-using crbase::Value;
+using cr::Value;
 
-namespace crbase {
+namespace cr {
 
 JSONStringValueSerializer::JSONStringValueSerializer(std::string* json_string)
     : json_string_(json_string),
@@ -58,4 +58,4 @@ std::unique_ptr<Value> JSONStringValueDeserializer::Deserialize(
       error_code, error_str);
 }
 
-}  // namespace crbase 
+}  // namespace cr 

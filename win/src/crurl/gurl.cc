@@ -83,7 +83,7 @@ GURL::GURL(const std::string& url_string) {
   InitCanonical(url_string, true);
 }
 
-GURL::GURL(const crbase::string16& url_string) {
+GURL::GURL(const cr::string16& url_string) {
   InitCanonical(url_string, true);
 }
 
@@ -233,7 +233,7 @@ GURL GURL::Resolve(const std::string& relative) const {
 }
 
 // Note: code duplicated above (it's inconvenient to use a template here).
-GURL GURL::Resolve(const crbase::string16& relative) const {
+GURL GURL::Resolve(const cr::string16& relative) const {
   // Not allowed for invalid URLs.
   if (!is_valid_)
     return GURL();
@@ -292,7 +292,7 @@ GURL GURL::ReplaceComponents(
 
 // Note: code duplicated above (it's inconvenient to use a template here).
 GURL GURL::ReplaceComponents(
-    const crurl::Replacements<crbase::char16>& replacements) const {
+    const crurl::Replacements<cr::char16>& replacements) const {
   GURL result;
 
   // Not allowed for invalid URLs.
@@ -377,9 +377,9 @@ bool GURL::IsStandard() const {
   return crurl::IsStandard(spec_.data(), parsed_.scheme);
 }
 
-bool GURL::SchemeIs(crbase::StringPiece lower_ascii_scheme) const {
-  CR_DCHECK(crbase::IsStringASCII(lower_ascii_scheme));
-  CR_DCHECK(crbase::ToLowerASCII(lower_ascii_scheme) == lower_ascii_scheme);
+bool GURL::SchemeIs(cr::StringPiece lower_ascii_scheme) const {
+  CR_DCHECK(cr::IsStringASCII(lower_ascii_scheme));
+  CR_DCHECK(cr::ToLowerASCII(lower_ascii_scheme) == lower_ascii_scheme);
 
   if (parsed_.scheme.len <= 0)
     return lower_ascii_scheme.empty();
@@ -492,7 +492,7 @@ const GURL& GURL::EmptyGURL() {
 
 #endif  // defined(MINI_CHROMIUM_OS_WIN)
 
-bool GURL::DomainIs(crbase::StringPiece lower_ascii_domain) const {
+bool GURL::DomainIs(cr::StringPiece lower_ascii_domain) const {
   if (!is_valid_ || lower_ascii_domain.empty())
     return false;
 
@@ -521,8 +521,8 @@ bool GURL::DomainIs(crbase::StringPiece lower_ascii_domain) const {
   const char* host_first_pos = spec_.data() + parsed_.host.begin +
                                host_len - domain_len;
 
-  if (!crbase::LowerCaseEqualsASCII(
-           crbase::StringPiece(host_first_pos, domain_len), lower_ascii_domain))
+  if (!cr::LowerCaseEqualsASCII(
+           cr::StringPiece(host_first_pos, domain_len), lower_ascii_domain))
     return false;
 
   // Make sure there aren't extra characters in host before the compared part;

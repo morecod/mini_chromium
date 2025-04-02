@@ -14,7 +14,7 @@
 
 namespace {
 
-crbase::StaticAtomicSequenceNumber g_next_id;
+cr::StaticAtomicSequenceNumber g_next_id;
 
 }  // namespace
 
@@ -52,10 +52,10 @@ bool SyncMessage::IsMessageReplyTo(const Message& msg, int request_id) {
   return GetMessageId(msg) == request_id;
 }
 
-crbase::PickleIterator SyncMessage::GetDataIterator(const Message* msg) {
-  crbase::PickleIterator iter(*msg);
+cr::PickleIterator SyncMessage::GetDataIterator(const Message* msg) {
+  cr::PickleIterator iter(*msg);
   if (!iter.SkipBytes(kSyncMessageHeaderSize))
-    return crbase::PickleIterator();
+    return cr::PickleIterator();
   else
     return iter;
 }
@@ -90,7 +90,7 @@ Message* SyncMessage::GenerateReply(const Message* msg) {
 bool SyncMessage::ReadSyncHeader(const Message& msg, SyncHeader* header) {
   CR_DCHECK(msg.is_sync() || msg.is_reply());
 
-  crbase::PickleIterator iter(msg);
+  cr::PickleIterator iter(msg);
   bool result = iter.ReadInt(&header->message_id);
   if (!result) {
     CR_NOTREACHED();

@@ -22,12 +22,12 @@ namespace crurl {
 
 namespace {
 
-bool IsCanonicalHost(const crbase::StringPiece& host) {
+bool IsCanonicalHost(const cr::StringPiece& host) {
   std::string canon_host;
 
   // Try to canonicalize the host (copy/pasted from net/base. :( ).
   const Component raw_host_component(0,
-                                     crbase::checked_cast<int>(host.length()));
+                                     cr::checked_cast<int>(host.length()));
   StdStringCanonOutput canon_host_output(&canon_host);
   CanonHostInfo host_info;
   CanonicalizeHostVerbose(host.data(), raw_host_component,
@@ -46,13 +46,13 @@ bool IsCanonicalHost(const crbase::StringPiece& host) {
   return host == canon_host;
 }
 
-bool IsValidInput(const crbase::StringPiece& scheme,
-                  const crbase::StringPiece& host,
+bool IsValidInput(const cr::StringPiece& scheme,
+                  const cr::StringPiece& host,
                   uint16_t port) {
   SchemeType scheme_type = SCHEME_WITH_PORT;
   bool is_standard = GetStandardSchemeType(
       scheme.data(),
-      Component(0, crbase::checked_cast<int>(scheme.length())),
+      Component(0, cr::checked_cast<int>(scheme.length())),
       &scheme_type);
   if (!is_standard)
     return false;
@@ -102,8 +102,8 @@ bool IsValidInput(const crbase::StringPiece& scheme,
 SchemeHostPort::SchemeHostPort() : port_(0) {
 }
 
-SchemeHostPort::SchemeHostPort(crbase::StringPiece scheme,
-                               crbase::StringPiece host,
+SchemeHostPort::SchemeHostPort(cr::StringPiece scheme,
+                               cr::StringPiece host,
                                uint16_t port)
     : port_(0) {
   if (!IsValidInput(scheme, host, port))
@@ -118,8 +118,8 @@ SchemeHostPort::SchemeHostPort(const GURL& url) : port_(0) {
   if (!url.is_valid())
     return;
 
-  crbase::StringPiece scheme = url.scheme_piece();
-  crbase::StringPiece host = url.host_piece();
+  cr::StringPiece scheme = url.scheme_piece();
+  cr::StringPiece host = url.host_piece();
 
   // A valid GURL never returns PORT_INVALID.
   int port = url.EffectiveIntPort();
@@ -161,7 +161,7 @@ std::string SchemeHostPort::Serialize() const {
     return result;
   if (port_ != default_port) {
     result.push_back(':');
-    result.append(crbase::UintToString(port_));
+    result.append(cr::UintToString(port_));
   }
 
   return result;

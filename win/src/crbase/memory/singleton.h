@@ -26,7 +26,7 @@
 #include "crbase/memory/aligned_memory.h"
 #include "crbase/threading/thread_restrictions.h"
 
-namespace crbase {
+namespace cr {
 namespace internal {
 
 // Our AtomicWord doubles as a spinlock, where a value of
@@ -276,6 +276,6 @@ class Singleton {
 template <typename Type, typename Traits, typename DifferentiatingType>
 subtle::AtomicWord Singleton<Type, Traits, DifferentiatingType>::instance_ = 0;
 
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_SRC_CRBASE_MEMORY_SINGLETON_H_

@@ -11,7 +11,7 @@
 #include "crbase/base_paths.h"
 #include "crbase/build_config.h"
 
-namespace crbase {
+namespace cr {
 
 class FilePath;
 class ScopedPathOverride;
@@ -87,9 +87,9 @@ class CRBASE_EXPORT PathService {
   static bool RemoveOverride(int key);
 };
 
-}  // namespace crbase
+}  // namespace cr
 
 // TODO(brettw) Convert all callers to using the base namespace and remove this.
-using crbase::PathService;
+using cr::PathService;
 
 #endif  // MINI_CHROMIUM_SRC_CRBASE_PATH_SERVICE_H_

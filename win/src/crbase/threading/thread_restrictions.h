@@ -15,7 +15,7 @@
 #define ENABLE_CR_THREAD_RESTRICTIONS 0
 #endif
 
-namespace crbase {
+namespace cr {
 
 class SequencedWorkerPool;
 class SimpleThread;
@@ -163,6 +163,6 @@ class CRBASE_EXPORT ThreadRestrictions {
   ///CR_DISALLOW_IMPLICIT_CONSTRUCTORS(ThreadRestrictions)
 };
 
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_SRC_CRBASE_THREADING_THREAD_RESTRICTIONS_H_

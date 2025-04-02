@@ -16,7 +16,7 @@
 #include "crbase/strings/utf_string_conversions.h"
 #include "crbase/logging.h"
 
-namespace crbase {
+namespace cr {
 
 namespace {
 
@@ -1194,4 +1194,4 @@ std::ostream& operator<<(std::ostream& out, const Value& value) {
   return out << json;
 }
 
-}  // namespace crbase
+}  // namespace cr

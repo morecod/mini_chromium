@@ -13,7 +13,7 @@
 #include "crbase/strings/string16.h"
 #include "crbase/strings/utf_offset_string_conversions.h"
 
-namespace crbase {
+namespace cr {
 
 // Escaping --------------------------------------------------------------------
 
@@ -112,7 +112,7 @@ class UnescapeRule {
 // conversions need to take place, it only unescapes.
 CRBASE_EXPORT std::string UnescapeURLComponent(StringPiece escaped_text,
                                                UnescapeRule::Type rules);
-CRBASE_EXPORT crbase::string16 UnescapeURLComponent(
+CRBASE_EXPORT cr::string16 UnescapeURLComponent(
     const StringPiece16 escaped_text,
     UnescapeRule::Type rules);
 
@@ -134,6 +134,6 @@ CRBASE_EXPORT string16 UnescapeAndDecodeUTF8URLComponentWithAdjustments(
 // &lt; &gt; &amp; &quot; &#39;
 CRBASE_EXPORT string16 UnescapeForHTML(StringPiece16 text);
 
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_SRC_CRBASE_STRINGS_ESCAPE_H_

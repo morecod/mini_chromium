@@ -24,7 +24,7 @@
 #include "crbase/strings/string16.h"
 #include "crbase/strings/string_piece.h"
 
-namespace crbase {
+namespace cr {
 
 class FilePath;
 
@@ -235,6 +235,6 @@ class CRBASE_EXPORT CommandLine {
   size_t begin_args_;
 };
 
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_SRC_CRBASE_COMMAND_LINE_H_

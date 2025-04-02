@@ -31,8 +31,8 @@
 namespace crnet {
 
 class CRNET_EXPORT UDPSocketWin
-    : MSVC_NON_EXPORTED_BASE(public crbase::NonThreadSafe),
-      MSVC_NON_EXPORTED_BASE(public crbase::win::ObjectWatcher::Delegate) {
+    : MSVC_NON_EXPORTED_BASE(public cr::NonThreadSafe),
+      MSVC_NON_EXPORTED_BASE(public cr::win::ObjectWatcher::Delegate) {
  public:
   ///UDPSocketWin(DatagramSocket::BindType bind_type,
   ///             const RandIntCallback& rand_int_cb,
@@ -287,20 +287,20 @@ class CRNET_EXPORT UDPSocketWin
   // The core of the socket that can live longer than the socket itself. We pass
   // resources to the Windows async IO functions and we have to make sure that
   // they are not destroyed while the OS still references them.
-  crbase::scoped_refptr<Core> core_;
+  cr::scoped_refptr<Core> core_;
 
   // True if non-blocking IO is used.
   bool use_non_blocking_io_;
 
   // Watches |read_write_event_|.
-  crbase::win::ObjectWatcher read_write_watcher_;
+  cr::win::ObjectWatcher read_write_watcher_;
 
   // Events for read and write.
-  crbase::win::ScopedHandle read_write_event_;
+  cr::win::ScopedHandle read_write_event_;
 
   // The buffers used in Read() and Write().
-  crbase::scoped_refptr<IOBuffer> read_iobuffer_;
-  crbase::scoped_refptr<IOBuffer> write_iobuffer_;
+  cr::scoped_refptr<IOBuffer> read_iobuffer_;
+  cr::scoped_refptr<IOBuffer> write_iobuffer_;
 
   int read_iobuffer_len_;
   int write_iobuffer_len_;

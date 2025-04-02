@@ -12,7 +12,7 @@
 #include "crbase/time/time.h"
 #include "crbase/build_config.h"
 
-namespace crbase {
+namespace cr {
 namespace internal {
 
 namespace {
@@ -171,4 +171,4 @@ void IncomingTaskQueue::ScheduleWork() {
 }
 
 }  // namespace internal
-}  // namespace crbase
+}  // namespace cr

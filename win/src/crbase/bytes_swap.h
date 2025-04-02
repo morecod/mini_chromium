@@ -12,7 +12,7 @@
 
 #include "crbase/build_config.h"
 
-namespace crbase {
+namespace cr {
 
 // Returns a value with all bytes in |x| swapped, i.e. reverses the endianness.
 inline uint16_t ByteSwap(uint16_t x) {
@@ -59,6 +59,29 @@ inline uint64_t ByteSwapToLE64(uint64_t x) {
 #endif
 }
 
-}  // namespace crbase
+inline uint16_t ByteSwapToBE16(uint16_t x) {
+#if defined(MINI_CHROMIUM_ARCH_CPU_LITTLE_ENDIAN)
+  return ByteSwap(x);
+#else
+  return x;
+#endif
+}
+inline uint32_t ByteSwapToBE32(uint32_t x) {
+#if defined(MINI_CHROMIUM_ARCH_CPU_LITTLE_ENDIAN)
+  return ByteSwap(x);
+#else
+  return x;
+#endif
+}
+inline uint64_t ByteSwapToBE64(uint64_t x) {
+#if defined(MINI_CHROMIUM_ARCH_CPU_LITTLE_ENDIAN)
+  return ByteSwap(x);
+#else
+  return x;
+#endif
+}
+
+
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_SRC_CRBASE_BYTES_SWAP_H_

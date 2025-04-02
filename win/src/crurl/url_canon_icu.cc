@@ -14,17 +14,17 @@
 
 namespace crurl {
 
-bool IDNToASCII(const crbase::char16* src, int src_len, CanonOutputW* output) {
+bool IDNToASCII(const cr::char16* src, int src_len, CanonOutputW* output) {
   CR_DCHECK(output->length() == 0);  // Output buffer is assumed empty.
 
-  crbase::StringPiece16 input(src, src_len);
-  crbase::StringPiece16 separators(L".");
-  std::vector<crbase::StringPiece16> members = crbase::SplitStringPiece(
-      input, separators, crbase::TRIM_WHITESPACE, crbase::SPLIT_WANT_ALL);
+  cr::StringPiece16 input(src, src_len);
+  cr::StringPiece16 separators(L".");
+  std::vector<cr::StringPiece16> members = cr::SplitStringPiece(
+      input, separators, cr::TRIM_WHITESPACE, cr::SPLIT_WANT_ALL);
 
   std::wstring temp;
   for (size_t i = 0; i < members.size(); i++) {
-    if (!crbase::EncodePunycode(members[i], temp))
+    if (!cr::EncodePunycode(members[i], temp))
       return false;
 
     if (i) output->Append(L".", 1);

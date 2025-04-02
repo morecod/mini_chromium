@@ -4,8 +4,8 @@
 
 #include "crbase/time/tick_clock.h"
 
-namespace crbase {
+namespace cr {
 
 TickClock::~TickClock() {}
 
-}  // namespace crbase
+}  // namespace cr

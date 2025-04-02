@@ -6,7 +6,7 @@
 
 #include "crbase/logging.h"
 
-namespace crbase {
+namespace cr {
 namespace internal {
 
 namespace {
@@ -102,4 +102,4 @@ template class CallbackBase<CopyMode::MoveOnly>;
 template class CallbackBase<CopyMode::Copyable>;
 
 }  // namespace internal
-}  // namespace crbase
+}  // namespace cr

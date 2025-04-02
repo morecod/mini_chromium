@@ -7,7 +7,7 @@
 #include "crbase/functional/bind.h"
 #include "crbase/logging.h"
 
-namespace crbase {
+namespace cr {
 namespace win {
 
 //-----------------------------------------------------------------------------
@@ -99,7 +99,7 @@ bool ObjectWatcher::StartWatchingInternal(HANDLE object, Delegate* delegate,
 
   // DoneWaiting can be synchronously called from RegisterWaitForSingleObject,
   // so set up all state now.
-  callback_ = crbase::BindRepeating(
+  callback_ = cr::BindRepeating(
       &ObjectWatcher::Signal, weak_factory_.GetWeakPtr(), delegate);
   object_ = object;
   origin_loop_ = MessageLoop::current();
@@ -135,4 +135,4 @@ void ObjectWatcher::WillDestroyCurrentMessageLoop() {
 }
 
 }  // namespace win
-}  // namespace crbase
+}  // namespace cr

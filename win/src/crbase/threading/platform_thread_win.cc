@@ -17,7 +17,7 @@
 #include "crbase/win/scoped_handle.h"
 #include "crbase/win/windows_version.h"
 
-namespace crbase {
+namespace cr {
 
 namespace {
 
@@ -76,7 +76,7 @@ DWORD __stdcall ThreadFunc(void* params) {
   ThreadParams* thread_params = static_cast<ThreadParams*>(params);
   PlatformThread::Delegate* delegate = thread_params->delegate;
   if (!thread_params->joinable)
-    crbase::ThreadRestrictions::SetSingletonAllowed(false);
+    cr::ThreadRestrictions::SetSingletonAllowed(false);
 
   if (thread_params->priority != ThreadPriority::NORMAL)
     PlatformThread::SetCurrentThreadPriority(thread_params->priority);
@@ -122,7 +122,7 @@ bool CreateThreadInternal(size_t stack_size,
                           ThreadPriority priority) {
   unsigned int flags = 0;
   if (stack_size > 0 &&
-      crbase::win::GetVersion() >= crbase::win::Version::XP) {
+      cr::win::GetVersion() >= cr::win::Version::XP) {
     flags = STACK_SIZE_PARAM_IS_A_RESERVATION;
   } else {
     stack_size = 0;
@@ -200,7 +200,7 @@ void PlatformThread::SetName(const std::string& name) {
   // there isn't a debugger, we are just needlessly throwing an exception.
   // If this image file is instrumented, we raise the exception anyway
   // to provide the profiler with human-readable thread names.
-  if (!::IsDebuggerPresent() /*&& !crbase::debug::IsBinaryInstrumented()*/)
+  if (!::IsDebuggerPresent() /*&& !cr::debug::IsBinaryInstrumented()*/)
     return;
 
   SetNameInternal(CurrentId(), name.c_str());
@@ -295,4 +295,4 @@ ThreadPriority PlatformThread::GetCurrentThreadPriority() {
   }
 }
 
-}  // namespace crbase
+}  // namespace cr

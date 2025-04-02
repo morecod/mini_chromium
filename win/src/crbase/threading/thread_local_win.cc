@@ -8,7 +8,7 @@
 
 #include "crbase/logging.h"
 
-namespace crbase {
+namespace cr {
 namespace internal {
 
 // static
@@ -37,4 +37,4 @@ void ThreadLocalPlatform::SetValueInSlot(SlotType slot, void* value) {
 }
 
 }  // namespace internal
-}  // namespace crbase
+}  // namespace cr

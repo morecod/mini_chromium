@@ -8,7 +8,7 @@
 #include "crbase/process/process_handle.h"
 #include "crbase/build_config.h"
 
-namespace crbase {
+namespace cr {
 
 namespace {
 bool g_have_unique_id = false;
@@ -49,4 +49,4 @@ void InitUniqueIdForProcessInPidNamespace(ProcessId pid_outside_of_namespace) {
 
 #endif
 
-}  // namespace crbase
+}  // namespace cr

@@ -6,7 +6,7 @@
 
 #include "crbase/functional/callback.h"
 
-namespace crbase {
+namespace cr {
 
 
 ScopedClosureRunner::ScopedClosureRunner() = default;
@@ -41,4 +41,4 @@ OnceClosure ScopedClosureRunner::Release() {
 }
 
 
-}  // namespace crbase
+}  // namespace cr

@@ -17,7 +17,7 @@
 #include "crbase/macros.h"
 #include "crbase/strings/string_piece.h"
 
-namespace crbase {
+namespace cr {
 
 namespace {
 
@@ -325,4 +325,4 @@ CPU::IntelMicroArchitecture CPU::GetIntelMicroArchitecture() const {
 }
 #endif
 
-}  // namespace crbase
+}  // namespace cr

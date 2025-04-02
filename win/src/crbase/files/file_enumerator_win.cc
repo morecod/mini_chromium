@@ -9,7 +9,7 @@
 
 #include "crbase/win/windows_version.h"
 
-namespace crbase {
+namespace cr {
 
 // FileEnumerator::FileInfo ----------------------------------------------------
 
@@ -34,8 +34,8 @@ int64_t FileEnumerator::FileInfo::GetSize() const {
   return static_cast<int64_t>(size.QuadPart);
 }
 
-crbase::Time FileEnumerator::FileInfo::GetLastModifiedTime() const {
-  return crbase::Time::FromFileTime(find_data_.ftLastWriteTime);
+cr::Time FileEnumerator::FileInfo::GetLastModifiedTime() const {
+  return cr::Time::FromFileTime(find_data_.ftLastWriteTime);
 }
 
 // FileEnumerator --------------------------------------------------------------
@@ -97,7 +97,7 @@ FilePath FileEnumerator::Next() {
       else
         src = src.Append(pattern_);
 
-      if (crbase::win::GetVersion() >= crbase::win::Version::WIN7) {
+      if (cr::win::GetVersion() >= cr::win::Version::WIN7) {
         // Use a "large fetch" on newer Windows which should speed up large
         // enumerations (we seldom abort in the middle).
         find_handle_ = ::FindFirstFileExW(src.value().c_str(),
@@ -158,4 +158,4 @@ FilePath FileEnumerator::Next() {
   return FilePath();
 }
 
-}  // namespace crbase
+}  // namespace cr

@@ -25,7 +25,7 @@
 #include <unistd.h>
 #endif
 
-namespace crbase {
+namespace cr {
 
 // Used for logging. Always an integer value.
 #if defined(MINI_CHROMIUM_OS_WIN)
@@ -197,6 +197,6 @@ class CRBASE_EXPORT PlatformThread {
 
 };
 
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_SRC_CRBASE_THREADING_PLATFORM_THREAD_H_

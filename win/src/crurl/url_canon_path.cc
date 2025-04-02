@@ -410,11 +410,11 @@ bool CanonicalizePath(const char* spec,
   return DoPath<char, unsigned char>(spec, path, output, out_path);
 }
 
-bool CanonicalizePath(const crbase::char16* spec,
+bool CanonicalizePath(const cr::char16* spec,
                       const Component& path,
                       CanonOutput* output,
                       Component* out_path) {
-  return DoPath<crbase::char16, crbase::char16>(spec, path, output, out_path);
+  return DoPath<cr::char16, cr::char16>(spec, path, output, out_path);
 }
 
 bool CanonicalizePartialPath(const char* spec,
@@ -425,11 +425,11 @@ bool CanonicalizePartialPath(const char* spec,
                                             output);
 }
 
-bool CanonicalizePartialPath(const crbase::char16* spec,
+bool CanonicalizePartialPath(const cr::char16* spec,
                              const Component& path,
                              int path_begin_in_output,
                              CanonOutput* output) {
-  return DoPartialPath<crbase::char16, crbase::char16>(spec, path,
+  return DoPartialPath<cr::char16, cr::char16>(spec, path,
                                                        path_begin_in_output,
                                                        output);
 }

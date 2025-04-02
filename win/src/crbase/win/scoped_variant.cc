@@ -6,7 +6,7 @@
 
 #include "crbase/logging.h"
 
-namespace crbase {
+namespace cr {
 namespace win {
 
 // Global, const instance of an empty variant.
@@ -279,4 +279,4 @@ bool ScopedVariant::IsLeakableVarType(VARTYPE vt) {
 }
 
 }  // namespace win
-}  // namespace crbase
+}  // namespace cr

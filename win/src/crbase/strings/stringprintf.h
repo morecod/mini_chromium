@@ -12,7 +12,7 @@
 
 #include "crbase/base_export.h"
 
-namespace crbase {
+namespace cr {
 
 // Return a C++ string given printf-like input.
 CRBASE_EXPORT std::string StringPrintf(_Printf_format_string_ const char* format,
@@ -52,6 +52,6 @@ CRBASE_EXPORT void StringAppendV(std::string* dst, const char* format,
 CRBASE_EXPORT void StringAppendV(std::wstring* dst,
                                  const wchar_t* format, va_list ap);
 
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_SRC_CRBASE_STRINGS_STRINGPRINTF_H_

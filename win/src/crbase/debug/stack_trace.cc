@@ -11,7 +11,7 @@
 
 #include "crbase/macros.h"
 
-namespace crbase {
+namespace cr {
 namespace debug {
 
 StackTrace::StackTrace(const void* const* trace, size_t count) {
@@ -40,4 +40,4 @@ std::string StackTrace::ToString() const {
 }
 
 }  // namespace debug
-}  // namespace crbase
+}  // namespace cr

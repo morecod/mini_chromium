@@ -39,7 +39,7 @@ class DefaultClientSocketFactory : public ClientSocketFactory {
   }
 };
 
-static crbase::LazyInstance<DefaultClientSocketFactory>::Leaky
+static cr::LazyInstance<DefaultClientSocketFactory>::Leaky
     g_default_client_socket_factory = CR_LAZY_INSTANCE_INITIALIZER;
 
 }  // namespace

@@ -18,7 +18,7 @@
 #define ERROR_DISK_RESOURCES_EXHAUSTED   314L
 #endif
 
-namespace crbase {
+namespace cr {
 
 // Make sure our Whence mappings match the system headers.
 static_assert(File::FROM_BEGIN == FILE_BEGIN &&
@@ -375,4 +375,4 @@ void File::SetPlatformFile(PlatformFile file) {
   file_.Set(file);
 }
 
-}  // namespace crbase
+}  // namespace cr

@@ -34,7 +34,7 @@
 #include "crbase/strings/utf_string_conversions.h"
 #include "crbase/third_party/icu/icu_utf.h"
 
-namespace crbase {
+namespace cr {
 
 namespace {
 
@@ -343,7 +343,7 @@ void TruncateUTF8ToByteSize(const std::string& input,
   // truncate the string to the end of that character.
   while (char_index >= 0) {
     int32_t prev = char_index;
-    crbase_icu::UChar32 code_point = 0;
+    cr_icu::UChar32 code_point = 0;
     CBU8_NEXT(data, char_index, truncation_length, code_point);
     if (!IsValidCharacter(code_point) ||
         !IsValidCodepoint(code_point)) {
@@ -655,11 +655,11 @@ string16 FormatBytesUnlocalized(int64_t bytes) {
 
   char buf[64];
   if (bytes != 0 && dimension > 0 && unit_amount < 100) {
-    crbase::snprintf(buf, cr_arraysize(buf), "%.1lf%s", unit_amount,
-                   kByteStringsUnlocalized[dimension]);
+    cr::snprintf(buf, cr_arraysize(buf), "%.1lf%s", unit_amount,
+                 kByteStringsUnlocalized[dimension]);
   } else {
-    crbase::snprintf(buf, cr_arraysize(buf), "%.0lf%s", unit_amount,
-                   kByteStringsUnlocalized[dimension]);
+    cr::snprintf(buf, cr_arraysize(buf), "%.0lf%s", unit_amount,
+                 kByteStringsUnlocalized[dimension]);
   }
 
   return ASCIIToUTF16(buf);
@@ -966,4 +966,4 @@ size_t wcslcpy(wchar_t* dst, const wchar_t* src, size_t dst_size) {
   return lcpyT<wchar_t>(dst, src, dst_size);
 }
 
-}  // namespace crbase
+}  // namespace cr

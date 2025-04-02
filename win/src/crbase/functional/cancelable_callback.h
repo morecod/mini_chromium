@@ -55,7 +55,7 @@
 #include "crbase/macros.h"
 #include "crbase/memory/weak_ptr.h"
 
-namespace crbase {
+namespace cr {
   
 namespace internal {
 
@@ -136,7 +136,7 @@ class CancelableCallbackImpl {
 
   // The stored closure that may be cancelled.
   CallbackType callback_;
-  mutable crbase::WeakPtrFactory<CancelableCallbackImpl> weak_ptr_factory_;
+  mutable cr::WeakPtrFactory<CancelableCallbackImpl> weak_ptr_factory_;
 };
 
 }  // namespace internal
@@ -153,6 +153,6 @@ using CancelableRepeatingCallback =
     internal::CancelableCallbackImpl<RepeatingCallback<Signature>>;
 using CancelableRepeatingClosure = CancelableRepeatingCallback<void()>;
 
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_CRBASE_FUNCTIONAL_CANCELABLE_CALLBACK_H_

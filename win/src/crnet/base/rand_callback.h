@@ -9,7 +9,7 @@
 
 namespace crnet {
 
-typedef crbase::RepeatingCallback<int(int, int)> RandIntCallback;
+typedef cr::RepeatingCallback<int(int, int)> RandIntCallback;
 
 }  // namespace crnet
 

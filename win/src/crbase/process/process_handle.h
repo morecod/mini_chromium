@@ -17,7 +17,7 @@
 #endif
 
 
-namespace crbase {
+namespace cr {
 
 // ProcessHandle is a platform specific type which represents the underlying OS
 // handle to a process.
@@ -77,6 +77,6 @@ CRBASE_EXPORT ProcessId GetParentProcessId(ProcessHandle process);
 CRBASE_EXPORT FilePath GetProcessExecutablePath(ProcessHandle process);
 #endif
 
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_SRC_CRBASE_PROCESS_PROCESS_HANDLE_H_

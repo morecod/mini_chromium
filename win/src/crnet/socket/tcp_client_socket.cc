@@ -163,8 +163,8 @@ int TCPClientSocket::DoConnect() {
   // |socket_| is owned by this class and the callback won't be run once
   // |socket_| is gone. Therefore, it is safe to use base::Unretained() here.
   return socket_->Connect(endpoint,
-                          crbase::BindOnce(&TCPClientSocket::DidCompleteConnect,
-                                           crbase::Unretained(this)));
+                          cr::BindOnce(&TCPClientSocket::DidCompleteConnect,
+                                           cr::Unretained(this)));
 }
 
 int TCPClientSocket::DoConnectComplete(int result) {
@@ -274,8 +274,8 @@ int TCPClientSocket::Read(IOBuffer* buf,
 
   // |socket_| is owned by this class and the callback won't be run once
   // |socket_| is gone. Therefore, it is safe to use base::Unretained() here.
-  CompletionOnceCallback read_callback = crbase::BindOnce(
-      &TCPClientSocket::DidCompleteRead, crbase::Unretained(this), 
+  CompletionOnceCallback read_callback = cr::BindOnce(
+      &TCPClientSocket::DidCompleteRead, cr::Unretained(this), 
       std::move(callback));
   int result = socket_->Read(buf, buf_len, std::move(read_callback));
   if (result > 0) {
@@ -293,8 +293,8 @@ int TCPClientSocket::Write(IOBuffer* buf,
 
   // |socket_| is owned by this class and the callback won't be run once
   // |socket_| is gone. Therefore, it is safe to use base::Unretained() here.
-  CompletionOnceCallback write_callback = crbase::BindOnce(
-      &TCPClientSocket::DidCompleteWrite, crbase::Unretained(this), 
+  CompletionOnceCallback write_callback = cr::BindOnce(
+      &TCPClientSocket::DidCompleteWrite, cr::Unretained(this), 
       std::move(callback));
   int result = socket_->Write(buf, buf_len, std::move(write_callback));
   if (result > 0)
@@ -345,7 +345,7 @@ void TCPClientSocket::DidCompleteConnect(int result) {
   result = DoConnectLoop(result);
   if (result != ERR_IO_PENDING) {
     ///socket_->EndLoggingMultipleConnectAttempts(result);
-    crbase::ResetAndReturn(&connect_callback_).Run(result);
+    cr::ResetAndReturn(&connect_callback_).Run(result);
   }
 }
 

@@ -17,7 +17,7 @@
 #include "crbase/template_util.h"
 #include "crbase/logging.h"
 
-namespace crbase {
+namespace cr {
 namespace internal {
 
 // Everything from here up to the floating point operations is portable C++,
@@ -541,6 +541,6 @@ struct IsIntegerArithmeticSafe {
 };
 
 }  // namespace internal
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_SRC_CRBASE_NUMERICS_SAFE_MATH_IMPL_H_

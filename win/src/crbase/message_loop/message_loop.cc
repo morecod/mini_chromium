@@ -23,13 +23,13 @@
 #include "crbase/message_loop/message_pump_libevent.h"
 #endif
 
-namespace crbase {
+namespace cr {
 
 namespace {
 
 // A lazily created thread local storage for quick access to a thread's message
 // loop, if one exists.  This should be safe and free of static constructors.
-LazyInstance<crbase::ThreadLocalPointer<MessageLoop> >::Leaky lazy_tls_ptr =
+LazyInstance<cr::ThreadLocalPointer<MessageLoop> >::Leaky lazy_tls_ptr =
     CR_LAZY_INSTANCE_INITIALIZER;
 
 // Logical events for Histogram profiling. Run with --message-loop-histogrammer
@@ -655,4 +655,4 @@ bool MessageLoopForIO::WatchFileDescriptor(int fd,
 }
 #endif
 
-}  // namespace crbase
+}  // namespace cr

@@ -8,7 +8,7 @@
 using namespace std;
 
 int main(int argc, char* argv[]) {
-  crbase::AtExitManager atexit_manager;
+  cr::AtExitManager atexit_manager;
 
   GURL url(u8"https://www.旺旺google中国.旺旺:888/1.txt?a=11&b=cc");
   cout << url.scheme() << endl; // "https"

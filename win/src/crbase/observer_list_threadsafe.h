@@ -53,7 +53,7 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-namespace crbase {
+namespace cr {
 
 // Forward declaration for ObserverListThreadSafeTraits.
 template <class ObserverType>
@@ -83,7 +83,7 @@ class UnboundMethod {
 // This class is used to work around VS2005 not accepting:
 //
 // friend class
-//     crbase::RefCountedThreadSafe<ObserverListThreadSafe<ObserverType>>;
+//     cr::RefCountedThreadSafe<ObserverListThreadSafe<ObserverType>>;
 //
 // Instead of friending the class, we could friend the actual function
 // which calls delete.  However, this ends up being
@@ -270,6 +270,6 @@ class ObserverListThreadSafe
   const NotificationType type_;
 };
 
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_SRC_CRBASE_OBSERVER_LIST_THREADSAFE_H_

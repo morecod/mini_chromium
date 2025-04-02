@@ -8,7 +8,7 @@
 #include "crbase/synchronization/waitable_event.h"
 #include "crbase/win/object_watcher.h"
 
-namespace crbase {
+namespace cr {
 
 WaitableEventWatcher::WaitableEventWatcher() = default;
 
@@ -54,4 +54,4 @@ void WaitableEventWatcher::OnObjectSignaled(HANDLE h) {
   std::move(callback).Run(event);
 }
 
-}  // namespace crbase
+}  // namespace cr

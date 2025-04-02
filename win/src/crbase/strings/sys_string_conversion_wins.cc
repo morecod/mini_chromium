@@ -9,7 +9,7 @@
 
 #include "crbase/strings/string_piece.h"
 
-namespace crbase {
+namespace cr {
 
 // Do not assert in this function since it is used by the asssertion code!
 std::string SysWideToUTF8(const StringPiece16& wide) {
@@ -68,4 +68,4 @@ std::string SysWideToMultiByte(const StringPiece16& wide, uint32_t code_page) {
   return mb;
 }
 
-}  // namespace crbase
+}  // namespace cr

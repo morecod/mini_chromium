@@ -12,9 +12,9 @@
 #include "crbase/logging.h"
 #include "crbase/files/file_path.h"
 
-using crbase::FilePath;
+using cr::FilePath;
 
-namespace crbase {
+namespace cr {
 
 namespace {
 
@@ -184,8 +184,8 @@ std::wstring FileVersionInfoWin::GetStringValue(const wchar_t* name) {
   return str;
 }
 
-crbase::Version FileVersionInfoWin::GetFileVersion() const {
-  return crbase::Version({ HIWORD(fixed_file_info_->dwFileVersionMS),
+cr::Version FileVersionInfoWin::GetFileVersion() const {
+  return cr::Version({ HIWORD(fixed_file_info_->dwFileVersionMS),
     LOWORD(fixed_file_info_->dwFileVersionMS),
     HIWORD(fixed_file_info_->dwFileVersionLS),
     LOWORD(fixed_file_info_->dwFileVersionLS) });

@@ -12,8 +12,8 @@
 //
 // ARGUMENT BINDING WRAPPERS
 //
-// The wrapper functions are crbase::Unretained(), crbase::Owned(), 
-// crbase::Passed(), crbase::ConstRef(), and crbase::IgnoreResult().
+// The wrapper functions are cr::Unretained(), cr::Owned(), 
+// cr::Passed(), cr::ConstRef(), and cr::IgnoreResult().
 //
 // Unretained() allows Bind() to bind a non-refcounted class, and to disable
 // refcounting on arguments that are refcounted objects.
@@ -79,7 +79,7 @@
 //    void foo(RefCountedBytes* bytes) {}
 //
 //    scoped_refptr<RefCountedBytes> bytes = ...;
-//    Closure callback = Bind(&foo, crbase::RetainedRef(bytes));
+//    Closure callback = Bind(&foo, cr::RetainedRef(bytes));
 //    callback.Run();
 //
 // Without RetainedRef, the scoped_refptr would try to implicitly convert to
@@ -169,7 +169,7 @@
 #include "crbase/memory/weak_ptr.h"
 #include "crbase/build_config.h"
 
-namespace crbase {
+namespace cr {
 
 template <typename T>
 struct IsWeakReceiver;
@@ -566,6 +566,6 @@ struct CallbackCancellationTraits<Callback<Signature, copy_mode, repeat_mode>,
   }
 };
 
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_CRBASE_FUNCTIONAL_BIND_HELPERS_H_

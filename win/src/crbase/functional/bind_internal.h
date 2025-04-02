@@ -19,7 +19,7 @@
 #include "crbase/tuple.h"
 #include "crbase/build_config.h"
 
-namespace crbase {
+namespace cr {
 namespace internal {
 
 // See base/callback.h for user documentation.
@@ -568,6 +568,6 @@ template <typename Functor, typename... BoundArgs>
 using MakeUnboundRunType =
     typename internal::MakeUnboundRunTypeImpl<Functor, BoundArgs...>::Type;
 
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_CRBASE_FUNCTIONAL_BIND_INTERNAL_H_

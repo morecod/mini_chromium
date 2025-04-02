@@ -6,11 +6,11 @@
 
 #include "crbase/third_party/icu/icu_utf.h"
 
-namespace crbase {
+namespace cr {
 
 namespace {
 
-static bool IsWildcard(crbase_icu::UChar32 character) {
+static bool IsWildcard(cr_icu::UChar32 character) {
   return character == '*' || character == '?';
 }
 
@@ -37,7 +37,7 @@ static void EatSameChars(const CHAR** pattern, const CHAR* pattern_end,
     // Check if the chars match, if so, increment the ptrs.
     const CHAR* pattern_next = *pattern;
     const CHAR* string_next = *string;
-    crbase_icu::UChar32 pattern_char = next(&pattern_next, pattern_end);
+    cr_icu::UChar32 pattern_char = next(&pattern_next, pattern_end);
     if (pattern_char == next(&string_next, string_end) &&
         pattern_char != CBU_SENTINEL) {
       *pattern = pattern_next;
@@ -133,8 +133,8 @@ static bool MatchPatternT(const CHAR* eval, const CHAR* eval_end,
 }
 
 struct NextCharUTF8 {
-  crbase_icu::UChar32 operator()(const char** p, const char* end) {
-    crbase_icu::UChar32 c;
+  cr_icu::UChar32 operator()(const char** p, const char* end) {
+    cr_icu::UChar32 c;
     int offset = 0;
     CBU8_NEXT(*p, offset, static_cast<int>(end - *p), c);
     *p += offset;
@@ -143,8 +143,8 @@ struct NextCharUTF8 {
 };
 
 struct NextCharUTF16 {
-  crbase_icu::UChar32 operator()(const char16** p, const char16* end) {
-    crbase_icu::UChar32 c;
+  cr_icu::UChar32 operator()(const char16** p, const char16* end) {
+    cr_icu::UChar32 c;
     int offset = 0;
     CBU16_NEXT(*p, offset, end - *p, c);
     *p += offset;
@@ -166,4 +166,4 @@ bool MatchPattern(const StringPiece16& eval, const StringPiece16& pattern) {
                        0, NextCharUTF16());
 }
 
-}  // namespace crbase
+}  // namespace cr

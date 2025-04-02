@@ -6,7 +6,7 @@
 
 #include "crbase/process/process_iterator.h"
 
-namespace crbase {
+namespace cr {
 
 bool KillProcesses(const FilePath::StringType& executable_name,
                    int exit_code,
@@ -20,4 +20,4 @@ bool KillProcesses(const FilePath::StringType& executable_name,
   return result;
 }
 
-}  // namespace crbase
+}  // namespace cr

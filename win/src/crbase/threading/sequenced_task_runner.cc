@@ -6,7 +6,7 @@
 
 #include "crbase/functional/bind.h"
 
-namespace crbase {
+namespace cr {
 
 bool SequencedTaskRunner::PostNonNestableTask(
     const tracked_objects::Location& from_here,
@@ -28,4 +28,4 @@ bool SequencedTaskRunner::ReleaseSoonInternal(
   return PostNonNestableTask(from_here, BindOnce(releaser, object));
 }
 
-}  // namespace crbase
+}  // namespace cr

@@ -98,8 +98,8 @@ class CRURL_EXPORT Origin {
   // dangerous recanonicalization); other potential callers should prefer the
   // 'GURL'-based constructor.
   static Origin UnsafelyCreateOriginWithoutNormalization(
-      crbase::StringPiece scheme,
-      crbase::StringPiece host,
+      cr::StringPiece scheme,
+      cr::StringPiece host,
       uint16_t port);
 
   ~Origin();
@@ -124,7 +124,7 @@ class CRURL_EXPORT Origin {
   bool operator<(const Origin& other) const;
 
  private:
-  Origin(crbase::StringPiece scheme, crbase::StringPiece host, uint16_t port);
+  Origin(cr::StringPiece scheme, cr::StringPiece host, uint16_t port);
 
   SchemeHostPort tuple_;
   bool unique_;

@@ -11,7 +11,7 @@
 #include "crbase/strings/string16.h"
 #include "crbase/strings/string_piece.h"
 
-namespace crbase {
+namespace cr {
 
 // Encodes an UTF16 string into Punycode. Returns true if successful and false
 // otherwise.
@@ -22,6 +22,6 @@ CRBASE_EXPORT bool EncodePunycode(const StringPiece16& input, string16 &out);
 // successful and false otherwise.
 CRBASE_EXPORT bool DecodePunycode(StringPiece input, string16& output);
 
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_SRC_CRBASE_CODES_PUNYCODE_H_

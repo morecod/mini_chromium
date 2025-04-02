@@ -22,7 +22,7 @@
 #include "crbase/strings/sys_string_conversions.h"
 #include "crbase/build_config.h"
 
-namespace crbase {
+namespace cr {
 
 namespace {
 
@@ -266,4 +266,4 @@ int GetUniquePathNumber(const FilePath& path,
   return -1;
 }
 
-}  // namespace crbase
+}  // namespace cr

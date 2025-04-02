@@ -11,7 +11,7 @@
 namespace crnet {
 
 // Map winsock and system errors to Chromium errors.
-Error MapSystemError(crbase_logging::SystemErrorCode os_error) {
+Error MapSystemError(cr_logging::SystemErrorCode os_error) {
   ///if (os_error != 0)
   ///  DVLOG(2) << "Error " << os_error;
 

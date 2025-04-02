@@ -45,10 +45,10 @@ CRNET_EXPORT bool IsCertificateError(int error);
 CRNET_EXPORT bool IsClientCertificateError(int error);
 
 // Map system error code to Error.
-CRNET_EXPORT Error MapSystemError(crbase_logging::SystemErrorCode os_error);
+CRNET_EXPORT Error MapSystemError(cr_logging::SystemErrorCode os_error);
 
 // A convenient function to translate file error to net error code.
-CRNET_EXPORT Error FileErrorToNetError(crbase::File::Error file_error);
+CRNET_EXPORT Error FileErrorToNetError(cr::File::Error file_error);
 
 }  // namespace crnet
 

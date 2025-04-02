@@ -12,7 +12,7 @@
 #include "crbase/logging.h"
 #include "crbase/build_config.h"
 
-namespace crbase {
+namespace cr {
 
 namespace {
 
@@ -229,4 +229,4 @@ std::string UTF16ToASCII(StringPiece16 utf16) {
   return std::string(utf16.begin(), utf16.end());
 }
 
-}  // namespace crbase
+}  // namespace cr

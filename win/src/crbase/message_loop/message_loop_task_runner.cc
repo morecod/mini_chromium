@@ -8,7 +8,7 @@
 #include "crbase/logging.h"
 #include "crbase/message_loop/incoming_task_queue.h"
 
-namespace crbase {
+namespace cr {
 namespace internal {
 
 MessageLoopTaskRunner::MessageLoopTaskRunner(
@@ -25,7 +25,7 @@ void MessageLoopTaskRunner::BindToCurrentThread() {
 bool MessageLoopTaskRunner::PostDelayedTask(
     const tracked_objects::Location& from_here,
     OnceClosure task,
-    crbase::TimeDelta delay) {
+    cr::TimeDelta delay) {
   CR_DCHECK(!task.is_null()) << from_here.ToString();
   return incoming_queue_->AddToIncomingQueue(
       from_here, std::move(task), delay, true);
@@ -34,7 +34,7 @@ bool MessageLoopTaskRunner::PostDelayedTask(
 bool MessageLoopTaskRunner::PostNonNestableDelayedTask(
     const tracked_objects::Location& from_here,
     OnceClosure task,
-    crbase::TimeDelta delay) {
+    cr::TimeDelta delay) {
   CR_DCHECK(!task.is_null()) << from_here.ToString();
   return incoming_queue_->AddToIncomingQueue(
       from_here, std::move(task), delay, false);
@@ -50,4 +50,4 @@ MessageLoopTaskRunner::~MessageLoopTaskRunner() {
 
 }  // namespace internal
 
-}  // namespace crbase
+}  // namespace cr

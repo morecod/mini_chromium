@@ -42,15 +42,15 @@ namespace crnet {
 
 namespace {
 
-std::string NormalizeHostname(crbase::StringPiece host) {
-  std::string result = crbase::ToLowerASCII(host);
+std::string NormalizeHostname(cr::StringPiece host) {
+  std::string result = cr::ToLowerASCII(host);
   if (!result.empty() && *result.rbegin() == '.')
     result.resize(result.size() - 1);
   return result;
 }
 
 bool IsNormalizedLocalhostTLD(const std::string& host) {
-  return crbase::EndsWith(host, ".localhost", crbase::CompareCase::SENSITIVE);
+  return cr::EndsWith(host, ".localhost", cr::CompareCase::SENSITIVE);
 }
 
 // |host| should be normalized.
@@ -194,7 +194,7 @@ bool ParseHostAndPort(const std::string& host_and_port,
 std::string GetHostAndPort(const GURL& url) {
   // For IPv6 literals, GURL::host() already includes the brackets so it is
   // safe to just append a colon.
-  return crbase::StringPrintf("%s:%d", url.host().c_str(),
+  return cr::StringPrintf("%s:%d", url.host().c_str(),
                               url.EffectiveIntPort());
 }
 
@@ -202,7 +202,7 @@ std::string GetHostAndOptionalPort(const GURL& url) {
   // For IPv6 literals, GURL::host() already includes the brackets
   // so it is safe to just append a colon.
   if (url.has_port())
-    return crbase::StringPrintf(
+    return cr::StringPrintf(
         "%s:%s", url.host().c_str(), url.port().c_str());
   return url.host();
 }
@@ -281,7 +281,7 @@ GURL SimplifyUrlForRequest(const GURL& url) {
   return url.ReplaceComponents(replacements);
 }
 
-bool ResolveLocalHostname(crbase::StringPiece host,
+bool ResolveLocalHostname(cr::StringPiece host,
                           uint16_t port,
                           AddressList* address_list) {
   static const unsigned char kLocalhostIPv4[] = {127, 0, 0, 1};
@@ -312,7 +312,7 @@ bool ResolveLocalHostname(crbase::StringPiece host,
   return true;
 }
 
-bool IsLocalhost(crbase::StringPiece host) {
+bool IsLocalhost(cr::StringPiece host) {
   std::string normalized_host = NormalizeHostname(host);
   if (IsLocalHostname(normalized_host) || IsLocal6Hostname(normalized_host))
     return true;

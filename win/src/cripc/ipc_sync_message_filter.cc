@@ -19,7 +19,7 @@ namespace cripc {
 bool SyncMessageFilter::Send(Message* message) {
   if (!message->is_sync()) {
     {
-      crbase::AutoLock auto_lock(lock_);
+      cr::AutoLock auto_lock(lock_);
       if (sender_ && is_channel_send_thread_safe_) {
         sender_->Send(message);
         return true;
@@ -30,40 +30,40 @@ bool SyncMessageFilter::Send(Message* message) {
     }
     io_task_runner_->PostTask(
         CR_FROM_HERE,
-        crbase::BindOnce(&SyncMessageFilter::SendOnIOThread, this, message));
+        cr::BindOnce(&SyncMessageFilter::SendOnIOThread, this, message));
     return true;
   }
 
-  crbase::WaitableEvent done_event(true, false);
+  cr::WaitableEvent done_event(true, false);
   PendingSyncMsg pending_message(
       SyncMessage::GetMessageId(*message),
       static_cast<SyncMessage*>(message)->GetReplyDeserializer(),
       &done_event);
 
   {
-    crbase::AutoLock auto_lock(lock_);
+    cr::AutoLock auto_lock(lock_);
     // Can't use this class on the main thread or else it can lead to deadlocks.
     // Also by definition, can't use this on IO thread since we're blocking it.
-    if (crbase::ThreadTaskRunnerHandle::IsSet()) {
-      CR_DCHECK(crbase::ThreadTaskRunnerHandle::Get() != listener_task_runner_);
-      CR_DCHECK(crbase::ThreadTaskRunnerHandle::Get() != io_task_runner_);
+    if (cr::ThreadTaskRunnerHandle::IsSet()) {
+      CR_DCHECK(cr::ThreadTaskRunnerHandle::Get() != listener_task_runner_);
+      CR_DCHECK(cr::ThreadTaskRunnerHandle::Get() != io_task_runner_);
     }
     pending_sync_messages_.insert(&pending_message);
 
     if (io_task_runner_.get()) {
       io_task_runner_->PostTask(
           CR_FROM_HERE,
-          crbase::BindOnce(&SyncMessageFilter::SendOnIOThread, this, message));
+          cr::BindOnce(&SyncMessageFilter::SendOnIOThread, this, message));
     } else {
       pending_messages_.push_back(message);
     }
   }
 
-  crbase::WaitableEvent* events[2] = { shutdown_event_, &done_event };
-  crbase::WaitableEvent::WaitMany(events, 2);
+  cr::WaitableEvent* events[2] = { shutdown_event_, &done_event };
+  cr::WaitableEvent::WaitMany(events, 2);
 
   {
-    crbase::AutoLock auto_lock(lock_);
+    cr::AutoLock auto_lock(lock_);
     delete pending_message.deserializer;
     pending_sync_messages_.erase(&pending_message);
   }
@@ -74,9 +74,9 @@ bool SyncMessageFilter::Send(Message* message) {
 void SyncMessageFilter::OnFilterAdded(Sender* sender) {
   std::vector<Message*> pending_messages;
   {
-    crbase::AutoLock auto_lock(lock_);
+    cr::AutoLock auto_lock(lock_);
     sender_ = sender;
-    io_task_runner_ = crbase::ThreadTaskRunnerHandle::Get();
+    io_task_runner_ = cr::ThreadTaskRunnerHandle::Get();
     pending_messages_.release(&pending_messages);
   }
   for (auto* msg : pending_messages)
@@ -84,19 +84,19 @@ void SyncMessageFilter::OnFilterAdded(Sender* sender) {
 }
 
 void SyncMessageFilter::OnChannelError() {
-  crbase::AutoLock auto_lock(lock_);
+  cr::AutoLock auto_lock(lock_);
   sender_ = NULL;
   SignalAllEvents();
 }
 
 void SyncMessageFilter::OnChannelClosing() {
-  crbase::AutoLock auto_lock(lock_);
+  cr::AutoLock auto_lock(lock_);
   sender_ = NULL;
   SignalAllEvents();
 }
 
 bool SyncMessageFilter::OnMessageReceived(const Message& message) {
-  crbase::AutoLock auto_lock(lock_);
+  cr::AutoLock auto_lock(lock_);
   for (PendingSyncMessages::iterator iter = pending_sync_messages_.begin();
        iter != pending_sync_messages_.end(); ++iter) {
     if (SyncMessage::IsMessageReplyTo(message, (*iter)->id)) {
@@ -112,11 +112,11 @@ bool SyncMessageFilter::OnMessageReceived(const Message& message) {
   return false;
 }
 
-SyncMessageFilter::SyncMessageFilter(crbase::WaitableEvent* shutdown_event,
+SyncMessageFilter::SyncMessageFilter(cr::WaitableEvent* shutdown_event,
                                      bool is_channel_send_thread_safe)
     : sender_(NULL),
       is_channel_send_thread_safe_(is_channel_send_thread_safe),
-      listener_task_runner_(crbase::ThreadTaskRunnerHandle::Get()),
+      listener_task_runner_(cr::ThreadTaskRunnerHandle::Get()),
       shutdown_event_(shutdown_event) {
 }
 
@@ -132,7 +132,7 @@ void SyncMessageFilter::SendOnIOThread(Message* message) {
   if (message->is_sync()) {
     // We don't know which thread sent it, but it doesn't matter, just signal
     // them all.
-    crbase::AutoLock auto_lock(lock_);
+    cr::AutoLock auto_lock(lock_);
     SignalAllEvents();
   }
 

@@ -82,8 +82,8 @@ class CRURL_EXPORT SchemeHostPort {
   // support ports (e.g. 'file'). In that case, |port| must be 0.
   //
   // Copies the data in |scheme| and |host|.
-  SchemeHostPort(crbase::StringPiece scheme,
-                 crbase::StringPiece host,
+  SchemeHostPort(cr::StringPiece scheme,
+                 cr::StringPiece host,
                  uint16_t port);
 
   // Creates a (scheme, host, port) tuple from |url|, as described at

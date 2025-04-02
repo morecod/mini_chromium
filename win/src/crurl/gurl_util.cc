@@ -17,8 +17,8 @@ GURL AppendQueryParameter(const GURL& url,
   if (!query.empty())
     query += "&";
 
-  query += (crbase::EscapeQueryParamValue(name, true) + "=" +
-            crbase::EscapeQueryParamValue(value, true));
+  query += (cr::EscapeQueryParamValue(name, true) + "=" +
+            cr::EscapeQueryParamValue(value, true));
   GURL::Replacements replacements;
   replacements.SetQueryStr(query);
   return url.ReplaceComponents(replacements);
@@ -28,8 +28,8 @@ GURL AppendOrReplaceQueryParameter(const GURL& url,
                                    const std::string& name,
                                    const std::string& value) {
   bool replaced = false;
-  std::string param_name = crbase::EscapeQueryParamValue(name, true);
-  std::string param_value = crbase::EscapeQueryParamValue(value, true);
+  std::string param_name = cr::EscapeQueryParamValue(name, true);
+  std::string param_value = cr::EscapeQueryParamValue(value, true);
 
   const std::string input = url.query();
   crurl::Component cursor(0, static_cast<int>(input.size()));
@@ -37,7 +37,7 @@ GURL AppendOrReplaceQueryParameter(const GURL& url,
   crurl::Component key_range, value_range;
   while (crurl::ExtractQueryKeyValue(input.data(), &cursor, &key_range,
                                      &value_range)) {
-    const crbase::StringPiece key(
+    const cr::StringPiece key(
         input.data() + key_range.begin, key_range.len);
     std::string key_value_pair;
     // Check |replaced| as only the first pair should be replaced.
@@ -94,11 +94,11 @@ std::string QueryIterator::GetValue() const {
 const std::string& QueryIterator::GetUnescapedValue() {
   CR_DCHECK(!at_end_);
   if (value_.is_nonempty() && unescaped_value_.empty()) {
-    unescaped_value_ = crbase::UnescapeURLComponent(
+    unescaped_value_ = cr::UnescapeURLComponent(
         GetValue(),
-        crbase::UnescapeRule::SPACES |
-        crbase::UnescapeRule::URL_SPECIAL_CHARS |
-        crbase::UnescapeRule::REPLACE_PLUS_WITH_SPACE);
+        cr::UnescapeRule::SPACES |
+        cr::UnescapeRule::URL_SPECIAL_CHARS |
+        cr::UnescapeRule::REPLACE_PLUS_WITH_SPACE);
   }
   return unescaped_value_;
 }
@@ -129,8 +129,8 @@ bool GetValueForKeyInQuery(const GURL& url,
   return false;
 }
 
-std::string TrimEndingDot(const crbase::StringPiece& host) {
-  crbase::StringPiece host_trimmed = host;
+std::string TrimEndingDot(const cr::StringPiece& host) {
+  cr::StringPiece host_trimmed = host;
   size_t len = host_trimmed.length();
   if (len > 1 && host_trimmed[len - 1] == '.') {
     host_trimmed.remove_suffix(1);
@@ -139,14 +139,14 @@ std::string TrimEndingDot(const crbase::StringPiece& host) {
 }
 
 void GetIdentityFromURL(const GURL& url,
-                        crbase::string16* username,
-                        crbase::string16* password) {
-  crbase::UnescapeRule::Type flags =
-      crbase::UnescapeRule::SPACES | 
-      crbase::UnescapeRule::URL_SPECIAL_CHARS;
-  *username = crbase::UnescapeAndDecodeUTF8URLComponent(
+                        cr::string16* username,
+                        cr::string16* password) {
+  cr::UnescapeRule::Type flags =
+      cr::UnescapeRule::SPACES | 
+      cr::UnescapeRule::URL_SPECIAL_CHARS;
+  *username = cr::UnescapeAndDecodeUTF8URLComponent(
       url.username(), flags);
-  *password = crbase::UnescapeAndDecodeUTF8URLComponent(
+  *password = cr::UnescapeAndDecodeUTF8URLComponent(
       url.password(), flags);
 }
 

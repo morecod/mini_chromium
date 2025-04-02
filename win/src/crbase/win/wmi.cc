@@ -15,7 +15,7 @@
 #include "crbase/win/scoped_bstr.h"
 #include "crbase/win/scoped_variant.h"
 
-namespace crbase {
+namespace cr {
 namespace win {
 
 bool CreateLocalWmiConnection(bool set_blanket,
@@ -206,4 +206,4 @@ void WmiComputerSystemInfo::PopulateSerialNumber(
 }
 
 }  // namespace win
-}  // namespace crbase
+}  // namespace cr

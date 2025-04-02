@@ -97,7 +97,7 @@ void AddressList::SetDefaultCanonicalName() {
 }
 
 ///NetLog::ParametersCallback AddressList::CreateNetLogCallback() const {
-///  return crbase::Bind(&NetLogAddressListCallback, this);
+///  return cr::Bind(&NetLogAddressListCallback, this);
 ///}
 
 }  // namespace crnet

@@ -14,7 +14,7 @@
 #include "crbase/hash.h"
 #include "crbase/build_config.h"
 
-namespace crbase {
+namespace cr {
 namespace tracked_objects {
 
 // Location provides basic info where of an object was constructed, or was
@@ -62,11 +62,11 @@ class CRBASE_EXPORT Location {
       // See the definition of CR_FROM_HERE in location.h, and how it is used
       // elsewhere.
 #if defined(MINI_CHROMIUM_ARCH_CPU_64_BITS)
-      return crbase::HashInts64(
+      return cr::HashInts64(
           reinterpret_cast<uintptr_t>(location.file_name()),
           location.line_number());
 #else
-      return crbase::HashInts32(
+      return cr::HashInts32(
           reinterpret_cast<uintptr_t>(location.file_name()),
           location.line_number());
 #endif
@@ -106,11 +106,11 @@ struct CRBASE_EXPORT LocationSnapshot {
 CRBASE_EXPORT const void* GetProgramCounter();
 
 #define CR_FROM_HERE_WITH_EXPLICIT_FUNCTION(function_name)      \
-    ::crbase::tracked_objects::Location(                        \
+    ::cr::tracked_objects::Location(                            \
         function_name,                                          \
         __FILE__,                                               \
         __LINE__,                                               \
-        ::crbase::tracked_objects::GetProgramCounter())
+        ::cr::tracked_objects::GetProgramCounter())
 
 // Define a macro to record the current source location.
 #define CR_FROM_HERE \

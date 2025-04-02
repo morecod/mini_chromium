@@ -16,7 +16,7 @@
 #include "crbase/time/time.h"
 #include "crbase/build_config.h"
 
-namespace crbase {
+namespace cr {
 
 class CRBASE_EXPORT SysInfo {
  public:
@@ -70,8 +70,8 @@ class CRBASE_EXPORT SysInfo {
   // corresponding unit test.
   // DON'T USE THIS ON THE MAC OR WINDOWS to determine the current OS release
   // for OS version-specific feature checks and workarounds. If you must use
-  // an OS version check instead of a feature check, use the crbase::mac::IsOS*
-  // family from base/mac/mac_util.h, or crbase::win::GetVersion from
+  // an OS version check instead of a feature check, use the cr::mac::IsOS*
+  // family from base/mac/mac_util.h, or cr::win::GetVersion from
   // base/win/windows_version.h.
   static void OperatingSystemVersionNumbers(int32_t* major_version,
                                             int32_t* minor_version,
@@ -105,6 +105,6 @@ class CRBASE_EXPORT SysInfo {
   static bool IsLowEndDevice();
 };
 
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_SRC_CRBASE_SYS_INFO_H_

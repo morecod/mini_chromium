@@ -14,7 +14,7 @@
 #include "crbase/base_export.h"
 #include "crbase/strings/string_piece.h"
 
-namespace crbase {
+namespace cr {
 
 // Version represents a dotted version number, like "1.2.3.4", supporting
 // parsing and comparison.
@@ -72,6 +72,6 @@ CRBASE_EXPORT bool operator>(const Version& v1, const Version& v2);
 CRBASE_EXPORT bool operator>=(const Version& v1, const Version& v2);
 CRBASE_EXPORT std::ostream& operator<<(std::ostream& stream, const Version& v);
 
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_SRC_CRBASE_VERSION_H_

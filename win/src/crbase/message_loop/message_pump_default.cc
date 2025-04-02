@@ -7,7 +7,7 @@
 #include "crbase/logging.h"
 ///#include "crbase/threading/thread_restrictions.h"
 
-namespace crbase {
+namespace cr {
 
 MessagePumpDefault::MessagePumpDefault()
     : keep_running_(true),
@@ -78,4 +78,4 @@ void MessagePumpDefault::ScheduleDelayedWork(
   delayed_work_time_ = delayed_work_time;
 }
 
-}  // namespace crbase
+}  // namespace cr

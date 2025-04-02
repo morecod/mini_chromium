@@ -52,15 +52,15 @@ bool IsClientCertificateError(int error) {
   }
 }
 
-Error FileErrorToNetError(crbase::File::Error file_error) {
+Error FileErrorToNetError(cr::File::Error file_error) {
   switch (file_error) {
-    case crbase::File::FILE_OK:
+    case cr::File::FILE_OK:
       return OK;
-    case crbase::File::FILE_ERROR_ACCESS_DENIED:
+    case cr::File::FILE_ERROR_ACCESS_DENIED:
       return ERR_ACCESS_DENIED;
-    case crbase::File::FILE_ERROR_INVALID_URL:
+    case cr::File::FILE_ERROR_INVALID_URL:
       return ERR_INVALID_URL;
-    case crbase::File::FILE_ERROR_NOT_FOUND:
+    case cr::File::FILE_ERROR_NOT_FOUND:
       return ERR_FILE_NOT_FOUND;
     default:
       return ERR_FAILED;

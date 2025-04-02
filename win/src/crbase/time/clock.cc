@@ -4,8 +4,8 @@
 
 #include "crbase/time/clock.h"
 
-namespace crbase {
+namespace cr {
 
 Clock::~Clock() {}
 
-}  // namespace crbase
+}  // namespace cr

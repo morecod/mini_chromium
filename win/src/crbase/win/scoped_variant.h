@@ -12,7 +12,7 @@
 #include "crbase/base_export.h"
 #include "crbase/macros.h"
 
-namespace crbase {
+namespace cr {
 namespace win {
 
 // Scoped VARIANT class for automatically freeing a COM VARIANT at the
@@ -164,6 +164,6 @@ class CRBASE_EXPORT ScopedVariant {
 };
 
 }  // namespace win
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_SRC_CRBASE_WIN_SCOPED_VARIANT_H_

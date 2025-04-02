@@ -9,7 +9,7 @@
 #include "crbase/message_loop/timer_slack.h"
 #include "crbase/threading/non_thread_safe.h"
 
-namespace crbase {
+namespace cr {
 
 class TimeTicks;
 
@@ -126,6 +126,6 @@ class CRBASE_EXPORT MessagePump : public NonThreadSafe {
   virtual void SetTimerSlack(TimerSlack timer_slack);
 };
 
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_SRC_CRBASE_MESSAGE_LOOP_MESSAGE_PUMP_H_

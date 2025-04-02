@@ -38,11 +38,11 @@ void LogBytes(const std::vector<CharType>& data, std::string* out) {
 }
 
 bool ReadValue(const Message* m,
-               crbase::PickleIterator* iter,
-               crbase::Value** value,
+               cr::PickleIterator* iter,
+               cr::Value** value,
                int recursion);
 
-void WriteValue(Message* m, const crbase::Value* value, int recursion) {
+void WriteValue(Message* m, const cr::Value* value, int recursion) {
   bool result;
   if (recursion > kMaxRecursionDepth) {
     CR_LOG(WARNING) << "Max recursion depth hit in WriteValue.";
@@ -52,60 +52,60 @@ void WriteValue(Message* m, const crbase::Value* value, int recursion) {
   m->WriteInt(value->GetType());
 
   switch (value->GetType()) {
-    case crbase::Value::TYPE_NULL:
+    case cr::Value::TYPE_NULL:
     break;
-    case crbase::Value::TYPE_BOOLEAN: {
+    case cr::Value::TYPE_BOOLEAN: {
       bool val;
       result = value->GetAsBoolean(&val);
       CR_DCHECK(result);
       WriteParam(m, val);
       break;
     }
-    case crbase::Value::TYPE_INTEGER: {
+    case cr::Value::TYPE_INTEGER: {
       int val;
       result = value->GetAsInteger(&val);
       CR_DCHECK(result);
       WriteParam(m, val);
       break;
     }
-    case crbase::Value::TYPE_DOUBLE: {
+    case cr::Value::TYPE_DOUBLE: {
       double val;
       result = value->GetAsDouble(&val);
       CR_DCHECK(result);
       WriteParam(m, val);
       break;
     }
-    case crbase::Value::TYPE_STRING: {
+    case cr::Value::TYPE_STRING: {
       std::string val;
       result = value->GetAsString(&val);
       CR_DCHECK(result);
       WriteParam(m, val);
       break;
     }
-    case crbase::Value::TYPE_BINARY: {
-      const crbase::BinaryValue* binary =
-          static_cast<const crbase::BinaryValue*>(value);
+    case cr::Value::TYPE_BINARY: {
+      const cr::BinaryValue* binary =
+          static_cast<const cr::BinaryValue*>(value);
       m->WriteData(binary->GetBuffer(), static_cast<int>(binary->GetSize()));
       break;
     }
-    case crbase::Value::TYPE_DICTIONARY: {
-      const crbase::DictionaryValue* dict =
-          static_cast<const crbase::DictionaryValue*>(value);
+    case cr::Value::TYPE_DICTIONARY: {
+      const cr::DictionaryValue* dict =
+          static_cast<const cr::DictionaryValue*>(value);
 
       WriteParam(m, static_cast<int>(dict->size()));
 
-      for (crbase::DictionaryValue::Iterator it(*dict); !it.IsAtEnd();
+      for (cr::DictionaryValue::Iterator it(*dict); !it.IsAtEnd();
            it.Advance()) {
         WriteParam(m, it.key());
         WriteValue(m, &it.value(), recursion + 1);
       }
       break;
     }
-    case crbase::Value::TYPE_LIST: {
-      const crbase::ListValue* list =
-          static_cast<const crbase::ListValue*>(value);
+    case cr::Value::TYPE_LIST: {
+      const cr::ListValue* list =
+          static_cast<const cr::ListValue*>(value);
       WriteParam(m, static_cast<int>(list->GetSize()));
-      for (crbase::ListValue::const_iterator it = list->begin();
+      for (cr::ListValue::const_iterator it = list->begin();
            it != list->end(); ++it) {
         WriteValue(m, *it, recursion + 1);
       }
@@ -117,8 +117,8 @@ void WriteValue(Message* m, const crbase::Value* value, int recursion) {
 // Helper for ReadValue that reads a DictionaryValue into a pre-allocated
 // object.
 bool ReadDictionaryValue(const Message* m,
-                         crbase::PickleIterator* iter,
-                         crbase::DictionaryValue* value,
+                         cr::PickleIterator* iter,
+                         cr::DictionaryValue* value,
                          int recursion) {
   int size;
   if (!ReadParam(m, iter, &size))
@@ -126,7 +126,7 @@ bool ReadDictionaryValue(const Message* m,
 
   for (int i = 0; i < size; ++i) {
     std::string key;
-    crbase::Value* subval;
+    cr::Value* subval;
     if (!ReadParam(m, iter, &key) ||
         !ReadValue(m, iter, &subval, recursion + 1))
       return false;
@@ -139,15 +139,15 @@ bool ReadDictionaryValue(const Message* m,
 // Helper for ReadValue that reads a ReadListValue into a pre-allocated
 // object.
 bool ReadListValue(const Message* m,
-                   crbase::PickleIterator* iter,
-                   crbase::ListValue* value,
+                   cr::PickleIterator* iter,
+                   cr::ListValue* value,
                    int recursion) {
   int size;
   if (!ReadParam(m, iter, &size))
     return false;
 
   for (int i = 0; i < size; ++i) {
-    crbase::Value* subval;
+    cr::Value* subval;
     if (!ReadValue(m, iter, &subval, recursion + 1))
       return false;
     value->Set(i, subval);
@@ -157,8 +157,8 @@ bool ReadListValue(const Message* m,
 }
 
 bool ReadValue(const Message* m,
-               crbase::PickleIterator* iter,
-               crbase::Value** value,
+               cr::PickleIterator* iter,
+               cr::Value** value,
                int recursion) {
   if (recursion > kMaxRecursionDepth) {
     CR_LOG(WARNING) << "Max recursion depth hit in ReadValue.";
@@ -170,55 +170,55 @@ bool ReadValue(const Message* m,
     return false;
 
   switch (type) {
-    case crbase::Value::TYPE_NULL:
-      *value = crbase::Value::CreateNullValue().release();
+    case cr::Value::TYPE_NULL:
+      *value = cr::Value::CreateNullValue().release();
     break;
-    case crbase::Value::TYPE_BOOLEAN: {
+    case cr::Value::TYPE_BOOLEAN: {
       bool val;
       if (!ReadParam(m, iter, &val))
         return false;
-      *value = new crbase::FundamentalValue(val);
+      *value = new cr::FundamentalValue(val);
       break;
     }
-    case crbase::Value::TYPE_INTEGER: {
+    case cr::Value::TYPE_INTEGER: {
       int val;
       if (!ReadParam(m, iter, &val))
         return false;
-      *value = new crbase::FundamentalValue(val);
+      *value = new cr::FundamentalValue(val);
       break;
     }
-    case crbase::Value::TYPE_DOUBLE: {
+    case cr::Value::TYPE_DOUBLE: {
       double val;
       if (!ReadParam(m, iter, &val))
         return false;
-      *value = new crbase::FundamentalValue(val);
+      *value = new cr::FundamentalValue(val);
       break;
     }
-    case crbase::Value::TYPE_STRING: {
+    case cr::Value::TYPE_STRING: {
       std::string val;
       if (!ReadParam(m, iter, &val))
         return false;
-      *value = new crbase::StringValue(val);
+      *value = new cr::StringValue(val);
       break;
     }
-    case crbase::Value::TYPE_BINARY: {
+    case cr::Value::TYPE_BINARY: {
       const char* data;
       int length;
       if (!iter->ReadData(&data, &length))
         return false;
-      *value = crbase::BinaryValue::CreateWithCopiedBuffer(data, length);
+      *value = cr::BinaryValue::CreateWithCopiedBuffer(data, length);
       break;
     }
-    case crbase::Value::TYPE_DICTIONARY: {
-      std::unique_ptr<crbase::DictionaryValue> val(
-          new crbase::DictionaryValue());
+    case cr::Value::TYPE_DICTIONARY: {
+      std::unique_ptr<cr::DictionaryValue> val(
+          new cr::DictionaryValue());
       if (!ReadDictionaryValue(m, iter, val.get(), recursion))
         return false;
       *value = val.release();
       break;
     }
-    case crbase::Value::TYPE_LIST: {
-      std::unique_ptr<crbase::ListValue> val(new crbase::ListValue());
+    case cr::Value::TYPE_LIST: {
+      std::unique_ptr<cr::ListValue> val(new cr::ListValue());
       if (!ReadListValue(m, iter, val.get(), recursion))
         return false;
       *value = val.release();
@@ -255,7 +255,7 @@ void ParamTraits<signed char>::Write(Message* m, const param_type& p) {
 }
 
 bool ParamTraits<signed char>::Read(const Message *m,
-                                    crbase::PickleIterator* iter, 
+                                    cr::PickleIterator* iter, 
                                     param_type *r) {
   const char* data;
   if (!iter->ReadBytes(&data, sizeof(param_type)))
@@ -265,7 +265,7 @@ bool ParamTraits<signed char>::Read(const Message *m,
 }
 
 void ParamTraits<signed char>::Log(const param_type& p, std::string* l) {
-  l->append(crbase::IntToString(p));
+  l->append(cr::IntToString(p));
 }
 
 void ParamTraits<unsigned char>::Write(Message* m, const param_type& p) {
@@ -273,7 +273,7 @@ void ParamTraits<unsigned char>::Write(Message* m, const param_type& p) {
 }
 
 bool ParamTraits<unsigned char>::Read(const Message* m,
-                                      crbase::PickleIterator* iter,
+                                      cr::PickleIterator* iter,
                                       param_type* r) {
   const char* data;
   if (!iter->ReadBytes(&data, sizeof(param_type)))
@@ -283,7 +283,7 @@ bool ParamTraits<unsigned char>::Read(const Message* m,
 }
 
 void ParamTraits<unsigned char>::Log(const param_type& p, std::string* l) {
-  l->append(crbase::UintToString(p));
+  l->append(cr::UintToString(p));
 }
 
 void ParamTraits<unsigned short>::Write(Message* m, const param_type& p) {
@@ -291,7 +291,7 @@ void ParamTraits<unsigned short>::Write(Message* m, const param_type& p) {
 }
 
 bool ParamTraits<unsigned short>::Read(const Message* m,
-                                       crbase::PickleIterator* iter,
+                                       cr::PickleIterator* iter,
                                        param_type* r) {
   const char* data;
   if (!iter->ReadBytes(&data, sizeof(param_type)))
@@ -301,35 +301,35 @@ bool ParamTraits<unsigned short>::Read(const Message* m,
 }
 
 void ParamTraits<unsigned short>::Log(const param_type& p, std::string* l) {
-  l->append(crbase::UintToString(p));
+  l->append(cr::UintToString(p));
 }
 
 void ParamTraits<int>::Log(const param_type& p, std::string* l) {
-  l->append(crbase::IntToString(p));
+  l->append(cr::IntToString(p));
 }
 
 void ParamTraits<unsigned int>::Log(const param_type& p, std::string* l) {
-  l->append(crbase::UintToString(p));
+  l->append(cr::UintToString(p));
 }
 
 void ParamTraits<long>::Log(const param_type& p, std::string* l) {
-  l->append(crbase::Int64ToString(static_cast<int64_t>(p)));
+  l->append(cr::Int64ToString(static_cast<int64_t>(p)));
 }
 
 void ParamTraits<unsigned long>::Log(const param_type& p, std::string* l) {
-  l->append(crbase::Uint64ToString(static_cast<uint64_t>(p)));
+  l->append(cr::Uint64ToString(static_cast<uint64_t>(p)));
 }
 
 void ParamTraits<long long>::Log(const param_type& p, std::string* l) {
-  l->append(crbase::Int64ToString(static_cast<int64_t>(p)));
+  l->append(cr::Int64ToString(static_cast<int64_t>(p)));
 }
 
 void ParamTraits<unsigned long long>::Log(const param_type& p, std::string* l) {
-  l->append(crbase::Uint64ToString(p));
+  l->append(cr::Uint64ToString(p));
 }
 
 void ParamTraits<float>::Log(const param_type& p, std::string* l) {
-  l->append(crbase::StringPrintf("%e", p));
+  l->append(cr::StringPrintf("%e", p));
 }
 
 void ParamTraits<double>::Write(Message* m, const param_type& p) {
@@ -337,7 +337,7 @@ void ParamTraits<double>::Write(Message* m, const param_type& p) {
 }
 
 bool ParamTraits<double>::Read(const Message* m,
-                               crbase::PickleIterator* iter,
+                               cr::PickleIterator* iter,
                                param_type* r) {
   const char *data;
   if (!iter->ReadBytes(&data, sizeof(*r))) {
@@ -349,7 +349,7 @@ bool ParamTraits<double>::Read(const Message* m,
 }
 
 void ParamTraits<double>::Log(const param_type& p, std::string* l) {
-  l->append(crbase::StringPrintf("%e", p));
+  l->append(cr::StringPrintf("%e", p));
 }
 
 
@@ -357,8 +357,8 @@ void ParamTraits<std::string>::Log(const param_type& p, std::string* l) {
   l->append(p);
 }
 
-void ParamTraits<crbase::string16>::Log(const param_type& p, std::string* l) {
-  l->append(crbase::UTF16ToUTF8(p));
+void ParamTraits<cr::string16>::Log(const param_type& p, std::string* l) {
+  l->append(cr::UTF16ToUTF8(p));
 }
 
 void ParamTraits<std::vector<char> >::Write(Message* m, const param_type& p) {
@@ -370,7 +370,7 @@ void ParamTraits<std::vector<char> >::Write(Message* m, const param_type& p) {
 }
 
 bool ParamTraits<std::vector<char>>::Read(const Message* m,
-                                          crbase::PickleIterator* iter,
+                                          cr::PickleIterator* iter,
                                           param_type* r) {
   const char *data;
   int data_size = 0;
@@ -397,7 +397,7 @@ void ParamTraits<std::vector<unsigned char> >::Write(Message* m,
 }
 
 bool ParamTraits<std::vector<unsigned char>>::Read(const Message* m,
-                                                   crbase::PickleIterator* iter,
+                                                   cr::PickleIterator* iter,
                                                    param_type* r) {
   const char *data;
   int data_size = 0;
@@ -424,7 +424,7 @@ void ParamTraits<std::vector<bool> >::Write(Message* m, const param_type& p) {
 }
 
 bool ParamTraits<std::vector<bool>>::Read(const Message* m,
-                                          crbase::PickleIterator* iter,
+                                          cr::PickleIterator* iter,
                                           param_type* r) {
   int size;
   // ReadLength() checks for < 0 itself.
@@ -448,29 +448,29 @@ void ParamTraits<std::vector<bool> >::Log(const param_type& p, std::string* l) {
   }
 }
 
-void ParamTraits<crbase::DictionaryValue>::Write(Message* m,
+void ParamTraits<cr::DictionaryValue>::Write(Message* m,
                                                  const param_type& p) {
   WriteValue(m, &p, 0);
 }
 
-bool ParamTraits<crbase::DictionaryValue>::Read(const Message* m,
-                                                crbase::PickleIterator* iter,
+bool ParamTraits<cr::DictionaryValue>::Read(const Message* m,
+                                                cr::PickleIterator* iter,
                                                 param_type* r) {
   int type;
-  if (!ReadParam(m, iter, &type) || type != crbase::Value::TYPE_DICTIONARY)
+  if (!ReadParam(m, iter, &type) || type != cr::Value::TYPE_DICTIONARY)
     return false;
 
   return ReadDictionaryValue(m, iter, r, 0);
 }
 
-void ParamTraits<crbase::DictionaryValue>::Log(const param_type& p,
+void ParamTraits<cr::DictionaryValue>::Log(const param_type& p,
                                                std::string* l) {
   std::string json;
-  crbase::JSONWriter::Write(p, &json);
+  cr::JSONWriter::Write(p, &json);
   l->append(json);
 }
 
-///void ParamTraits<crbase::SharedMemoryHandle>::Write(Message* m,
+///void ParamTraits<cr::SharedMemoryHandle>::Write(Message* m,
 ///                                                    const param_type& p) {
 ///  m->WriteBool(p.NeedsBrokering());
 ///
@@ -482,8 +482,8 @@ void ParamTraits<crbase::DictionaryValue>::Log(const param_type& p,
 ///  }
 ///}
 ///
-///bool ParamTraits<crbase::SharedMemoryHandle>::Read(const Message* m,
-///                                                   crbase::PickleIterator* iter,
+///bool ParamTraits<cr::SharedMemoryHandle>::Read(const Message* m,
+///                                                   cr::PickleIterator* iter,
 ///                                                   param_type* r) {
 ///  bool needs_brokering;
 ///  if (!iter->ReadBool(&needs_brokering))
@@ -493,8 +493,8 @@ void ParamTraits<crbase::DictionaryValue>::Log(const param_type& p,
 ///    HandleWin handle_win;
 ///    if (!ParamTraits<HandleWin>::Read(m, iter, &handle_win))
 ///      return false;
-///    *r = crbase::SharedMemoryHandle(handle_win.get_handle(),
-///                                    crbase::GetCurrentProcId());
+///    *r = cr::SharedMemoryHandle(handle_win.get_handle(),
+///                                    cr::GetCurrentProcId());
 ///    return true;
 ///  }
 ///
@@ -502,71 +502,71 @@ void ParamTraits<crbase::DictionaryValue>::Log(const param_type& p,
 ///  if (!iter->ReadInt(&handle_int))
 ///    return false;
 ///  HANDLE handle = LongToHandle(handle_int);
-///  *r = crbase::SharedMemoryHandle(handle, crbase::GetCurrentProcId());
+///  *r = cr::SharedMemoryHandle(handle, cr::GetCurrentProcId());
 ///  return true;
 ///}
 ///
-///void ParamTraits<crbase::SharedMemoryHandle>::Log(const param_type& p,
+///void ParamTraits<cr::SharedMemoryHandle>::Log(const param_type& p,
 ///                                                  std::string* l) {
 ///  LogParam(p.GetHandle(), l);
 ///  l->append(" needs brokering: ");
 ///  LogParam(p.NeedsBrokering(), l);
 ///}
 
-void ParamTraits<crbase::FilePath>::Write(Message* m, const param_type& p) {
+void ParamTraits<cr::FilePath>::Write(Message* m, const param_type& p) {
   p.WriteToPickle(m);
 }
 
-bool ParamTraits<crbase::FilePath>::Read(const Message* m,
-                                         crbase::PickleIterator* iter,
+bool ParamTraits<cr::FilePath>::Read(const Message* m,
+                                         cr::PickleIterator* iter,
                                          param_type* r) {
   return r->ReadFromPickle(iter);
 }
 
-void ParamTraits<crbase::FilePath>::Log(const param_type& p, std::string* l) {
-  ParamTraits<crbase::FilePath::StringType>::Log(p.value(), l);
+void ParamTraits<cr::FilePath>::Log(const param_type& p, std::string* l) {
+  ParamTraits<cr::FilePath::StringType>::Log(p.value(), l);
 }
 
-void ParamTraits<crbase::ListValue>::Write(Message* m, const param_type& p) {
+void ParamTraits<cr::ListValue>::Write(Message* m, const param_type& p) {
   WriteValue(m, &p, 0);
 }
 
-bool ParamTraits<crbase::ListValue>::Read(const Message* m,
-                                          crbase::PickleIterator* iter,
+bool ParamTraits<cr::ListValue>::Read(const Message* m,
+                                          cr::PickleIterator* iter,
                                           param_type* r) {
   int type;
-  if (!ReadParam(m, iter, &type) || type != crbase::Value::TYPE_LIST)
+  if (!ReadParam(m, iter, &type) || type != cr::Value::TYPE_LIST)
     return false;
 
   return ReadListValue(m, iter, r, 0);
 }
 
-void ParamTraits<crbase::ListValue>::Log(const param_type& p, std::string* l) {
+void ParamTraits<cr::ListValue>::Log(const param_type& p, std::string* l) {
   std::string json;
-  crbase::JSONWriter::Write(p, &json);
+  cr::JSONWriter::Write(p, &json);
   l->append(json);
 }
 
-void ParamTraits<crbase::NullableString16>::Write(Message* m,
+void ParamTraits<cr::NullableString16>::Write(Message* m,
                                                   const param_type& p) {
   WriteParam(m, p.string());
   WriteParam(m, p.is_null());
 }
 
-bool ParamTraits<crbase::NullableString16>::Read(const Message* m,
-                                                  crbase::PickleIterator* iter,
+bool ParamTraits<cr::NullableString16>::Read(const Message* m,
+                                                  cr::PickleIterator* iter,
                                                   param_type* r) {
-  crbase::string16 string;
+  cr::string16 string;
   if (!ReadParam(m, iter, &string))
     return false;
   bool is_null;
   if (!ReadParam(m, iter, &is_null))
     return false;
-  *r = crbase::NullableString16(string, is_null);
+  *r = cr::NullableString16(string, is_null);
   return true;
 }
 
-void ParamTraits<crbase::NullableString16>::Log(const param_type& p,
+void ParamTraits<cr::NullableString16>::Log(const param_type& p,
                                                 std::string* l) {
   l->append("(");
   LogParam(p.string(), l);
@@ -575,7 +575,7 @@ void ParamTraits<crbase::NullableString16>::Log(const param_type& p,
   l->append(")");
 }
 
-void ParamTraits<crbase::File::Info>::Write(Message* m,
+void ParamTraits<cr::File::Info>::Write(Message* m,
                                             const param_type& p) {
   WriteParam(m, p.size);
   WriteParam(m, p.is_directory);
@@ -584,8 +584,8 @@ void ParamTraits<crbase::File::Info>::Write(Message* m,
   WriteParam(m, p.creation_time.ToDoubleT());
 }
 
-bool ParamTraits<crbase::File::Info>::Read(const Message* m,
-                                           crbase::PickleIterator* iter,
+bool ParamTraits<cr::File::Info>::Read(const Message* m,
+                                           cr::PickleIterator* iter,
                                            param_type* p) {
   double last_modified, last_accessed, creation_time;
   if (!ReadParam(m, iter, &p->size) ||
@@ -594,13 +594,13 @@ bool ParamTraits<crbase::File::Info>::Read(const Message* m,
       !ReadParam(m, iter, &last_accessed) ||
       !ReadParam(m, iter, &creation_time))
     return false;
-  p->last_modified = crbase::Time::FromDoubleT(last_modified);
-  p->last_accessed = crbase::Time::FromDoubleT(last_accessed);
-  p->creation_time = crbase::Time::FromDoubleT(creation_time);
+  p->last_modified = cr::Time::FromDoubleT(last_modified);
+  p->last_accessed = cr::Time::FromDoubleT(last_accessed);
+  p->creation_time = cr::Time::FromDoubleT(creation_time);
   return true;
 }
 
-void ParamTraits<crbase::File::Info>::Log(const param_type& p,
+void ParamTraits<cr::File::Info>::Log(const param_type& p,
                                           std::string* l) {
   l->append("(");  
   LogParam(p.size, l);
@@ -615,59 +615,59 @@ void ParamTraits<crbase::File::Info>::Log(const param_type& p,
   l->append(")");
 }
 
-void ParamTraits<crbase::Time>::Write(Message* m, const param_type& p) {
+void ParamTraits<cr::Time>::Write(Message* m, const param_type& p) {
   ParamTraits<int64_t>::Write(m, p.ToInternalValue());
 }
 
-bool ParamTraits<crbase::Time>::Read(const Message* m,
-                                     crbase::PickleIterator* iter,
+bool ParamTraits<cr::Time>::Read(const Message* m,
+                                     cr::PickleIterator* iter,
                                      param_type* r) {
   int64_t value;
   if (!ParamTraits<int64_t>::Read(m, iter, &value))
     return false;
-  *r = crbase::Time::FromInternalValue(value);
+  *r = cr::Time::FromInternalValue(value);
   return true;
 }
 
-void ParamTraits<crbase::Time>::Log(const param_type& p, std::string* l) {
+void ParamTraits<cr::Time>::Log(const param_type& p, std::string* l) {
   ParamTraits<int64_t>::Log(p.ToInternalValue(), l);
 }
 
-void ParamTraits<crbase::TimeDelta>::Write(Message* m, const param_type& p) {
+void ParamTraits<cr::TimeDelta>::Write(Message* m, const param_type& p) {
   ParamTraits<int64_t>::Write(m, p.ToInternalValue());
 }
 
-bool ParamTraits<crbase::TimeDelta>::Read(const Message* m,
-                                          crbase::PickleIterator* iter,
+bool ParamTraits<cr::TimeDelta>::Read(const Message* m,
+                                          cr::PickleIterator* iter,
                                           param_type* r) {
   int64_t value;
   bool ret = ParamTraits<int64_t>::Read(m, iter, &value);
   if (ret)
-    *r = crbase::TimeDelta::FromInternalValue(value);
+    *r = cr::TimeDelta::FromInternalValue(value);
 
   return ret;
 }
 
-void ParamTraits<crbase::TimeDelta>::Log(const param_type& p, std::string* l) {
+void ParamTraits<cr::TimeDelta>::Log(const param_type& p, std::string* l) {
   ParamTraits<int64_t>::Log(p.ToInternalValue(), l);
 }
 
-void ParamTraits<crbase::TimeTicks>::Write(Message* m, const param_type& p) {
+void ParamTraits<cr::TimeTicks>::Write(Message* m, const param_type& p) {
   ParamTraits<int64_t>::Write(m, p.ToInternalValue());
 }
 
-bool ParamTraits<crbase::TimeTicks>::Read(const Message* m,
-                                          crbase::PickleIterator* iter,
+bool ParamTraits<cr::TimeTicks>::Read(const Message* m,
+                                          cr::PickleIterator* iter,
                                           param_type* r) {
   int64_t value;
   bool ret = ParamTraits<int64_t>::Read(m, iter, &value);
   if (ret)
-    *r = crbase::TimeTicks::FromInternalValue(value);
+    *r = cr::TimeTicks::FromInternalValue(value);
 
   return ret;
 }
 
-void ParamTraits<crbase::TimeTicks>::Log(const param_type& p, std::string* l) {
+void ParamTraits<cr::TimeTicks>::Log(const param_type& p, std::string* l) {
   ParamTraits<int64_t>::Log(p.ToInternalValue(), l);
 }
 
@@ -678,14 +678,14 @@ void ParamTraits<ChannelHandle>::Write(Message* m, const param_type& p) {
 }
 
 bool ParamTraits<ChannelHandle>::Read(const Message *m,
-                                      crbase::PickleIterator* iter,
+                                      cr::PickleIterator* iter,
                                       param_type *r) {
   return ReadParam(m, iter, &r->name);
 }
 
 void ParamTraits<ChannelHandle>::Log(const param_type& p,
                                      std::string* l) {
-  l->append(crbase::StringPrintf("ChannelHandle(%s)", p.name.c_str()));
+  l->append(cr::StringPrintf("ChannelHandle(%s)", p.name.c_str()));
 }
 
 void ParamTraits<LogData>::Write(Message* m, const param_type& p) {
@@ -701,7 +701,7 @@ void ParamTraits<LogData>::Write(Message* m, const param_type& p) {
 }
 
 bool ParamTraits<LogData>::Read(const Message* m,
-                                crbase::PickleIterator* iter,
+                                cr::PickleIterator* iter,
                                 param_type* r) {
   return
       ReadParam(m, iter, &r->channel) &&
@@ -737,7 +737,7 @@ void ParamTraits<Message>::Write(Message* m, const Message& p) {
 }
 
 bool ParamTraits<Message>::Read(const Message* m,
-                                crbase::PickleIterator* iter,
+                                cr::PickleIterator* iter,
                                 Message* r) {
   uint32_t routing_id, type, flags;
   if (!iter->ReadUInt32(&routing_id) ||
@@ -765,7 +765,7 @@ void ParamTraits<HANDLE>::Write(Message* m, const param_type& p) {
 }
 
 bool ParamTraits<HANDLE>::Read(const Message* m,
-                               crbase::PickleIterator* iter,
+                               cr::PickleIterator* iter,
                                param_type* r) {
   int32_t temp;
   if (!iter->ReadInt(&temp))
@@ -775,7 +775,7 @@ bool ParamTraits<HANDLE>::Read(const Message* m,
 }
 
 void ParamTraits<HANDLE>::Log(const param_type& p, std::string* l) {
-  l->append(crbase::StringPrintf("0x%p", p));
+  l->append(cr::StringPrintf("0x%p", p));
 }
 
 void ParamTraits<LOGFONT>::Write(Message* m, const param_type& p) {
@@ -783,7 +783,7 @@ void ParamTraits<LOGFONT>::Write(Message* m, const param_type& p) {
 }
 
 bool ParamTraits<LOGFONT>::Read(const Message* m,
-                                crbase::PickleIterator* iter,
+                                cr::PickleIterator* iter,
                                 param_type* r) {
   const char *data;
   int data_size = 0;
@@ -800,7 +800,7 @@ bool ParamTraits<LOGFONT>::Read(const Message* m,
 }
 
 void ParamTraits<LOGFONT>::Log(const param_type& p, std::string* l) {
-  l->append(crbase::StringPrintf("<LOGFONT>"));
+  l->append(cr::StringPrintf("<LOGFONT>"));
 }
 
 void ParamTraits<MSG>::Write(Message* m, const param_type& p) {
@@ -808,7 +808,7 @@ void ParamTraits<MSG>::Write(Message* m, const param_type& p) {
 }
 
 bool ParamTraits<MSG>::Read(const Message* m,
-                            crbase::PickleIterator* iter,
+                            cr::PickleIterator* iter,
                             param_type* r) {
   const char *data;
   int data_size = 0;

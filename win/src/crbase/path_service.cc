@@ -19,7 +19,7 @@
 #include "crbase/synchronization/lock.h"
 #include "crbase/build_config.h"
 
-namespace crbase {
+namespace cr {
 
 bool PathProvider(int key, FilePath* result);
 
@@ -296,4 +296,4 @@ void PathService::DisableCache() {
   path_data->cache_disabled = true;
 }
 
-}  // namespace crbase
+}  // namespace cr

@@ -12,7 +12,7 @@
 #include "crbase/synchronization/lock.h"
 #include "crbase/time/time.h"
 
-namespace crbase {
+namespace cr {
 
 class MessageLoop;
 class WaitableEvent;
@@ -82,7 +82,7 @@ class CRBASE_EXPORT IncomingTaskQueue
   int high_res_task_count_;
 
   // The lock that protects access to the members of this class.
-  crbase::Lock incoming_queue_lock_;
+  cr::Lock incoming_queue_lock_;
 
   // An incoming queue of tasks that are acquired under a mutex for processing
   // on this instance's thread. These tasks have not yet been been pushed to
@@ -108,6 +108,6 @@ class CRBASE_EXPORT IncomingTaskQueue
 };
 
 }  // namespace internal
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_SRC_CRBASE_MESSAGE_LOOP_INCOMING_TASK_QUEUE_H_

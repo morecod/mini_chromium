@@ -13,7 +13,7 @@
 #include "crbase/strings/string_util.h"
 #include "crbase/win/windows_version.h"
 
-namespace crbase {
+namespace cr {
 namespace win {
 
 namespace {
@@ -673,4 +673,4 @@ void RegistryKeyIterator::Initialize(HKEY root_key,
 }
 
 }  // namespace win
-}  // namespace crbase
+}  // namespace cr

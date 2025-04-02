@@ -88,14 +88,14 @@ bool CanonicalizeFileSystemURL(const char* spec,
       new_parsed);
 }
 
-bool CanonicalizeFileSystemURL(const crbase::char16* spec,
+bool CanonicalizeFileSystemURL(const cr::char16* spec,
                                int spec_len,
                                const Parsed& parsed,
                                CharsetConverter* charset_converter,
                                CanonOutput* output,
                                Parsed* new_parsed) {
-  return DoCanonicalizeFileSystemURL<crbase::char16, crbase::char16>(
-      spec, URLComponentSource<crbase::char16>(spec), parsed, charset_converter,
+  return DoCanonicalizeFileSystemURL<cr::char16, cr::char16>(
+      spec, URLComponentSource<cr::char16>(spec), parsed, charset_converter,
       output, new_parsed);
 }
 
@@ -114,7 +114,7 @@ bool ReplaceFileSystemURL(const char* base,
 
 bool ReplaceFileSystemURL(const char* base,
                           const Parsed& base_parsed,
-                          const Replacements<crbase::char16>& replacements,
+                          const Replacements<cr::char16>& replacements,
                           CharsetConverter* charset_converter,
                           CanonOutput* output,
                           Parsed* new_parsed) {

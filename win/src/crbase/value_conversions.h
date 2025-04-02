@@ -9,7 +9,7 @@
 
 #include "crbase/base_export.h"
 
-namespace crbase {
+namespace cr {
 
 class FilePath;
 class TimeDelta;
@@ -23,6 +23,6 @@ CRBASE_EXPORT bool GetValueAsFilePath(const Value& value, FilePath* file_path);
 CRBASE_EXPORT StringValue* CreateTimeDeltaValue(const TimeDelta& time);
 CRBASE_EXPORT bool GetValueAsTimeDelta(const Value& value, TimeDelta* time);
 
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_SRC_CRBASE_VALUE_CONVERSIONS_H_

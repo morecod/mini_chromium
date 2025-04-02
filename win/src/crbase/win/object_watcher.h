@@ -13,7 +13,7 @@
 #include "crbase/memory/weak_ptr.h"
 #include "crbase/message_loop/message_loop.h"
 
-namespace crbase {
+namespace cr {
 namespace win {
 
 // A class that provides a means to asynchronously wait for a Windows object to
@@ -27,7 +27,7 @@ namespace win {
 //
 // Typical usage:
 //
-//   class MyClass : public crbase::win::ObjectWatcher::Delegate {
+//   class MyClass : public cr::win::ObjectWatcher::Delegate {
 //    public:
 //     void DoStuffWhenSignaled(HANDLE object) {
 //       watcher_.StartWatchingOnce(object, this);
@@ -36,7 +36,7 @@ namespace win {
 //       // OK, time to do stuff!
 //     }
 //    private:
-//     crbase::win::ObjectWatcher watcher_;
+//     cr::win::ObjectWatcher watcher_;
 //   };
 //
 // In the above example, MyClass wants to "do stuff" when object becomes

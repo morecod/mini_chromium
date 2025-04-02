@@ -12,7 +12,7 @@
 #include "crbase/time/time.h"
 ///#include "crbase/threading/thread_restrictions.h"
 
-namespace crbase {
+namespace cr {
 
 WaitableEvent::WaitableEvent(bool manual_reset, bool signaled)
     : handle_(CreateEvent(NULL, manual_reset, signaled, NULL)) {
@@ -43,7 +43,7 @@ bool WaitableEvent::IsSignaled() {
 }
 
 void WaitableEvent::Wait() {
-  ///crbase::ThreadRestrictions::AssertWaitAllowed();
+  ///cr::ThreadRestrictions::AssertWaitAllowed();
   DWORD result = ::WaitForSingleObject(handle_.Get(), INFINITE);
   // It is most unexpected that this should ever fail.  Help consumers learn
   // about it if it should ever fail.
@@ -51,7 +51,7 @@ void WaitableEvent::Wait() {
 }
 
 bool WaitableEvent::TimedWait(const TimeDelta& max_time) {
-  ///crbase::ThreadRestrictions::AssertWaitAllowed();
+  ///cr::ThreadRestrictions::AssertWaitAllowed();
   CR_DCHECK_GE(max_time, TimeDelta());
   // Truncate the timeout to milliseconds. The API specifies that this method
   // can return in less than |max_time| (when returning false), as the argument
@@ -73,7 +73,7 @@ bool WaitableEvent::TimedWait(const TimeDelta& max_time) {
 
 // static
 size_t WaitableEvent::WaitMany(WaitableEvent** events, size_t count) {
-  ///crbase::ThreadRestrictions::AssertWaitAllowed();
+  ///cr::ThreadRestrictions::AssertWaitAllowed();
   HANDLE handles[MAXIMUM_WAIT_OBJECTS];
   CR_CHECK_LE(count, static_cast<size_t>(MAXIMUM_WAIT_OBJECTS))
       << "Can only wait on " << MAXIMUM_WAIT_OBJECTS << " with WaitMany";
@@ -95,4 +95,4 @@ size_t WaitableEvent::WaitMany(WaitableEvent** events, size_t count) {
   return result - WAIT_OBJECT_0;
 }
 
-}  // namespace crbase
+}  // namespace cr

@@ -526,12 +526,12 @@ bool IsRelativeURL(const char* base,
 
 bool IsRelativeURL(const char* base,
                    const Parsed& base_parsed,
-                   const crbase::char16* fragment,
+                   const cr::char16* fragment,
                    int fragment_len,
                    bool is_base_hierarchical,
                    bool* is_relative,
                    Component* relative_component) {
-  return DoIsRelativeURL<crbase::char16>(
+  return DoIsRelativeURL<cr::char16>(
       base, base_parsed, fragment, fragment_len, is_base_hierarchical,
       is_relative, relative_component);
 }
@@ -552,12 +552,12 @@ bool ResolveRelativeURL(const char* base_url,
 bool ResolveRelativeURL(const char* base_url,
                         const Parsed& base_parsed,
                         bool base_is_file,
-                        const crbase::char16* relative_url,
+                        const cr::char16* relative_url,
                         const Component& relative_component,
                         CharsetConverter* query_converter,
                         CanonOutput* output,
                         Parsed* out_parsed) {
-  return DoResolveRelativeURL<crbase::char16>(
+  return DoResolveRelativeURL<cr::char16>(
       base_url, base_parsed, base_is_file, relative_url,
       relative_component, query_converter, output, out_parsed);
 }

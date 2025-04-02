@@ -49,7 +49,7 @@ namespace crurl {
 namespace {
 
 // Returns true if the given character is a valid digit to use in a port.
-inline bool IsPortDigit(crbase::char16 ch) {
+inline bool IsPortDigit(cr::char16 ch) {
   return ch >= '0' && ch <= '9';
 }
 
@@ -802,13 +802,13 @@ bool ExtractScheme(const char* url, int url_len, Component* scheme) {
   return DoExtractScheme(url, url_len, scheme);
 }
 
-bool ExtractScheme(const crbase::char16* url, int url_len, Component* scheme) {
+bool ExtractScheme(const cr::char16* url, int url_len, Component* scheme) {
   return DoExtractScheme(url, url_len, scheme);
 }
 
 // This handles everything that may be an authority terminator, including
 // backslash. For special backslash handling see DoParseAfterScheme.
-bool IsAuthorityTerminator(crbase::char16 ch) {
+bool IsAuthorityTerminator(cr::char16 ch) {
   return IsURLSlash(ch) || ch == '?' || ch == '#';
 }
 
@@ -818,7 +818,7 @@ void ExtractFileName(const char* url,
   DoExtractFileName(url, path, file_name);
 }
 
-void ExtractFileName(const crbase::char16* url,
+void ExtractFileName(const cr::char16* url,
                      const Component& path,
                      Component* file_name) {
   DoExtractFileName(url, path, file_name);
@@ -831,7 +831,7 @@ bool ExtractQueryKeyValue(const char* url,
   return DoExtractQueryKeyValue(url, query, key, value);
 }
 
-bool ExtractQueryKeyValue(const crbase::char16* url,
+bool ExtractQueryKeyValue(const cr::char16* url,
                           Component* query,
                           Component* key,
                           Component* value) {
@@ -847,7 +847,7 @@ void ParseAuthority(const char* spec,
   DoParseAuthority(spec, auth, username, password, hostname, port_num);
 }
 
-void ParseAuthority(const crbase::char16* spec,
+void ParseAuthority(const cr::char16* spec,
                     const Component& auth,
                     Component* username,
                     Component* password,
@@ -860,7 +860,7 @@ int ParsePort(const char* url, const Component& port) {
   return DoParsePort(url, port);
 }
 
-int ParsePort(const crbase::char16* url, const Component& port) {
+int ParsePort(const cr::char16* url, const Component& port) {
   return DoParsePort(url, port);
 }
 
@@ -868,7 +868,7 @@ void ParseStandardURL(const char* url, int url_len, Parsed* parsed) {
   DoParseStandardURL(url, url_len, parsed);
 }
 
-void ParseStandardURL(const crbase::char16* url, int url_len, Parsed* parsed) {
+void ParseStandardURL(const cr::char16* url, int url_len, Parsed* parsed) {
   DoParseStandardURL(url, url_len, parsed);
 }
 
@@ -879,7 +879,7 @@ void ParsePathURL(const char* url,
   DoParsePathURL(url, url_len, trim_path_end, parsed);
 }
 
-void ParsePathURL(const crbase::char16* url,
+void ParsePathURL(const cr::char16* url,
                   int url_len,
                   bool trim_path_end,
                   Parsed* parsed) {
@@ -890,7 +890,7 @@ void ParseFileSystemURL(const char* url, int url_len, Parsed* parsed) {
   DoParseFileSystemURL(url, url_len, parsed);
 }
 
-void ParseFileSystemURL(const crbase::char16* url, int url_len, Parsed* parsed) {
+void ParseFileSystemURL(const cr::char16* url, int url_len, Parsed* parsed) {
   DoParseFileSystemURL(url, url_len, parsed);
 }
 
@@ -898,7 +898,7 @@ void ParseMailtoURL(const char* url, int url_len, Parsed* parsed) {
   DoParseMailtoURL(url, url_len, parsed);
 }
 
-void ParseMailtoURL(const crbase::char16* url, int url_len, Parsed* parsed) {
+void ParseMailtoURL(const cr::char16* url, int url_len, Parsed* parsed) {
   DoParseMailtoURL(url, url_len, parsed);
 }
 
@@ -910,7 +910,7 @@ void ParsePathInternal(const char* spec,
   ParsePath(spec, path, filepath, query, ref);
 }
 
-void ParsePathInternal(const crbase::char16* spec,
+void ParsePathInternal(const cr::char16* spec,
                        const Component& path,
                        Component* filepath,
                        Component* query,
@@ -925,7 +925,7 @@ void ParseAfterScheme(const char* spec,
   DoParseAfterScheme(spec, spec_len, after_scheme, parsed);
 }
 
-void ParseAfterScheme(const crbase::char16* spec,
+void ParseAfterScheme(const cr::char16* spec,
                       int spec_len,
                       int after_scheme,
                       Parsed* parsed) {

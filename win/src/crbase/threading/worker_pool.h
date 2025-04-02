@@ -9,7 +9,7 @@
 #include "crbase/functional/callback_forward.h"
 #include "crbase/memory/ref_counted.h"
 
-namespace crbase {
+namespace cr {
 
 class Task;
 
@@ -55,6 +55,6 @@ class CRBASE_EXPORT WorkerPool {
   static const scoped_refptr<TaskRunner>& GetTaskRunner(bool task_is_slow);
 };
 
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_SRC_CRBASE_THREADING_WORKER_POOL_H_

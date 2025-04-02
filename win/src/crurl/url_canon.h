@@ -176,13 +176,13 @@ class RawCanonOutputT : public CanonOutputT<T> {
 // the templates so it can also be used internally if a wide buffer is
 // required.
 typedef CanonOutputT<char> CanonOutput;
-typedef CanonOutputT<crbase::char16> CanonOutputW;
+typedef CanonOutputT<cr::char16> CanonOutputW;
 
 template<int fixed_capacity>
 class RawCanonOutput : public RawCanonOutputT<char, fixed_capacity> {};
 template<int fixed_capacity>
 class RawCanonOutputW : 
-    public RawCanonOutputT<crbase::char16, fixed_capacity> {};
+    public RawCanonOutputT<cr::char16, fixed_capacity> {};
 
 // Character set converter ----------------------------------------------------
 //
@@ -208,7 +208,7 @@ class CRURL_EXPORT CharsetConverter {
   // decimal, (such as "&#20320;") with escaping of the ampersand, number
   // sign, and semicolon (in the previous example it would be
   // "%26%2320320%3B"). This rule is based on what IE does in this situation.
-  virtual void ConvertFromUTF16(const crbase::char16* input,
+  virtual void ConvertFromUTF16(const cr::char16* input,
                                 int input_len,
                                 CanonOutput* output) = 0;
 };
@@ -233,10 +233,10 @@ class CRURL_EXPORT CharsetConverter {
 CRURL_EXPORT const char* RemoveURLWhitespace(const char* input, int input_len,
                                              CanonOutputT<char>* buffer,
                                              int* output_len);
-CRURL_EXPORT const crbase::char16* RemoveURLWhitespace(
-    const crbase::char16* input,
+CRURL_EXPORT const cr::char16* RemoveURLWhitespace(
+    const cr::char16* input,
     int input_len,
-    CanonOutputT<crbase::char16>* buffer,
+    CanonOutputT<cr::char16>* buffer,
     int* output_len);
 
 // IDN ------------------------------------------------------------------------
@@ -250,7 +250,7 @@ CRURL_EXPORT const crbase::char16* RemoveURLWhitespace(
 // the length of the output will be set to the length of the new host name.
 //
 // On error, returns false. The output in this case is undefined.
-CRURL_EXPORT bool IDNToASCII(const crbase::char16* src,
+CRURL_EXPORT bool IDNToASCII(const cr::char16* src,
                              int src_len,
                              CanonOutputW* output);
 
@@ -282,7 +282,7 @@ CRURL_EXPORT bool CanonicalizeScheme(const char* spec,
                                      const Component& scheme,
                                      CanonOutput* output,
                                      Component* out_scheme);
-CRURL_EXPORT bool CanonicalizeScheme(const crbase::char16* spec,
+CRURL_EXPORT bool CanonicalizeScheme(const cr::char16* spec,
                                      const Component& scheme,
                                      CanonOutput* output,
                                      Component* out_scheme);
@@ -304,9 +304,9 @@ CRURL_EXPORT bool CanonicalizeUserInfo(const char* username_source,
                                        CanonOutput* output,
                                        Component* out_username,
                                        Component* out_password);
-CRURL_EXPORT bool CanonicalizeUserInfo(const crbase::char16* username_source,
+CRURL_EXPORT bool CanonicalizeUserInfo(const cr::char16* username_source,
                                        const Component& username,
-                                       const crbase::char16* password_source,
+                                       const cr::char16* password_source,
                                        const Component& password,
                                        CanonOutput* output,
                                        Component* out_username,
@@ -366,7 +366,7 @@ CRURL_EXPORT bool CanonicalizeHost(const char* spec,
                                    const Component& host,
                                    CanonOutput* output,
                                    Component* out_host);
-CRURL_EXPORT bool CanonicalizeHost(const crbase::char16* spec,
+CRURL_EXPORT bool CanonicalizeHost(const cr::char16* spec,
                                    const Component& host,
                                    CanonOutput* output,
                                    Component* out_host);
@@ -379,7 +379,7 @@ CRURL_EXPORT void CanonicalizeHostVerbose(const char* spec,
                                           const Component& host,
                                           CanonOutput* output,
                                           CanonHostInfo* host_info);
-CRURL_EXPORT void CanonicalizeHostVerbose(const crbase::char16* spec,
+CRURL_EXPORT void CanonicalizeHostVerbose(const cr::char16* spec,
                                           const Component& host,
                                           CanonOutput* output,
                                           CanonHostInfo* host_info);
@@ -398,7 +398,7 @@ CRURL_EXPORT void CanonicalizeIPAddress(const char* spec,
                                         const Component& host,
                                         CanonOutput* output,
                                         CanonHostInfo* host_info);
-CRURL_EXPORT void CanonicalizeIPAddress(const crbase::char16* spec,
+CRURL_EXPORT void CanonicalizeIPAddress(const cr::char16* spec,
                                         const Component& host,
                                         CanonOutput* output,
                                         CanonHostInfo* host_info);
@@ -413,7 +413,7 @@ CRURL_EXPORT bool CanonicalizePort(const char* spec,
                                    int default_port_for_scheme,
                                    CanonOutput* output,
                                    Component* out_port);
-CRURL_EXPORT bool CanonicalizePort(const crbase::char16* spec,
+CRURL_EXPORT bool CanonicalizePort(const cr::char16* spec,
                                    const Component& port,
                                    int default_port_for_scheme,
                                    CanonOutput* output,
@@ -436,7 +436,7 @@ CRURL_EXPORT bool CanonicalizePath(const char* spec,
                                    const Component& path,
                                    CanonOutput* output,
                                    Component* out_path);
-CRURL_EXPORT bool CanonicalizePath(const crbase::char16* spec,
+CRURL_EXPORT bool CanonicalizePath(const cr::char16* spec,
                                    const Component& path,
                                    CanonOutput* output,
                                    Component* out_path);
@@ -451,7 +451,7 @@ CRURL_EXPORT bool FileCanonicalizePath(const char* spec,
                                        const Component& path,
                                        CanonOutput* output,
                                        Component* out_path);
-CRURL_EXPORT bool FileCanonicalizePath(const crbase::char16* spec,
+CRURL_EXPORT bool FileCanonicalizePath(const cr::char16* spec,
                                        const Component& path,
                                        CanonOutput* output,
                                        Component* out_path);
@@ -473,7 +473,7 @@ CRURL_EXPORT void CanonicalizeQuery(const char* spec,
                                     CharsetConverter* converter,
                                     CanonOutput* output,
                                     Component* out_query);
-CRURL_EXPORT void CanonicalizeQuery(const crbase::char16* spec,
+CRURL_EXPORT void CanonicalizeQuery(const cr::char16* spec,
                                     const Component& query,
                                     CharsetConverter* converter,
                                     CanonOutput* output,
@@ -489,7 +489,7 @@ CRURL_EXPORT void CanonicalizeRef(const char* spec,
                                   const Component& path,
                                   CanonOutput* output,
                                   Component* out_path);
-CRURL_EXPORT void CanonicalizeRef(const crbase::char16* spec,
+CRURL_EXPORT void CanonicalizeRef(const cr::char16* spec,
                                   const Component& path,
                                   CanonOutput* output,
                                   Component* out_path);
@@ -511,7 +511,7 @@ CRURL_EXPORT bool CanonicalizeStandardURL(const char* spec,
                                           CharsetConverter* query_converter,
                                           CanonOutput* output,
                                           Parsed* new_parsed);
-CRURL_EXPORT bool CanonicalizeStandardURL(const crbase::char16* spec,
+CRURL_EXPORT bool CanonicalizeStandardURL(const cr::char16* spec,
                                           int spec_len,
                                           const Parsed& parsed,
                                           CharsetConverter* query_converter,
@@ -525,7 +525,7 @@ CRURL_EXPORT bool CanonicalizeFileURL(const char* spec,
                                       CharsetConverter* query_converter,
                                       CanonOutput* output,
                                       Parsed* new_parsed);
-CRURL_EXPORT bool CanonicalizeFileURL(const crbase::char16* spec,
+CRURL_EXPORT bool CanonicalizeFileURL(const cr::char16* spec,
                                       int spec_len,
                                       const Parsed& parsed,
                                       CharsetConverter* query_converter,
@@ -539,7 +539,7 @@ CRURL_EXPORT bool CanonicalizeFileSystemURL(const char* spec,
                                             CharsetConverter* query_converter,
                                             CanonOutput* output,
                                             Parsed* new_parsed);
-CRURL_EXPORT bool CanonicalizeFileSystemURL(const crbase::char16* spec,
+CRURL_EXPORT bool CanonicalizeFileSystemURL(const cr::char16* spec,
                                             int spec_len,
                                             const Parsed& parsed,
                                             CharsetConverter* query_converter,
@@ -553,7 +553,7 @@ CRURL_EXPORT bool CanonicalizePathURL(const char* spec,
                                       const Parsed& parsed,
                                       CanonOutput* output,
                                       Parsed* new_parsed);
-CRURL_EXPORT bool CanonicalizePathURL(const crbase::char16* spec,
+CRURL_EXPORT bool CanonicalizePathURL(const cr::char16* spec,
                                       int spec_len,
                                       const Parsed& parsed,
                                       CanonOutput* output,
@@ -569,7 +569,7 @@ CRURL_EXPORT bool CanonicalizeMailtoURL(const char* spec,
                                         const Parsed& parsed,
                                         CanonOutput* output,
                                         Parsed* new_parsed);
-CRURL_EXPORT bool CanonicalizeMailtoURL(const crbase::char16* spec,
+CRURL_EXPORT bool CanonicalizeMailtoURL(const cr::char16* spec,
                                         int spec_len,
                                         const Parsed& parsed,
                                         CanonOutput* output,
@@ -767,7 +767,7 @@ CRURL_EXPORT bool ReplaceStandardURL(const char* base,
 CRURL_EXPORT bool ReplaceStandardURL(
     const char* base,
     const Parsed& base_parsed,
-    const Replacements<crbase::char16>& replacements,
+    const Replacements<cr::char16>& replacements,
     CharsetConverter* query_converter,
     CanonOutput* output,
     Parsed* new_parsed);
@@ -783,7 +783,7 @@ CRURL_EXPORT bool ReplaceFileSystemURL(const char* base,
 CRURL_EXPORT bool ReplaceFileSystemURL(
     const char* base,
     const Parsed& base_parsed,
-    const Replacements<crbase::char16>& replacements,
+    const Replacements<cr::char16>& replacements,
     CharsetConverter* query_converter,
     CanonOutput* output,
     Parsed* new_parsed);
@@ -799,7 +799,7 @@ CRURL_EXPORT bool ReplaceFileURL(const char* base,
 CRURL_EXPORT bool ReplaceFileURL(
     const char* base,
     const Parsed& base_parsed,
-    const Replacements<crbase::char16>& replacements,
+    const Replacements<cr::char16>& replacements,
     CharsetConverter* query_converter,
     CanonOutput* output,
     Parsed* new_parsed);
@@ -814,7 +814,7 @@ CRURL_EXPORT bool ReplacePathURL(const char* base,
 CRURL_EXPORT bool ReplacePathURL(
     const char* base,
     const Parsed& base_parsed,
-    const Replacements<crbase::char16>& replacements,
+    const Replacements<cr::char16>& replacements,
     CanonOutput* output,
     Parsed* new_parsed);
 
@@ -828,7 +828,7 @@ CRURL_EXPORT bool ReplaceMailtoURL(const char* base,
 CRURL_EXPORT bool ReplaceMailtoURL(
     const char* base,
     const Parsed& base_parsed,
-    const Replacements<crbase::char16>& replacements,
+    const Replacements<cr::char16>& replacements,
     CanonOutput* output,
     Parsed* new_parsed);
 
@@ -854,7 +854,7 @@ CRURL_EXPORT bool IsRelativeURL(const char* base,
                                 Component* relative_component);
 CRURL_EXPORT bool IsRelativeURL(const char* base,
                                 const Parsed& base_parsed,
-                                const crbase::char16* fragment,
+                                const cr::char16* fragment,
                                 int fragment_len,
                                 bool is_base_hierarchical,
                                 bool* is_relative,
@@ -889,7 +889,7 @@ CRURL_EXPORT bool ResolveRelativeURL(const char* base_url,
 CRURL_EXPORT bool ResolveRelativeURL(const char* base_url,
                                      const Parsed& base_parsed,
                                      bool base_is_file,
-                                     const crbase::char16* relative_url,
+                                     const cr::char16* relative_url,
                                      const Component& relative_component,
                                      CharsetConverter* query_converter,
                                      CanonOutput* output,

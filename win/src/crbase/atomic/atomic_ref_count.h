@@ -10,7 +10,7 @@
 
 #include "crbase/atomic/atomicops.h"
 
-namespace crbase {
+namespace cr {
 
 typedef subtle::Atomic32 AtomicRefCount;
 
@@ -61,6 +61,6 @@ inline bool AtomicRefCountIsZero(volatile AtomicRefCount *ptr) {
   return res;
 }
 
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_SRC_CRBASE_ATOMIC_ATOMIC_REF_COUNT_H_

@@ -18,7 +18,7 @@
 #include "crbase/strings/string_piece.h"
 #include "crbase/build_config.h"
 
-namespace crbase {
+namespace cr {
 
 // Converts between wide and UTF-8 representations of a string. On error, the
 // result is system-dependent.
@@ -44,6 +44,6 @@ CRBASE_EXPORT std::string SysWideToMultiByte(const StringPiece16& wide,
                                              uint32_t code_page);
 #endif 
 
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_SRC_CRBASE_STRINGS_SYS_STRING_CONVERSIONS_H_

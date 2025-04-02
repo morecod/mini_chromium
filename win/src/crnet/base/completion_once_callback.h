@@ -14,15 +14,15 @@ namespace crnet {
 
 // A callback specialization that takes a single int parameter. Usually this is
 // used to report a byte count or network error code.
-typedef crbase::OnceCallback<void(int)> CompletionOnceCallback;
+typedef cr::OnceCallback<void(int)> CompletionOnceCallback;
 
 // 64bit version of callback specialization that takes a single int64_t
 // parameter. Usually this is used to report a file offset, size or network
 // error code.
-typedef crbase::OnceCallback<void(int64_t)> Int64CompletionOnceCallback;
+typedef cr::OnceCallback<void(int64_t)> Int64CompletionOnceCallback;
 
 using CancelableCompletionOnceCallback =
-    crbase::CancelableOnceCallback<void(int)>;
+    cr::CancelableOnceCallback<void(int)>;
 
 }  // namespace crnet
 

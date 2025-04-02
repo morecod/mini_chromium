@@ -280,14 +280,14 @@ const char* RemoveURLWhitespace(const char* input, int input_len,
   return DoRemoveURLWhitespace(input, input_len, buffer, output_len);
 }
 
-const crbase::char16* RemoveURLWhitespace(const crbase::char16* input,
+const cr::char16* RemoveURLWhitespace(const cr::char16* input,
                                           int input_len,
-                                          CanonOutputT<crbase::char16>* buffer,
+                                          CanonOutputT<cr::char16>* buffer,
                                           int* output_len) {
   return DoRemoveURLWhitespace(input, input_len, buffer, output_len);
 }
 
-char CanonicalSchemeChar(crbase::char16 ch) {
+char CanonicalSchemeChar(cr::char16 ch) {
   if (ch >= 0x80)
     return 0;  // Non-ASCII is not supported by schemes.
   return kSchemeCanonical[ch];
@@ -300,11 +300,11 @@ bool CanonicalizeScheme(const char* spec,
   return DoScheme<char, unsigned char>(spec, scheme, output, out_scheme);
 }
 
-bool CanonicalizeScheme(const crbase::char16* spec,
+bool CanonicalizeScheme(const cr::char16* spec,
                         const Component& scheme,
                         CanonOutput* output,
                         Component* out_scheme) {
-  return DoScheme<crbase::char16, crbase::char16>(
+  return DoScheme<cr::char16, cr::char16>(
       spec, scheme, output, out_scheme);
 }
 
@@ -320,14 +320,14 @@ bool CanonicalizeUserInfo(const char* username_source,
       output, out_username, out_password);
 }
 
-bool CanonicalizeUserInfo(const crbase::char16* username_source,
+bool CanonicalizeUserInfo(const cr::char16* username_source,
                           const Component& username,
-                          const crbase::char16* password_source,
+                          const cr::char16* password_source,
                           const Component& password,
                           CanonOutput* output,
                           Component* out_username,
                           Component* out_password) {
-  return DoUserInfo<crbase::char16, crbase::char16>(
+  return DoUserInfo<cr::char16, cr::char16>(
       username_source, username, password_source, password,
       output, out_username, out_password);
 }
@@ -342,12 +342,12 @@ bool CanonicalizePort(const char* spec,
                                      output, out_port);
 }
 
-bool CanonicalizePort(const crbase::char16* spec,
+bool CanonicalizePort(const cr::char16* spec,
                       const Component& port,
                       int default_port_for_scheme,
                       CanonOutput* output,
                       Component* out_port) {
-  return DoPort<crbase::char16, crbase::char16>(
+  return DoPort<cr::char16, cr::char16>(
       spec, port, default_port_for_scheme, output, out_port);
 }
 
@@ -358,11 +358,11 @@ void CanonicalizeRef(const char* spec,
   DoCanonicalizeRef<char, unsigned char>(spec, ref, output, out_ref);
 }
 
-void CanonicalizeRef(const crbase::char16* spec,
+void CanonicalizeRef(const cr::char16* spec,
                      const Component& ref,
                      CanonOutput* output,
                      Component* out_ref) {
-  DoCanonicalizeRef<crbase::char16, crbase::char16>(
+  DoCanonicalizeRef<cr::char16, cr::char16>(
       spec, ref, output, out_ref);
 }
 

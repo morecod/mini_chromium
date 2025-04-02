@@ -47,10 +47,10 @@
 #include "crbase/synchronization/lock.h"
 #include "crbase/build_config.h"
 
-using crbase::ThreadTicks;
-using crbase::Time;
-using crbase::TimeDelta;
-using crbase::TimeTicks;
+using cr::ThreadTicks;
+using cr::Time;
+using cr::TimeDelta;
+using cr::TimeTicks;
 
 namespace {
 
@@ -60,7 +60,7 @@ int64_t FileTimeToMicroseconds(const FILETIME& ft) {
   // Need to bit_cast to fix alignment, then divide by 10 to convert
   // 100-nanoseconds to microseconds. This only works on little-endian
   // machines.
-  return crbase::bit_cast<int64_t, FILETIME>(ft) / 10;
+  return cr::bit_cast<int64_t, FILETIME>(ft) / 10;
 }
 
 void MicrosecondsToFileTime(int64_t us, FILETIME* ft) {
@@ -69,7 +69,7 @@ void MicrosecondsToFileTime(int64_t us, FILETIME* ft) {
 
   // Multiply by 10 to convert microseconds to 100-nanoseconds. Bit_cast will
   // handle alignment problems. This only works on little-endian machines.
-  *ft = crbase::bit_cast<FILETIME, int64_t>(us * 10);
+  *ft = cr::bit_cast<FILETIME, int64_t>(us * 10);
 }
 
 int64_t CurrentWallclockMicroseconds() {
@@ -99,7 +99,7 @@ bool g_high_res_timer_enabled = false;
 // How many times the high resolution timer has been called.
 uint32_t g_high_res_timer_count = 0;
 // The lock to control access to the above two variables.
-crbase::Lock g_high_res_lock;
+cr::Lock g_high_res_lock;
 
 // Returns a pointer to the QueryThreadCycleTime() function from Windows.
 // Can't statically link to it because it is not available on XP.
@@ -197,7 +197,7 @@ FILETIME Time::ToFileTime() const {
 
 // static
 void Time::EnableHighResolutionTimer(bool enable) {
-  crbase::AutoLock lock(g_high_res_lock);
+  cr::AutoLock lock(g_high_res_lock);
   if (g_high_res_timer_enabled == enable)
     return;
   g_high_res_timer_enabled = enable;
@@ -224,7 +224,7 @@ bool Time::ActivateHighResolutionTimer(bool activating) {
   // called.
   const uint32_t max_value = std::numeric_limits<uint32_t>::max();
 
-  crbase::AutoLock lock(g_high_res_lock);
+  cr::AutoLock lock(g_high_res_lock);
   UINT period = g_high_res_timer_enabled ? kMinTimerIntervalHighResMs
                                          : kMinTimerIntervalLowResMs;
   if (activating) {
@@ -243,7 +243,7 @@ bool Time::ActivateHighResolutionTimer(bool activating) {
 
 // static
 bool Time::IsHighResolutionTimerInUse() {
-  crbase::AutoLock lock(g_high_res_lock);
+  cr::AutoLock lock(g_high_res_lock);
   return g_high_res_timer_enabled && g_high_res_timer_count > 0;
 }
 
@@ -346,7 +346,7 @@ DWORD g_last_seen_now = 0;
 // easy to use a Singleton without even knowing it, and that may lead to many
 // gotchas). Its impact on startup time should be negligible due to low-level
 // nature of time code.
-crbase::Lock g_rollover_lock;
+cr::Lock g_rollover_lock;
 
 // We use timeGetTime() to implement TimeTicks::Now().  This can be problematic
 // because it returns the number of milliseconds since Windows has started,
@@ -354,7 +354,7 @@ crbase::Lock g_rollover_lock;
 // rollover ourselves, which works if TimeTicks::Now() is called at least every
 // 49 days.
 TimeDelta RolloverProtectedNow() {
-  crbase::AutoLock locked(g_rollover_lock);
+  cr::AutoLock locked(g_rollover_lock);
   // We should hold the lock while calling tick_function to make sure that
   // we keep last_seen_now stay correctly in sync.
   DWORD now = g_tick_function();
@@ -440,7 +440,7 @@ TimeDelta QPCNow() {
   return QPCValueToTimeDelta(QPCNowRaw());
 }
 
-bool IsBuggyAthlon(const crbase::CPU& cpu) {
+bool IsBuggyAthlon(const cr::CPU& cpu) {
   // On Athlon X2 CPUs (e.g. model 15) QueryPerformanceCounter is unreliable.
   return cpu.vendor_name() == "AuthenticAMD" && cpu.family() == 15;
 }
@@ -462,7 +462,7 @@ void InitializeNowFunctionPointer() {
   // Otherwise, Now uses the high-resolution QPC clock. As of 21 August 2015,
   // ~72% of users fall within this category.
   NowFunction now_function;
-  crbase::CPU cpu;
+  cr::CPU cpu;
   if (ticks_per_sec.QuadPart <= 0 ||
       !cpu.has_non_stop_time_stamp_counter() || IsBuggyAthlon(cpu)) {
     now_function = &RolloverProtectedNow;
@@ -494,7 +494,7 @@ TimeDelta InitialNowFunction() {
 // static
 TimeTicks::TickFunctionType TimeTicks::SetMockTickFunction(
     TickFunctionType ticker) {
-  crbase::AutoLock locked(g_rollover_lock);
+  cr::AutoLock locked(g_rollover_lock);
   TickFunctionType old = g_tick_function;
   g_tick_function = ticker;
   g_rollover_ms = 0;
@@ -536,8 +536,8 @@ ThreadTicks ThreadTicks::Now() {
 // static
 bool ThreadTicks::IsSupportedWin() {
   static bool is_supported = GetQueryThreadCycleTimeFunction() &&
-                             crbase::CPU().has_non_stop_time_stamp_counter() &&
-                             !IsBuggyAthlon(crbase::CPU());
+                             cr::CPU().has_non_stop_time_stamp_counter() &&
+                             !IsBuggyAthlon(cr::CPU());
   return is_supported;
 }
 

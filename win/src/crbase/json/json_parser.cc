@@ -17,7 +17,7 @@
 #include "crbase/third_party/icu/icu_utf.h"
 #include "crbase/values.h"
 
-namespace crbase {
+namespace cr {
 namespace internal {
 
 namespace {
@@ -963,4 +963,4 @@ std::string JSONParser::FormatErrorMessage(int line, int column,
 }
 
 }  // namespace internal
-}  // namespace crbase
+}  // namespace cr

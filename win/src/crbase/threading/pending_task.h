@@ -13,7 +13,7 @@
 #include "crbase/tracing/location.h"
 #include "crbase/tracing/tracking_info.h"
 
-namespace crbase {
+namespace cr {
 
 // Contains data about a pending task. Stored in TaskQueue and DelayedTaskQueue
 // for use by classes that queue and execute tasks.
@@ -51,8 +51,8 @@ struct CRBASE_EXPORT PendingTask : public TrackingInfo {
 using TaskQueue = std::queue<PendingTask>;
 
 // PendingTasks are sorted by their |delayed_run_time| property.
-using DelayedTaskQueue = std::priority_queue<crbase::PendingTask>;
+using DelayedTaskQueue = std::priority_queue<cr::PendingTask>;
 
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_SRC_CRBASE_PENDING_TASK_H_

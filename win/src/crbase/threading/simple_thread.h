@@ -51,7 +51,7 @@
 #include "crbase/synchronization/waitable_event.h"
 #include "crbase/threading/platform_thread.h"
 
-namespace crbase {
+namespace cr {
 
 // This is the base SimpleThread.  You can derive from it and implement the
 // virtual Run method, or you can use the DelegateSimpleThread interface.
@@ -187,6 +187,6 @@ class CRBASE_EXPORT DelegateSimpleThreadPool
   WaitableEvent dry_;    // Not signaled when there is no work to do.
 };
 
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_SRC_CRBASE_THREADING_SIMPLE_THREAD_H_

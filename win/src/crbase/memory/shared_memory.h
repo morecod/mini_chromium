@@ -24,7 +24,7 @@
 #include "crbase/files/scoped_file.h"
 #endif
 
-namespace crbase {
+namespace cr {
 
 class FilePath;
 
@@ -276,6 +276,6 @@ class CRBASE_EXPORT SharedMemory {
   size_t             requested_size_;
 };
 
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_SRC_CRBASE_MEMORY_SHARED_MEMORY_H_

@@ -13,7 +13,7 @@
 #include "crbase/synchronization/lock.h"
 #include "crbase/threading/platform_thread.h"
 
-namespace crbase {
+namespace cr {
 
 template <typename T>
 struct DefaultSingletonTraits;
@@ -64,6 +64,6 @@ class CRBASE_EXPORT ThreadIdNameManager {
   PlatformThreadId main_process_id_;
 };
 
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_SRC_CRBASE_THREADING_THREAD_ID_NAME_MANAGER_H_

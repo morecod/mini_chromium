@@ -47,10 +47,10 @@ bool standard_schemes_locked = false;
 template<typename CHAR> struct CharToStringPiece {
 };
 template<> struct CharToStringPiece<char> {
-  typedef crbase::StringPiece Piece;
+  typedef cr::StringPiece Piece;
 };
-template<> struct CharToStringPiece<crbase::char16> {
-  typedef crbase::StringPiece16 Piece;
+template<> struct CharToStringPiece<cr::char16> {
+  typedef cr::StringPiece16 Piece;
 };
 
 // Ensures that the standard_schemes list is initialized, does nothing if it
@@ -71,7 +71,7 @@ inline bool DoCompareSchemeComponent(const CHAR* spec,
                                      const char* compare_to) {
   if (!component.is_nonempty())
     return compare_to[0] == 0;  // When component is empty, match empty scheme.
-  return crbase::LowerCaseEqualsASCII(
+  return cr::LowerCaseEqualsASCII(
       typename CharToStringPiece<CHAR>::Piece(
           &spec[component.begin], component.len),
       compare_to);
@@ -89,7 +89,7 @@ bool DoIsStandard(const CHAR* spec,
 
   InitStandardSchemes();
   for (size_t i = 0; i < standard_schemes->size(); i++) {
-    if (crbase::LowerCaseEqualsASCII(
+    if (cr::LowerCaseEqualsASCII(
             typename CharToStringPiece<CHAR>::Piece(
                 &spec[scheme.begin], scheme.len),
             standard_schemes->at(i).scheme)) {
@@ -422,7 +422,7 @@ bool GetStandardSchemeType(const char* spec,
   return DoIsStandard(spec, scheme, type);
 }
 
-bool IsStandard(const crbase::char16* spec, const Component& scheme) {
+bool IsStandard(const cr::char16* spec, const Component& scheme) {
   SchemeType unused_scheme_type;
   return DoIsStandard(spec, scheme, &unused_scheme_type);
 }
@@ -434,7 +434,7 @@ bool FindAndCompareScheme(const char* str,
   return DoFindAndCompareScheme(str, str_len, compare, found_scheme);
 }
 
-bool FindAndCompareScheme(const crbase::char16* str,
+bool FindAndCompareScheme(const cr::char16* str,
                           int str_len,
                           const char* compare,
                           Component* found_scheme) {
@@ -451,7 +451,7 @@ bool Canonicalize(const char* spec,
                         output, output_parsed);
 }
 
-bool Canonicalize(const crbase::char16* spec,
+bool Canonicalize(const cr::char16* spec,
                   int spec_len,
                   bool trim_path_end,
                   CharsetConverter* charset_converter,
@@ -477,7 +477,7 @@ bool ResolveRelative(const char* base_spec,
 bool ResolveRelative(const char* base_spec,
                      int base_spec_len,
                      const Parsed& base_parsed,
-                     const crbase::char16* relative,
+                     const cr::char16* relative,
                      int relative_length,
                      CharsetConverter* charset_converter,
                      CanonOutput* output,
@@ -501,7 +501,7 @@ bool ReplaceComponents(const char* spec,
 bool ReplaceComponents(const char* spec,
                        int spec_len,
                        const Parsed& parsed,
-                       const Replacements<crbase::char16>& replacements,
+                       const Replacements<cr::char16>& replacements,
                        CharsetConverter* charset_converter,
                        CanonOutput* output,
                        Parsed* out_parsed) {
@@ -575,7 +575,7 @@ bool CompareSchemeComponent(const char* spec,
   return DoCompareSchemeComponent(spec, component, compare_to);
 }
 
-bool CompareSchemeComponent(const crbase::char16* spec,
+bool CompareSchemeComponent(const cr::char16* spec,
                             const Component& component,
                             const char* compare_to) {
   return DoCompareSchemeComponent(spec, component, compare_to);

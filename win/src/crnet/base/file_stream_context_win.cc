@@ -37,7 +37,7 @@ void IncrementOffset(OVERLAPPED* overlapped, DWORD count) {
 }  // namespace
 
 FileStream::Context::Context(const 
-    crbase::scoped_refptr<crbase::TaskRunner>& task_runner)
+    cr::scoped_refptr<cr::TaskRunner>& task_runner)
         : async_in_progress_(false),
           last_operation_(NONE),
           orphaned_(false),
@@ -48,8 +48,8 @@ FileStream::Context::Context(const
           result_(0) {}
 
 FileStream::Context::Context(
-    crbase::File file, 
-    const crbase::scoped_refptr<crbase::TaskRunner>& task_runner)
+    cr::File file, 
+    const cr::scoped_refptr<cr::TaskRunner>& task_runner)
         : file_(std::move(file)),
           async_in_progress_(false),
           last_operation_(NONE),
@@ -85,12 +85,12 @@ int FileStream::Context::Read(IOBuffer* buf,
 
   task_runner_->PostTask(
       CR_FROM_HERE,
-      crbase::BindOnce(&FileStream::Context::ReadAsync, 
-                       crbase::Unretained(this),
+      cr::BindOnce(&FileStream::Context::ReadAsync, 
+                       cr::Unretained(this),
                        file_.GetPlatformFile(), 
-                       crbase::make_scoped_refptr(buf), buf_len,
+                       cr::make_scoped_refptr(buf), buf_len,
                        &io_context_.overlapped, 
-                       crbase::ThreadTaskRunnerHandle::Get()));
+                       cr::ThreadTaskRunnerHandle::Get()));
   return ERR_IO_PENDING;
 }
 
@@ -126,7 +126,7 @@ FileStream::Context::IOResult FileStream::Context::SeekFileImpl(
 }
 
 void FileStream::Context::OnFileOpened() {
-  crbase::MessageLoopForIO::current()->RegisterIOHandler(
+  cr::MessageLoopForIO::current()->RegisterIOHandler(
       file_.GetPlatformFile(), this);
 }
 
@@ -140,7 +140,7 @@ void FileStream::Context::IOCompletionIsPending(
 }
 
 void FileStream::Context::OnIOCompleted(
-    crbase::MessageLoopForIO::IOContext* context,
+    cr::MessageLoopForIO::IOContext* context,
     DWORD bytes_read,
     DWORD error) {
   CR_DCHECK_EQ(&io_context_, context);
@@ -193,7 +193,7 @@ void FileStream::Context::InvokeUserCallback() {
     last_operation_ = NONE;
     async_in_progress_ = false;
   }
-  crbase::scoped_refptr<IOBuffer> temp_buf = in_flight_buf_;
+  cr::scoped_refptr<IOBuffer> temp_buf = in_flight_buf_;
   in_flight_buf_ = NULL;
   std::move(callback_).Run(result_);
 }
@@ -210,17 +210,17 @@ void FileStream::Context::DeleteOrphanedContext() {
 void FileStream::Context::ReadAsync(
     FileStream::Context* context,
     HANDLE file,
-    crbase::scoped_refptr<IOBuffer> buf,
+    cr::scoped_refptr<IOBuffer> buf,
     int buf_len,
     OVERLAPPED* overlapped,
-    crbase::scoped_refptr<crbase::SingleThreadTaskRunner> 
+    cr::scoped_refptr<cr::SingleThreadTaskRunner> 
         origin_thread_task_runner) {
   DWORD bytes_read = 0;
   BOOL ret = ::ReadFile(file, buf->data(), buf_len, &bytes_read, overlapped);
   origin_thread_task_runner->PostTask(
       CR_FROM_HERE,
-      crbase::BindOnce(&FileStream::Context::ReadAsyncResult,
-                       crbase::Unretained(context), ret, bytes_read, 
+      cr::BindOnce(&FileStream::Context::ReadAsyncResult,
+                       cr::Unretained(context), ret, bytes_read, 
                        ::GetLastError()));
 }
 

@@ -6,7 +6,7 @@
 
 ///#include "base/threading/thread_collision_warner.h"
 
-namespace crbase {
+namespace cr {
 namespace {
 
 #if CR_DCHECK_IS_ON()
@@ -62,4 +62,4 @@ bool RefCountedThreadSafeBase::Release() const {
 
 }  // namespace subtle
 
-}  // namespace crbase
+}  // namespace cr

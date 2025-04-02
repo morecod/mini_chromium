@@ -15,7 +15,7 @@
 #include "crbase/threading/thread_task_runner_handle.h"
 #include "crbase/time/tick_clock.h"
 
-namespace crbase {
+namespace cr {
 namespace internal {
 
 // BaseTimerTaskInternal is a simple delegate for scheduling a callback to Timer
@@ -340,4 +340,4 @@ void RetainingOneShotTimer::RunUserTask() {
   // No more member accesses here: |this| could be deleted at this point.
 }
 
-}  // namespace crbase
+}  // namespace cr

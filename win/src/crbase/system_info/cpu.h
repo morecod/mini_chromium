@@ -10,7 +10,7 @@
 #include "crbase/build_config.h"
 #include "crbase/base_export.h"
 
-namespace crbase {
+namespace cr {
 
 // Query information about the processor.
 class CRBASE_EXPORT CPU {
@@ -149,6 +149,6 @@ class CRBASE_EXPORT CPU {
   bool is_running_in_vm_;
 };
 
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_SRC_CRBASE_SYSTEM_INFO_CPU_H_

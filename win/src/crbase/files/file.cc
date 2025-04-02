@@ -5,7 +5,7 @@
 #include "crbase/files/file.h"
 #include "crbase/files/file_path.h"
 
-namespace crbase {
+namespace cr {
 
 File::Info::Info()
     : size(0),
@@ -127,4 +127,4 @@ bool File::Flush() {
   return return_value;
 }
 
-}  // namespace crbase
+}  // namespace cr

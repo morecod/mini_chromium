@@ -6,7 +6,7 @@
 
 #include "crbase/tracing/tracked_objects.h"
 
-namespace crbase {
+namespace cr {
 
 PendingTask::PendingTask(const tracked_objects::Location& posted_from,
                          OnceClosure task)
@@ -53,4 +53,4 @@ bool PendingTask::operator<(const PendingTask& other) const {
   return (sequence_num - other.sequence_num) > 0;
 }
 
-}  // namespace crbase
+}  // namespace cr

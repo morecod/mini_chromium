@@ -35,7 +35,7 @@
 #include "crbase/posix/eintr_wrapper.h"
 #endif
 
-namespace crbase {
+namespace cr {
 
 class Time;
 
@@ -434,6 +434,6 @@ CRBASE_EXPORT bool CopyAndDeleteDirectory(const FilePath& from_path,
 #endif
 
 }  // namespace internal
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_SRC_CRBASE_FILES_FILE_UTIL_H_

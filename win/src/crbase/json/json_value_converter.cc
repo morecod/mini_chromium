@@ -4,33 +4,33 @@
 
 #include "crbase/json/json_value_converter.h"
 
-namespace crbase {
+namespace cr {
 namespace internal {
 
 bool BasicValueConverter<int>::Convert(
-    const crbase::Value& value, int* field) const {
+    const cr::Value& value, int* field) const {
   return value.GetAsInteger(field);
 }
 
 bool BasicValueConverter<std::string>::Convert(
-    const crbase::Value& value, std::string* field) const {
+    const cr::Value& value, std::string* field) const {
   return value.GetAsString(field);
 }
 
 bool BasicValueConverter<string16>::Convert(
-    const crbase::Value& value, string16* field) const {
+    const cr::Value& value, string16* field) const {
   return value.GetAsString(field);
 }
 
 bool BasicValueConverter<double>::Convert(
-    const crbase::Value& value, double* field) const {
+    const cr::Value& value, double* field) const {
   return value.GetAsDouble(field);
 }
 
 bool BasicValueConverter<bool>::Convert(
-    const crbase::Value& value, bool* field) const {
+    const cr::Value& value, bool* field) const {
   return value.GetAsBoolean(field);
 }
 
 }  // namespace internal
-}  // namespace crbase
+}  // namespace cr

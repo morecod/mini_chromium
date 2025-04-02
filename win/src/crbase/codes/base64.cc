@@ -8,7 +8,7 @@
 
 #include "crbase/third_party/modp_b64/modp_b64.h"
 
-namespace crbase {
+namespace cr {
 
 void Base64Encode(const StringPiece& input, std::string* output) {
   std::string temp;
@@ -36,4 +36,4 @@ bool Base64Decode(const StringPiece& input, std::string* output) {
   return true;
 }
 
-}  // namespace crbase
+}  // namespace cr

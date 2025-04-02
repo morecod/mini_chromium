@@ -14,7 +14,7 @@
 #include "crbase/strings/string_split.h"
 #include "crbase/strings/string_util.h"
 
-namespace crbase {
+namespace cr {
 
 namespace {
 
@@ -194,4 +194,4 @@ std::ostream& operator<<(std::ostream& stream, const Version& v) {
   return stream << v.GetString();
 }
 
-}  // namespace crbase
+}  // namespace cr

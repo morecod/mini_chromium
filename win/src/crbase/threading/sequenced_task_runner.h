@@ -9,7 +9,7 @@
 #include "crbase/threading/sequenced_task_runner_helpers.h"
 #include "crbase/threading/task_runner.h"
 
-namespace crbase {
+namespace cr {
 
 // A SequencedTaskRunner is a subclass of TaskRunner that provides
 // additional guarantees on the order that tasks are started, as well
@@ -154,6 +154,6 @@ class CRBASE_EXPORT SequencedTaskRunner : public TaskRunner {
                            const void* object);
 };
 
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_SRC_CRBASE_THREADING_SEQUENCED_TASK_RUNNER_H_

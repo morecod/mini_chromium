@@ -18,7 +18,7 @@
 #include "crbase/strings/stringprintf.h"
 #endif
 
-namespace crbase {
+namespace cr {
 
 bool IsValidGUID(const std::string& guid) {
   const size_t kGUIDLength = 36U;
@@ -74,7 +74,7 @@ std::string RandomDataToGUIDString(const uint64_t bytes[2]) {
 }
 
 std::string GenerateGUID() {
-  uint64_t sixteen_bytes[2] = {crbase::RandUint64(), crbase::RandUint64()};
+  uint64_t sixteen_bytes[2] = {cr::RandUint64(), cr::RandUint64()};
 
   // Set the GUID to version 4 as described in RFC 4122, section 4.4.
   // The format of GUID version 4 must be xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx,
@@ -94,4 +94,4 @@ std::string GenerateGUID() {
 
 #endif
 
-}  // namespace crbase
+}  // namespace cr

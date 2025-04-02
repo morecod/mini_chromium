@@ -24,7 +24,7 @@
 #include <sys/stat.h>
 #endif
 
-namespace crbase {
+namespace cr {
 
 #if defined(MINI_CHROMIUM_OS_WIN)
 typedef HANDLE PlatformFile;
@@ -115,7 +115,7 @@ class CRBASE_EXPORT File {
   // Used to hold information about a given file.
   // If you add more fields to this structure (platform-specific fields are OK),
   // make sure to update all functions that use it in file_util_{win|posix}.cc,
-  // too, and the ParamTraits<crbase::File::Info> implementation in
+  // too, and the ParamTraits<cr::File::Info> implementation in
   // ipc/ipc_message_utils.cc.
   struct CRBASE_EXPORT Info {
     Info();
@@ -315,6 +315,6 @@ class CRBASE_EXPORT File {
   bool async_;
 };
 
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_SRC_CRBASE_FILES_FILE_H_

@@ -16,7 +16,7 @@
 #include "crbase/third_party/nspr/prtime.h"
 #include "crbase/build_config.h"
 
-namespace crbase {
+namespace cr {
 
 // TimeDelta ------------------------------------------------------------------
 
@@ -156,7 +156,7 @@ time_t Time::ToTimeT() const {
     return std::numeric_limits<time_t>::max();
   }
   if (std::numeric_limits<int64_t>::max() - kTimeTToMicrosecondsOffset <= us_) {
-    CR_DLOG(WARNING) << "Overflow when converting crbase::Time with internal " 
+    CR_DLOG(WARNING) << "Overflow when converting cr::Time with internal " 
                      << "value " << us_ << " to time_t.";
     return std::numeric_limits<time_t>::max();
   }
@@ -347,4 +347,4 @@ bool Time::Exploded::HasValidValues() const {
          is_in_range(millisecond, 0, 999);
 }
 
-}  // namespace crbase
+}  // namespace cr

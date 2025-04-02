@@ -15,7 +15,7 @@
 #include "crbase/tracing/tracked_time.h"
 #include "crbase/time/time.h"
 
-namespace crbase {
+namespace cr {
 
 namespace tracked_objects {
 class Location;
@@ -53,6 +53,6 @@ struct CRBASE_EXPORT TrackingInfo {
   TimeTicks delayed_run_time;
 };
 
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_SRC_CRBASE_TRACING_TRACKING_INFO_H_

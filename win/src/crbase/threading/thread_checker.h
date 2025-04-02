@@ -21,7 +21,7 @@
 
 #define ENABLE_THREAD_CHECKER 0
 
-namespace crbase {
+namespace cr {
 
 // Do nothing implementation, for use in release mode.
 //

@@ -9,7 +9,7 @@
 
 #include "crbase/win/pe_image.h"
 
-namespace crbase {
+namespace cr {
 namespace win {
 
 // Structure to perform imports enumerations.
@@ -577,4 +577,4 @@ PVOID PEImageAsData::RVAToAddr(DWORD rva) const {
 }
 
 }  // namespace win
-}  // namespace crbase
+}  // namespace cr

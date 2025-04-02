@@ -69,7 +69,7 @@
 //
 // WARNING: FilePaths should ALWAYS be displayed with LTR directionality, even
 // when the UI language is RTL. This means you always need to pass filepaths
-// through crbase::i18n::WrapPathWithLTRFormatting() before displaying it in the
+// through cr::i18n::WrapPathWithLTRFormatting() before displaying it in the
 // RTL UI.
 //
 // This is a very common source of bugs, please try to keep this in mind.
@@ -134,7 +134,7 @@
 #define PRIsFP "ls"
 #endif  // MINI_CHROMIUM_OS_WIN
 
-namespace crbase {
+namespace cr {
 
 class Pickle;
 class PickleIterator;
@@ -259,7 +259,7 @@ class CRBASE_EXPORT FilePath {
   // TODO(davidben): Check all our extension-sensitive code to see if
   // we can rename this to Extension() and the other to something like
   // LongExtension(), defaulting to short extensions and leaving the
-  // long "extensions" to logic like crbase::GetUniquePathNumber().
+  // long "extensions" to logic like cr::GetUniquePathNumber().
   StringType FinalExtension() const;
 
   // Returns "C:\pics\jojo" for path "C:\pics\jojo.jpg"
@@ -419,7 +419,7 @@ class CRBASE_EXPORT FilePath {
   StringType path_;
 };
 
-}  // namespace crbase
+}  // namespace cr
 
 // Macros for string literal initialization of FilePath::CharType[], and for
 // using a FilePath::CharType[] in a printf-style format string.
@@ -436,13 +436,13 @@ class CRBASE_EXPORT FilePath {
 namespace std {
 
 template<>
-struct hash<crbase::FilePath> {
-  size_t operator()(const crbase::FilePath& f) const {
-    return hash<crbase::FilePath::StringType>()(f.value());
+struct hash<cr::FilePath> {
+  size_t operator()(const cr::FilePath& f) const {
+    return hash<cr::FilePath::StringType>()(f.value());
   }
 };
 
-std::ostream& operator<<(std::ostream& out, const crbase::FilePath& value);
+std::ostream& operator<<(std::ostream& out, const cr::FilePath& value);
 
 }  // namespace std
 

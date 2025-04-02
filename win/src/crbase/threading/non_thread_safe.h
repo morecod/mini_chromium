@@ -5,7 +5,7 @@
 #ifndef MINI_CHROMIUM_SRC_CRBASE_THREADING_NON_THREAD_SAFE_H_
 #define MINI_CHROMIUM_SRC_CRBASE_THREADING_NON_THREAD_SAFE_H_
 
-namespace crbase {
+namespace cr {
 
 // Do nothing implementation of NonThreadSafe, for release mode.
 //
@@ -24,6 +24,6 @@ class NonThreadSafeDoNothing {
 
 typedef NonThreadSafeDoNothing NonThreadSafe;
 
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_SRC_CRBASE_THREADING_NON_THREAD_SAFE_H_

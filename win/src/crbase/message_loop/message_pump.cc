@@ -4,7 +4,7 @@
 
 #include "crbase/message_loop/message_pump.h"
 
-namespace crbase {
+namespace cr {
 
 MessagePump::MessagePump() {
 }
@@ -15,4 +15,4 @@ MessagePump::~MessagePump() {
 void MessagePump::SetTimerSlack(TimerSlack) {
 }
 
-}  // namespace crbase
+}  // namespace cr

@@ -12,7 +12,7 @@
 #include "crbase/strings/utf_offset_string_conversions.h"
 #include "crbase/strings/utf_string_conversions.h"
 
-namespace crbase {
+namespace cr {
 
 namespace {
 
@@ -296,7 +296,7 @@ std::basic_string<CharT> UnescapeURLWithAdjustmentsImpl(
             (rules & UnescapeRule::SPOOFING_AND_CONTROL_CHARS)))) {
         // Use the unescaped version of the character.
         if (adjustments)
-          adjustments->push_back(crbase::OffsetAdjuster::Adjustment(i, 3, 1));
+          adjustments->push_back(cr::OffsetAdjuster::Adjustment(i, 3, 1));
         result.push_back(first_byte);
         i += 2;
       } else {
@@ -453,7 +453,7 @@ string16 UnescapeAndDecodeUTF8URLComponentWithAdjustments(
   OffsetAdjuster::Adjustments unescape_adjustments;
   std::string unescaped_url(UnescapeURLWithAdjustmentsImpl(
       text, rules, &unescape_adjustments));
-  if (crbase::UTF8ToUTF16WithAdjustments(unescaped_url.data(),
+  if (cr::UTF8ToUTF16WithAdjustments(unescaped_url.data(),
                                          unescaped_url.length(),
                                          &result, adjustments)) {
     // Character set looks like it's valid.
@@ -503,4 +503,4 @@ string16 UnescapeForHTML(StringPiece16 input) {
   return text;
 }
 
-}  // namespace crbase
+}  // namespace cr

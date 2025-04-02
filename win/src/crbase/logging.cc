@@ -72,7 +72,7 @@ typedef pthread_mutex_t* MutexHandle;
 #include "crbase/posix/safe_strerror.h"
 #endif
 
-namespace crbase_logging {
+namespace cr_logging {
 
 namespace {
 
@@ -223,7 +223,7 @@ class LoggingLock {
   // The lock is used if log file locking is false. It helps us avoid problems
   // with multiple threads writing to the log file at the same time.  Use
   // LockImpl directly instead of using Lock, because Lock makes logging calls.
-  static crbase::internal::LockImpl* log_lock;
+  static cr::internal::LockImpl* log_lock;
 
   // When we don't use a lock, we are using a global mutex. We need to do this
   // because LockFileEx is not thread safe.
@@ -238,7 +238,7 @@ class LoggingLock {
 // static
 bool LoggingLock::initialized = false;
 // static
-crbase::internal::LockImpl* LoggingLock::log_lock = nullptr;
+cr::internal::LockImpl* LoggingLock::log_lock = nullptr;
 // static
 LogLockingState LoggingLock::lock_log_file = LOCK_LOG_FILE;
 
@@ -273,8 +273,8 @@ bool InitializeLogFileHandle() {
                                OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, nullptr);
     if (g_log_file == INVALID_HANDLE_VALUE || g_log_file == nullptr) {
       // try the current directory
-      crbase::FilePath file_path;
-      if (!crbase::GetCurrentDirectory(&file_path))
+      cr::FilePath file_path;
+      if (!cr::GetCurrentDirectory(&file_path))
         return false;
 
       *g_log_file_name = file_path.Append(
@@ -443,7 +443,7 @@ void DisplayDebugMessageInDialog(const std::string& str) {
     return;
 
 #if defined(MINI_CHROMIUM_OS_WIN)
-  MessageBoxW(nullptr, crbase::UTF8ToUTF16(str).c_str(), L"Fatal error",
+  MessageBoxW(nullptr, cr::UTF8ToUTF16(str).c_str(), L"Fatal error",
               MB_OK | MB_ICONHAND | MB_TOPMOST);
 #else
   // We intentionally don't implement a dialog on other platforms.
@@ -490,9 +490,9 @@ LogMessage::LogMessage(const char* file, int line, LogSeverity severity,
 
 LogMessage::~LogMessage() {
 #if !defined(NDEBUG)
-  if (severity_ == LOG_FATAL && !crbase::debug::BeingDebugged()) {
+  if (severity_ == LOG_FATAL && !cr::debug::BeingDebugged()) {
     // Include a stack trace on a fatal, unless a debugger is attached.
-    crbase::debug::StackTrace trace;
+    cr::debug::StackTrace trace;
     stream_ << std::endl;  // Newline to separate from log message.
     trace.OutputToStream(&stream_);
   }
@@ -576,7 +576,7 @@ LogMessage::~LogMessage() {
     // are contained in minidumps for diagnostic purposes.
     char str_stack[1024];
     str_newline.copy(str_stack, cr_arraysize(str_stack));
-    crbase::debug::Alias(str_stack);
+    cr::debug::Alias(str_stack);
 
     if (log_assert_handler) {
       // Make a copy of the string for the handler out of paranoia.
@@ -588,14 +588,14 @@ LogMessage::~LogMessage() {
       // information, and displaying message boxes when the application is
       // hosed can cause additional problems.
 #ifndef NDEBUG
-      if (!crbase::debug::BeingDebugged()) {
+      if (!cr::debug::BeingDebugged()) {
         // Displaying a dialog is unnecessary when debugging and can complicate
         // debugging.
         DisplayDebugMessageInDialog(stream_.str());
       }
 #endif
       // Crash the process to generate a dump.
-      ///crbase::debug::BreakDebugger();
+      ///cr::debug::BreakDebugger();
       CR_IMMEDIATE_CRASH();
     }
   }
@@ -603,9 +603,9 @@ LogMessage::~LogMessage() {
 
 // writes the common header info to the stream
 void LogMessage::Init(const char* file, int line) {
-  crbase::StringPiece filename(file);
+  cr::StringPiece filename(file);
   size_t last_slash_pos = filename.find_last_of("\\/");
-  if (last_slash_pos != crbase::StringPiece::npos)
+  if (last_slash_pos != cr::StringPiece::npos)
     filename.remove_prefix(last_slash_pos + 1);
 
   // TODO(darin): It might be nice if the columns were fixed width.
@@ -614,7 +614,7 @@ void LogMessage::Init(const char* file, int line) {
   if (g_log_process_id)
     stream_ << CurrentProcessId() << ':';
   if (g_log_thread_id)
-    stream_ << crbase::PlatformThread::CurrentId() << ':';
+    stream_ << cr::PlatformThread::CurrentId() << ':';
   if (g_log_timestamp) {
     time_t t = time(nullptr);
     struct tm local_time = {0};
@@ -671,15 +671,15 @@ CRBASE_EXPORT std::string SystemErrorCodeToString(SystemErrorCode error_code) {
                              cr_arraysize(msgbuf), nullptr);
   if (len) {
     // Messages returned by system end with line breaks.
-    return crbase::CollapseWhitespaceASCII(msgbuf, true) +
-        crbase::StringPrintf(" (0x%X)", error_code);
+    return cr::CollapseWhitespaceASCII(msgbuf, true) +
+        cr::StringPrintf(" (0x%X)", error_code);
   }
-  return crbase::StringPrintf("Error (0x%X) while retrieving error. (0x%X)",
+  return cr::StringPrintf("Error (0x%X) while retrieving error. (0x%X)",
                             GetLastError(), error_code);
 }
 #elif defined(MINI_CHROMIUM_OS_POSIX)
 CRBASE_EXPORT std::string SystemErrorCodeToString(SystemErrorCode error_code) {
-  return crbase::safe_strerror(error_code);
+  return cr::safe_strerror(error_code);
 }
 #else
 #error Not implemented
@@ -700,7 +700,7 @@ Win32ErrorLogMessage::~Win32ErrorLogMessage() {
   // by placing it in a field) and use Alias in hopes that it makes
   // it into crash dumps.
   DWORD last_error = err_;
-  crbase::debug::Alias(&last_error);
+  cr::debug::Alias(&last_error);
 }
 #elif defined(MINI_CHROMIUM_OS_POSIX)
 ErrnoLogMessage::ErrnoLogMessage(const char* file,
@@ -751,7 +751,7 @@ void RawLog(int level, const char* message) {
   }
 
   if (level == LOG_FATAL)
-    crbase::debug::BreakDebugger();
+    cr::debug::BreakDebugger();
 }
 
 // This was defined at the beginning of this file.
@@ -774,8 +774,8 @@ CRBASE_EXPORT void LogErrorNotReached(const char* file, int line) {
       << "NOTREACHED() hit.";
 }
 
-}  // namespace crbase_logging
+}  // namespace cr_logging
 
 //std::ostream& std::operator<<(std::ostream& out, const wchar_t* wstr) {
-//  return out << crbase::WideToUTF8(wstr);
+//  return out << cr::WideToUTF8(wstr);
 //}

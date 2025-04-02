@@ -26,7 +26,7 @@
 ///#include "cripc/ipc_message_macros.h"
 #include "cripc/ipc_sync_message.h"
 
-using crbase::WaitableEvent;
+using cr::WaitableEvent;
 
 namespace cripc {
 
@@ -38,7 +38,7 @@ namespace {
 ///  *signal = true;
 ///}
 ///
-crbase::LazyInstance<std::unique_ptr<crbase::WaitableEvent>>::Leaky
+cr::LazyInstance<std::unique_ptr<cr::WaitableEvent>>::Leaky
     g_pump_messages_event = CR_LAZY_INSTANCE_INITIALIZER;
 
 }  // namespace
@@ -61,7 +61,7 @@ crbase::LazyInstance<std::unique_ptr<crbase::WaitableEvent>>::Leaky
 // sync message while another one is blocked).
 
 class SyncChannel::ReceivedSyncMsgQueue :
-    public crbase::RefCountedThreadSafe<ReceivedSyncMsgQueue> {
+    public cr::RefCountedThreadSafe<ReceivedSyncMsgQueue> {
  public:
   // SyncChannel::WaitForReplyWithNestedMessageLoop may be re-entered, i.e. we
   // may nest waiting message loops arbitrarily deep on the SyncChannel's
@@ -86,12 +86,12 @@ class SyncChannel::ReceivedSyncMsgQueue :
     NestedSendDoneWatcher& operator=( const NestedSendDoneWatcher&) = delete;
 
     NestedSendDoneWatcher(SyncChannel::SyncContext* context,
-                          crbase::RunLoop* run_loop)
+                          cr::RunLoop* run_loop)
         : sync_msg_queue_(context->received_sync_msgs()),
           outer_state_(sync_msg_queue_->top_send_done_event_watcher_),
           event_(context->GetSendDoneEvent()),
           callback_(
-              crbase::BindOnce(
+              cr::BindOnce(
                   &SyncChannel::SyncContext::OnSendDoneEventSignaled,
                   context,
                   run_loop)) {
@@ -115,8 +115,8 @@ class SyncChannel::ReceivedSyncMsgQueue :
 
     void StartWatching() {
       watcher_.StartWatching(
-          event_, crbase::BindOnce(&NestedSendDoneWatcher::Run,
-                                   crbase::Unretained(this)));
+          event_, cr::BindOnce(&NestedSendDoneWatcher::Run,
+                                   cr::Unretained(this)));
     }
 
     void StopWatching() { watcher_.StopWatching(); }
@@ -124,9 +124,9 @@ class SyncChannel::ReceivedSyncMsgQueue :
     ReceivedSyncMsgQueue* const sync_msg_queue_;
     NestedSendDoneWatcher* const outer_state_;
 
-    crbase::WaitableEvent* const event_;
-    crbase::WaitableEventWatcher::EventCallback callback_;
-    crbase::WaitableEventWatcher watcher_;
+    cr::WaitableEvent* const event_;
+    cr::WaitableEventWatcher::EventCallback callback_;
+    cr::WaitableEventWatcher watcher_;
 
     ///DISALLOW_COPY_AND_ASSIGN(NestedSendDoneWatcher);
   };
@@ -157,7 +157,7 @@ class SyncChannel::ReceivedSyncMsgQueue :
   void QueueMessage(const Message& msg, SyncChannel::SyncContext* context) {
     bool was_task_pending;
     {
-      crbase::AutoLock auto_lock(message_lock_);
+      cr::AutoLock auto_lock(message_lock_);
 
       was_task_pending = task_pending_;
       task_pending_ = true;
@@ -172,8 +172,8 @@ class SyncChannel::ReceivedSyncMsgQueue :
     if (!was_task_pending) {
       listener_task_runner_->PostTask(
           CR_FROM_HERE, 
-          crbase::BindOnce(&ReceivedSyncMsgQueue::DispatchMessagesTask,
-                           this, crbase::RetainedRef(context)));
+          cr::BindOnce(&ReceivedSyncMsgQueue::DispatchMessagesTask,
+                           this, cr::RetainedRef(context)));
     }
   }
 
@@ -185,7 +185,7 @@ class SyncChannel::ReceivedSyncMsgQueue :
   // messages.
   void DispatchMessagesTask(SyncContext* context) {
     {
-      crbase::AutoLock auto_lock(message_lock_);
+      cr::AutoLock auto_lock(message_lock_);
       task_pending_ = false;
     }
     context->DispatchMessages();
@@ -202,9 +202,9 @@ class SyncChannel::ReceivedSyncMsgQueue :
     SyncMessageQueue::iterator it;
     while (true) {
       Message* message = nullptr;
-      crbase::scoped_refptr<SyncChannel::SyncContext> context;
+      cr::scoped_refptr<SyncChannel::SyncContext> context;
       {
-        crbase::AutoLock auto_lock(message_lock_);
+        cr::AutoLock auto_lock(message_lock_);
         if (first_time || message_queue_version_ != expected_version) {
           it = message_queue_.begin();
           first_time = false;
@@ -233,7 +233,7 @@ class SyncChannel::ReceivedSyncMsgQueue :
 
   // SyncChannel calls this in its destructor.
   void RemoveContext(SyncContext* context) {
-    crbase::AutoLock auto_lock(message_lock_);
+    cr::AutoLock auto_lock(message_lock_);
 
     SyncMessageQueue::iterator iter = message_queue_.begin();
     while (iter != message_queue_.end()) {
@@ -253,13 +253,13 @@ class SyncChannel::ReceivedSyncMsgQueue :
     }
   }
 
-  crbase::WaitableEvent* dispatch_event() { return &dispatch_event_; }
-  crbase::SingleThreadTaskRunner* listener_task_runner() {
+  cr::WaitableEvent* dispatch_event() { return &dispatch_event_; }
+  cr::SingleThreadTaskRunner* listener_task_runner() {
     return listener_task_runner_.get();
   }
 
   // Holds a pointer to the per-thread ReceivedSyncMsgQueue object.
-  static crbase::LazyInstance<crbase::ThreadLocalPointer<ReceivedSyncMsgQueue>>::
+  static cr::LazyInstance<cr::ThreadLocalPointer<ReceivedSyncMsgQueue>>::
       DestructorAtExit lazy_tls_ptr_;
 
   // Called on the ipc thread to check if we can unblock any current Send()
@@ -276,14 +276,14 @@ class SyncChannel::ReceivedSyncMsgQueue :
   }
 
  private:
-  friend class crbase::RefCountedThreadSafe<ReceivedSyncMsgQueue>;
+  friend class cr::RefCountedThreadSafe<ReceivedSyncMsgQueue>;
 
   // See the comment in SyncChannel::SyncChannel for why this event is created
   // as manual reset.
   ReceivedSyncMsgQueue()
       : message_queue_version_(0),
         dispatch_event_(true, false),
-        listener_task_runner_(crbase::ThreadTaskRunnerHandle::Get()) {
+        listener_task_runner_(cr::ThreadTaskRunnerHandle::Get()) {
     ///sync_dispatch_watcher_->AllowWokenUpBySyncWatchOnSameThread();
   }
 
@@ -307,7 +307,7 @@ class SyncChannel::ReceivedSyncMsgQueue :
   struct QueuedMessage {
     QueuedMessage(Message* m, SyncContext* c) : message(m), context(c) { }
     Message* message;
-    crbase::scoped_refptr<SyncChannel::SyncContext> context;
+    cr::scoped_refptr<SyncChannel::SyncContext> context;
   };
 
   typedef std::list<QueuedMessage> SyncMessageQueue;
@@ -321,9 +321,9 @@ class SyncChannel::ReceivedSyncMsgQueue :
   // Signaled when we get a synchronous message that we must respond to, as the
   // sender needs its reply before it can reply to our original synchronous
   // message.
-  crbase::WaitableEvent dispatch_event_;
-  crbase::scoped_refptr<crbase::SingleThreadTaskRunner> listener_task_runner_;
-  crbase::Lock message_lock_;
+  cr::WaitableEvent dispatch_event_;
+  cr::scoped_refptr<cr::SingleThreadTaskRunner> listener_task_runner_;
+  cr::Lock message_lock_;
   bool task_pending_ = false;
   int listener_count_ = 0;
 
@@ -342,14 +342,14 @@ class SyncChannel::ReceivedSyncMsgQueue :
   ///std::unique_ptr<mojo::SyncEventWatcher> sync_dispatch_watcher_;
 };
 
-crbase::LazyInstance<crbase::ThreadLocalPointer<
+cr::LazyInstance<cr::ThreadLocalPointer<
     SyncChannel::ReceivedSyncMsgQueue>>::DestructorAtExit
     SyncChannel::ReceivedSyncMsgQueue::lazy_tls_ptr_ =
         CR_LAZY_INSTANCE_INITIALIZER;
 
 SyncChannel::SyncContext::SyncContext(
     Listener* listener,
-    const crbase::scoped_refptr<crbase::SingleThreadTaskRunner>& 
+    const cr::scoped_refptr<cr::SingleThreadTaskRunner>& 
         ipc_task_runner,
     WaitableEvent* shutdown_event)
     : ChannelProxy::Context(listener, ipc_task_runner),
@@ -359,8 +359,8 @@ SyncChannel::SyncContext::SyncContext(
 }
 
 void SyncChannel::SyncContext::OnSendDoneEventSignaled(
-    crbase::RunLoop* nested_loop,
-    crbase::WaitableEvent* event) {
+    cr::RunLoop* nested_loop,
+    cr::WaitableEvent* event) {
   CR_DCHECK_EQ(GetSendDoneEvent(), event);
   nested_loop->Quit();
 }
@@ -382,12 +382,12 @@ bool SyncChannel::SyncContext::Push(SyncMessage* sync_msg) {
   // OnObjectSignalled, another Send can happen which would stop the watcher
   // from being called.  The event would get watched later, when the nested
   // Send completes, so the event will need to remain set.
-  crbase::AutoLock auto_lock(deserializers_lock_);
+  cr::AutoLock auto_lock(deserializers_lock_);
   if (reject_new_deserializers_)
     return false;
   PendingSyncMsg pending(
       SyncMessage::GetMessageId(*sync_msg), sync_msg->GetReplyDeserializer(),
-      new crbase::WaitableEvent(true, false));
+      new cr::WaitableEvent(true, false));
   deserializers_.push_back(pending);
   return true;
 }
@@ -395,7 +395,7 @@ bool SyncChannel::SyncContext::Push(SyncMessage* sync_msg) {
 bool SyncChannel::SyncContext::Pop() {
   bool result;
   {
-    crbase::AutoLock auto_lock(deserializers_lock_);
+    cr::AutoLock auto_lock(deserializers_lock_);
     PendingSyncMsg msg = deserializers_.back();
     delete msg.deserializer;
     delete msg.done_event;
@@ -410,18 +410,18 @@ bool SyncChannel::SyncContext::Pop() {
   // Send() call.  So check if we have any queued replies available that
   // can now unblock the listener thread.
   ipc_task_runner()->PostTask(
-      CR_FROM_HERE, crbase::BindOnce(&ReceivedSyncMsgQueue::DispatchReplies,
+      CR_FROM_HERE, cr::BindOnce(&ReceivedSyncMsgQueue::DispatchReplies,
                                      received_sync_msgs_));
 
   return result;
 }
 
-crbase::WaitableEvent* SyncChannel::SyncContext::GetSendDoneEvent() {
-  crbase::AutoLock auto_lock(deserializers_lock_);
+cr::WaitableEvent* SyncChannel::SyncContext::GetSendDoneEvent() {
+  cr::AutoLock auto_lock(deserializers_lock_);
   return deserializers_.back().done_event;
 }
 
-crbase::WaitableEvent* SyncChannel::SyncContext::GetDispatchEvent() {
+cr::WaitableEvent* SyncChannel::SyncContext::GetDispatchEvent() {
   return received_sync_msgs_->dispatch_event();
 }
 
@@ -430,7 +430,7 @@ void SyncChannel::SyncContext::DispatchMessages() {
 }
 
 bool SyncChannel::SyncContext::TryToUnblockListener(const Message* msg) {
-  crbase::AutoLock auto_lock(deserializers_lock_);
+  cr::AutoLock auto_lock(deserializers_lock_);
   if (deserializers_.empty() ||
       !SyncMessage::IsMessageReplyTo(*msg, deserializers_.back().id)) {
     return false;
@@ -447,7 +447,7 @@ bool SyncChannel::SyncContext::TryToUnblockListener(const Message* msg) {
     ///DVLOG(1) << "Received error reply";
   }
 
-  crbase::WaitableEvent* done_event = deserializers_.back().done_event;
+  cr::WaitableEvent* done_event = deserializers_.back().done_event;
   ///TRACE_EVENT_FLOW_BEGIN0(
   ///    TRACE_DISABLED_BY_DEFAULT("ipc.flow"),
   ///    "SyncChannel::SyncContext::TryToUnblockListener", done_event);
@@ -493,9 +493,9 @@ void SyncChannel::SyncContext::OnChannelError() {
 void SyncChannel::SyncContext::OnChannelOpened() {
   shutdown_watcher_.StartWatching(
       shutdown_event_,
-      crbase::BindOnce(
+      cr::BindOnce(
           &SyncChannel::SyncContext::OnShutdownEventSignaled,
-          crbase::Unretained(this)));
+          cr::Unretained(this)));
   Context::OnChannelOpened();
 }
 
@@ -506,7 +506,7 @@ void SyncChannel::SyncContext::OnChannelClosed() {
 }
 
 void SyncChannel::SyncContext::CancelPendingSends() {
-  crbase::AutoLock auto_lock(deserializers_lock_);
+  cr::AutoLock auto_lock(deserializers_lock_);
   reject_new_deserializers_ = true;
   PendingSyncMessageQueue::iterator iter;
   CR_DLOG(INFO) << "Canceling pending sends";
@@ -533,10 +533,10 @@ std::unique_ptr<SyncChannel> SyncChannel::Create(
     const ChannelHandle& channel_handle,
     Channel::Mode mode,
     Listener* listener,
-    const crbase::scoped_refptr<crbase::SingleThreadTaskRunner>& 
+    const cr::scoped_refptr<cr::SingleThreadTaskRunner>& 
         ipc_task_runner,
     bool create_pipe_now,
-    crbase::WaitableEvent* shutdown_event) {
+    cr::WaitableEvent* shutdown_event) {
   std::unique_ptr<SyncChannel> channel =
       Create(listener, ipc_task_runner, shutdown_event);
   channel->Init(channel_handle, mode, create_pipe_now);
@@ -547,10 +547,10 @@ std::unique_ptr<SyncChannel> SyncChannel::Create(
 std::unique_ptr<SyncChannel> SyncChannel::Create(
     std::unique_ptr<ChannelFactory> factory,
     Listener* listener,
-    const crbase::scoped_refptr<crbase::SingleThreadTaskRunner>& 
+    const cr::scoped_refptr<cr::SingleThreadTaskRunner>& 
         ipc_task_runner,
     bool create_pipe_now,
-    crbase::WaitableEvent* shutdown_event) {
+    cr::WaitableEvent* shutdown_event) {
   std::unique_ptr<SyncChannel> channel =
       Create(listener, ipc_task_runner, shutdown_event);
   channel->Init(std::move(factory), create_pipe_now);
@@ -560,23 +560,23 @@ std::unique_ptr<SyncChannel> SyncChannel::Create(
 // static
 std::unique_ptr<SyncChannel> SyncChannel::Create(
     Listener* listener,
-    const crbase::scoped_refptr<crbase::SingleThreadTaskRunner>& 
+    const cr::scoped_refptr<cr::SingleThreadTaskRunner>& 
         ipc_task_runner,
     WaitableEvent* shutdown_event) {
-  return crbase::WrapUnique(
+  return cr::WrapUnique(
       new SyncChannel(listener, ipc_task_runner, shutdown_event));
 }
 
 SyncChannel::SyncChannel(
     Listener* listener,
-    const crbase::scoped_refptr<crbase::SingleThreadTaskRunner>& 
+    const cr::scoped_refptr<cr::SingleThreadTaskRunner>& 
         ipc_task_runner,
     WaitableEvent* shutdown_event)
     : ChannelProxy(new SyncContext(listener, ipc_task_runner, shutdown_event)) {
   // The current (listener) thread must be distinct from the IPC thread, or else
   // sending synchronous messages will deadlock.
   CR_DCHECK_NE(ipc_task_runner.get(), 
-               crbase::ThreadTaskRunnerHandle::Get().get());
+               cr::ThreadTaskRunnerHandle::Get().get());
   StartWatching();
 }
 
@@ -587,8 +587,8 @@ void SyncChannel::SetRestrictDispatchChannelGroup(int group) {
   sync_context()->set_restrict_dispatch_group(group);
 }
 
-crbase::scoped_refptr<SyncMessageFilter> SyncChannel::CreateSyncMessageFilter() {
-  crbase::scoped_refptr<SyncMessageFilter> filter = new SyncMessageFilter(
+cr::scoped_refptr<SyncMessageFilter> SyncChannel::CreateSyncMessageFilter() {
+  cr::scoped_refptr<SyncMessageFilter> filter = new SyncMessageFilter(
       sync_context()->shutdown_event(),
       sync_context()->IsChannelSendThreadSafe());
   AddFilter(filter.get());
@@ -617,7 +617,7 @@ bool SyncChannel::Send(Message* message) {
   bool pump_messages = sync_msg->ShouldPumpMessages();
 
   // *this* might get deleted in WaitForReply.
-  crbase::scoped_refptr<SyncContext> context(sync_context());
+  cr::scoped_refptr<SyncContext> context(sync_context());
   if (!context->Push(sync_msg)) {
     ///DVLOG(1) << "Channel is shutting down. Dropping sync message.";
     CR_DLOG(INFO) << "Channel is shutting down. Dropping sync message.";
@@ -641,10 +641,10 @@ void SyncChannel::WaitForReply(SyncContext* context,
                                bool pump_messages) {
   context->DispatchMessages();
 
-  crbase::WaitableEvent* pump_messages_event = nullptr;
+  cr::WaitableEvent* pump_messages_event = nullptr;
   if (pump_messages) {
     if (!g_pump_messages_event.Get()) {
-      g_pump_messages_event.Get() = crbase::MakeUnique<crbase::WaitableEvent>(
+      g_pump_messages_event.Get() = cr::MakeUnique<cr::WaitableEvent>(
           true, true);
     }
     pump_messages_event = g_pump_messages_event.Get().get();
@@ -675,14 +675,14 @@ void SyncChannel::WaitForReply(SyncContext* context,
 }
 
 void SyncChannel::WaitForReplyWithNestedMessageLoop(SyncContext* context) {
-  crbase::MessageLoop::ScopedNestableTaskAllower allow(
-      crbase::MessageLoop::current());
-  crbase::RunLoop nested_loop;
+  cr::MessageLoop::ScopedNestableTaskAllower allow(
+      cr::MessageLoop::current());
+  cr::RunLoop nested_loop;
   ReceivedSyncMsgQueue::NestedSendDoneWatcher watcher(context, &nested_loop);
   nested_loop.Run();
 }
 
-void SyncChannel::OnDispatchEventSignaled(crbase::WaitableEvent* event) {
+void SyncChannel::OnDispatchEventSignaled(cr::WaitableEvent* event) {
   CR_DCHECK_EQ(sync_context()->GetDispatchEvent(), event);
   sync_context()->GetDispatchEvent()->Reset();
 
@@ -699,8 +699,8 @@ void SyncChannel::StartWatching() {
   // immediately if woken up by a message which it's allowed to dispatch.
   dispatch_watcher_.StartWatching(
       sync_context()->GetDispatchEvent(),
-      crbase::BindOnce(&SyncChannel::OnDispatchEventSignaled,
-                       crbase::Unretained(this)));
+      cr::BindOnce(&SyncChannel::OnDispatchEventSignaled,
+                       cr::Unretained(this)));
 }
 
 void SyncChannel::OnChannelInit() {

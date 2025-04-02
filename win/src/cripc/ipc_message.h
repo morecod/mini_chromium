@@ -32,7 +32,7 @@ struct LogData;
 class MessageReplyDeserializer;
 class SyncMessage;
 
-class CRIPC_EXPORT Message : public crbase::Pickle {
+class CRIPC_EXPORT Message : public cr::Pickle {
  public:
   enum PriorityValue {
     PRIORITY_LOW = 1,
@@ -184,7 +184,7 @@ class CRIPC_EXPORT Message : public crbase::Pickle {
     // Only filled in if |message_found| is true.
     // The start address is passed into FindNext() by the caller, so isn't
     // repeated in this struct. The end address of the pickle should be used to
-    // construct a crbase::Pickle.
+    // construct a cr::Pickle.
     const char* pickle_end;
     // Only filled in if |message_found| is true.
     // The end address of the message should be used to determine the start
@@ -197,8 +197,8 @@ class CRIPC_EXPORT Message : public crbase::Pickle {
                        const char* range_end,
                        NextMessageInfo* info);
 
-  void set_sender_pid(crbase::ProcessId id) { sender_pid_ = id; }
-  crbase::ProcessId get_sender_pid() const { return sender_pid_; }
+  void set_sender_pid(cr::ProcessId id) { sender_pid_ = id; }
+  cr::ProcessId get_sender_pid() const { return sender_pid_; }
 
 #ifdef ENABLE_CRIPC_MESSAGE_LOG
   // Adds the outgoing time from Time::Now() at the end of the message and sets
@@ -228,7 +228,7 @@ class CRIPC_EXPORT Message : public crbase::Pickle {
   friend class SyncMessage;
 
 #pragma pack(push, 4)
-  struct Header : crbase::Pickle::Header {
+  struct Header : cr::Pickle::Header {
     int32_t routing;  // ID of the view that this message is destined for
     uint32_t type;    // specifies the user-defined message type
     uint32_t flags;   // specifies control flags for the message
@@ -244,12 +244,12 @@ class CRIPC_EXPORT Message : public crbase::Pickle {
 
   void Init();
 
-  // Used internally to support crbase::ipc::Listener::OnBadMessageReceived.
+  // Used internally to support cr::ipc::Listener::OnBadMessageReceived.
   mutable bool dispatch_error_;
 
   // The process id of the sender of the message. This member is populated with
   // a valid value for every message dispatched to listeners.
-  crbase::ProcessId sender_pid_;
+  cr::ProcessId sender_pid_;
 
 #ifdef ENABLE_CRIPC_MESSAGE_LOG
   // Used for logging.

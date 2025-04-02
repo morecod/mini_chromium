@@ -16,7 +16,7 @@
 #include "crbase/synchronization/waitable_event.h"
 #endif
 
-namespace crbase {
+namespace cr {
 
 class Flag;
 class AsyncWaiter;
@@ -122,6 +122,6 @@ class CRBASE_EXPORT WaitableEventWatcher
 
   /// DISALLOW_COPY_AND_ASSIGN(WaitableEventWatcher);
 };
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_SRC_CRBASE_SYNCHRONIZATION_WAITABLE_EVENT_WATCHER_H_

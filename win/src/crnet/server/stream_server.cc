@@ -36,14 +36,14 @@ StreamServer::StreamServer(std::unique_ptr<ServerSocket> server_socket,
   CR_DCHECK(delegate);
   // Start accepting connections in next run loop in case when delegate is not
   // ready to get callbacks.
-  crbase::ThreadTaskRunnerHandle::Get()->PostTask(
+  cr::ThreadTaskRunnerHandle::Get()->PostTask(
       CR_FROM_HERE,
-      crbase::BindOnce(&StreamServer::DoAcceptLoop, 
-                       weak_ptr_factory_.GetWeakPtr()));
+      cr::BindOnce(&StreamServer::DoAcceptLoop, 
+                   weak_ptr_factory_.GetWeakPtr()));
 }
 
 StreamServer::~StreamServer() {
-  crbase::STLDeleteContainerPairSecondPointers(
+  cr::STLDeleteContainerPairSecondPointers(
       id_to_connection_.begin(), id_to_connection_.end());
 }
 
@@ -80,8 +80,7 @@ void StreamServer::Close(uint32_t connection_id) {
   // connection. Instead of referencing connection with ID all the time,
   // destroys the connection in next run loop to make sure any pending
   // callbacks in the call stack return.
-  crbase::ThreadTaskRunnerHandle::Get()->DeleteSoon(
-      CR_FROM_HERE, connection);
+  cr::ThreadTaskRunnerHandle::Get()->DeleteSoon(CR_FROM_HERE, connection);
 }
 
 int StreamServer::GetLocalAddress(IPEndPoint* address) {
@@ -105,8 +104,8 @@ void StreamServer::DoAcceptLoop() {
   do {
     rv = server_socket_->Accept(
         &accepted_socket_,
-        crbase::BindOnce(&StreamServer::OnAcceptCompleted,
-                         weak_ptr_factory_.GetWeakPtr()));
+        cr::BindOnce(&StreamServer::OnAcceptCompleted,
+                     weak_ptr_factory_.GetWeakPtr()));
     if (rv == ERR_IO_PENDING)
       return;
     rv = HandleAcceptResult(rv);
@@ -146,8 +145,8 @@ void StreamServer::DoReadLoop(StreamConnection* connection) {
     rv = connection->socket()->Read(
         read_buf,
         read_buf->RemainingCapacity(),
-        crbase::BindOnce(&StreamServer::OnReadCompleted,
-                         weak_ptr_factory_.GetWeakPtr(), connection->id()));
+        cr::BindOnce(&StreamServer::OnReadCompleted,
+                     weak_ptr_factory_.GetWeakPtr(), connection->id()));
     if (rv == ERR_IO_PENDING)
       return;
     rv = HandleReadResult(connection, rv);
@@ -200,8 +199,8 @@ void StreamServer::DoWriteLoop(StreamConnection* connection) {
     rv = connection->socket()->Write(
         write_buf,
         write_buf->GetSizeToWrite(),
-        crbase::BindOnce(&StreamServer::OnWriteCompleted,
-                         weak_ptr_factory_.GetWeakPtr(), connection->id()));
+        cr::BindOnce(&StreamServer::OnWriteCompleted,
+                     weak_ptr_factory_.GetWeakPtr(), connection->id()));
     if (rv == ERR_IO_PENDING || rv == OK)
       return;
     rv = HandleWriteResult(connection, rv);

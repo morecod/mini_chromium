@@ -41,7 +41,7 @@ CRURL_EXPORT void AppendIPv6Address(const unsigned char address[16],
 CRURL_EXPORT bool FindIPv4Components(const char* spec,
                                      const Component& host,
                                      Component components[4]);
-CRURL_EXPORT bool FindIPv4Components(const crbase::char16* spec,
+CRURL_EXPORT bool FindIPv4Components(const cr::char16* spec,
                                      const Component& host,
                                      Component components[4]);
 
@@ -62,7 +62,7 @@ CRURL_EXPORT CanonHostInfo::Family IPv4AddressToNumber(
     unsigned char address[4],
     int* num_ipv4_components);
 CRURL_EXPORT CanonHostInfo::Family IPv4AddressToNumber(
-    const crbase::char16* spec,
+    const cr::char16* spec,
     const Component& host,
     unsigned char address[4],
     int* num_ipv4_components);
@@ -75,7 +75,7 @@ CRURL_EXPORT CanonHostInfo::Family IPv4AddressToNumber(
 CRURL_EXPORT bool IPv6AddressToNumber(const char* spec,
                                       const Component& host,
                                       unsigned char address[16]);
-CRURL_EXPORT bool IPv6AddressToNumber(const crbase::char16* spec,
+CRURL_EXPORT bool IPv6AddressToNumber(const cr::char16* spec,
                                       const Component& host,
                                       unsigned char address[16]);
 

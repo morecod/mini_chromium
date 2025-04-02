@@ -17,7 +17,7 @@ namespace {
 // are being accepted. When using "size_t" this function ensures that it can be
 // safely converted to an "int" without truncation.
 void AssertValidBufferSize(size_t size) {
-  crbase::CheckedNumeric<int>(size).ValueOrDie();
+  cr::CheckedNumeric<int>(size).ValueOrDie();
 }
 
 void AssertValidBufferSize(int size) {

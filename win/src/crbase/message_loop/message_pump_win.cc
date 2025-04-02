@@ -14,7 +14,7 @@
 #include "crbase/strings/stringprintf.h"
 #include "crbase/win/wrapped_window_proc.h"
 
-namespace crbase {
+namespace cr {
 
 namespace {
 
@@ -206,7 +206,7 @@ void MessagePumpForUI::InitMessageWnd() {
       reinterpret_cast<void*>(&WndProcThunk));
   WNDCLASSEXW wc = {0};
   wc.cbSize = sizeof(wc);
-  wc.lpfnWndProc = crbase::win::WrappedWindowProc<WndProcThunk>;
+  wc.lpfnWndProc = cr::win::WrappedWindowProc<WndProcThunk>;
   wc.hInstance = instance;
   wc.lpszClassName = class_name.c_str();
   atom_ = RegisterClassExW(&wc);
@@ -650,4 +650,4 @@ MessagePumpForIO::IOHandler* MessagePumpForIO::KeyToHandler(
   return reinterpret_cast<IOHandler*>(key & ~static_cast<ULONG_PTR>(1));
 }
 
-}  // namespace crbase
+}  // namespace cr

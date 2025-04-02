@@ -11,12 +11,12 @@
 #include "crbase/logging.h"
 
 
-namespace crbase {
+namespace cr {
 namespace win {
 
 // Simple scoped memory releaser class for COM allocated memory.
 // Example:
-//   crbase::win::ScopedCoMem<ITEMIDLIST> file_item;
+//   cr::win::ScopedCoMem<ITEMIDLIST> file_item;
 //   SHGetSomeInfo(&file_item, ...);
 //   ...
 //   return;  <-- memory released
@@ -65,6 +65,6 @@ class ScopedCoMem {
 };
 
 }  // namespace win
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_SRC_CRBASE_WIN_SCOPED_CO_MEM_H_

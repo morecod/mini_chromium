@@ -20,7 +20,7 @@
 ///#include "base/threading/thread_collision_warner.h"
 #include "crbase/build_config.h"
 
-namespace crbase {
+namespace cr {
 
 template <class T>
 class scoped_refptr;
@@ -106,7 +106,7 @@ class CRBASE_EXPORT RefCountedBase {
 
  private:
   template <typename U>
-  friend scoped_refptr<U> crbase::AdoptRef(U*);
+  friend scoped_refptr<U> cr::AdoptRef(U*);
 
   void Adopted() const {
 #if CR_DCHECK_IS_ON()
@@ -156,7 +156,7 @@ class CRBASE_EXPORT RefCountedThreadSafeBase {
 
  private:
   template <typename U>
-  friend scoped_refptr<U> crbase::AdoptRef(U*);
+  friend scoped_refptr<U> cr::AdoptRef(U*);
 
   void Adopted() const {
 #if CR_DCHECK_IS_ON()
@@ -181,10 +181,10 @@ class CRBASE_EXPORT RefCountedThreadSafeBase {
 // knock-off of WebKit's RefCounted<T> class.  To use this, just extend your
 // class from it like so:
 //
-//   class MyFoo : public crbase::RefCounted<MyFoo> {
+//   class MyFoo : public cr::RefCounted<MyFoo> {
 //    ...
 //    private:
-//     friend class crbase::RefCounted<MyFoo>;
+//     friend class cr::RefCounted<MyFoo>;
 //     ~MyFoo();
 //   };
 //
@@ -204,8 +204,8 @@ class CRBASE_EXPORT RefCountedThreadSafeBase {
 // the ref counted class to opt-in.
 //
 // If an object has start-from-one ref count, the first scoped_refptr need to be
-// created by base::AdoptRef() or crbase::MakeRefCounted(). We can use
-// crbase::MakeRefCounted() to create create both type of ref counted object.
+// created by base::AdoptRef() or cr::MakeRefCounted(). We can use
+// cr::MakeRefCounted() to create create both type of ref counted object.
 //
 // The motivations to use start-from-one ref count are:
 //  - Start-from-one ref count doesn't need the ref count increment for the
@@ -216,11 +216,11 @@ class CRBASE_EXPORT RefCountedThreadSafeBase {
 //    TODO(tzik): Implement invalid acquisition detection.
 //  - Behavior parity to Blink's WTF::RefCounted, whose count starts from one.
 //    And start-from-one ref count is a step to merge WTF::RefCounted into
-//    crbase::RefCounted.
+//    cr::RefCounted.
 //
 #define REQUIRE_ADOPTION_FOR_REFCOUNTED_TYPE()               \
-  static constexpr ::crbase::subtle::StartRefCountFromOneTag \
-      kRefCountPreference = ::crbase::subtle::kStartRefCountFromOneTag;
+  static constexpr ::cr::subtle::StartRefCountFromOneTag \
+      kRefCountPreference = ::cr::subtle::kStartRefCountFromOneTag;
 
 template <class T>
 class RefCounted : public subtle::RefCountedBase {
@@ -269,14 +269,14 @@ struct DefaultRefCountedThreadSafeTraits {
 //
 // A thread-safe variant of RefCounted<T>
 //
-//   class MyFoo : public crbase::RefCountedThreadSafe<MyFoo> {
+//   class MyFoo : public cr::RefCountedThreadSafe<MyFoo> {
 //    ...
 //   };
 //
 // If you're using the default trait, then you should add compile time
 // asserts that no one else is deleting your object.  i.e.
 //    private:
-//     friend class crbase::RefCountedThreadSafe<MyFoo>;
+//     friend class cr::RefCountedThreadSafe<MyFoo>;
 //     ~MyFoo();
 //
 // We can use REQUIRE_ADOPTION_FOR_REFCOUNTED_TYPE() with RefCountedThreadSafe
@@ -319,7 +319,7 @@ class RefCountedThreadSafe : public subtle::RefCountedThreadSafeBase {
 //
 template<typename T>
 class RefCountedData
-    : public crbase::RefCountedThreadSafe< crbase::RefCountedData<T> > {
+    : public cr::RefCountedThreadSafe< cr::RefCountedData<T> > {
  public:
   RefCountedData() : data() {}
   RefCountedData(const T& in_value) : data(in_value) {}
@@ -327,7 +327,7 @@ class RefCountedData
   T data;
 
  private:
-  friend class crbase::RefCountedThreadSafe<crbase::RefCountedData<T> >;
+  friend class cr::RefCountedThreadSafe<cr::RefCountedData<T> >;
   ~RefCountedData() = default;
 };
 
@@ -534,9 +534,9 @@ class scoped_refptr {
 
  private:
   template <typename U>
-  friend scoped_refptr<U> crbase::AdoptRef(U*);
+  friend scoped_refptr<U> cr::AdoptRef(U*);
 
-  scoped_refptr(T* p, crbase::subtle::AdoptRefTag) : ptr_(p) {}
+  scoped_refptr(T* p, cr::subtle::AdoptRefTag) : ptr_(p) {}
 
   // Friend required for move constructors that set r.ptr_ to null.
   template <typename U>
@@ -614,6 +614,6 @@ std::ostream& operator<<(std::ostream& out, const scoped_refptr<T>& p) {
   return out << p.get();
 }
 
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_CRBASE_MEMORY_REF_COUNTED_H_

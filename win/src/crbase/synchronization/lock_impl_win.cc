@@ -4,7 +4,7 @@
 
 #include "crbase/synchronization/lock_impl.h"
 
-namespace crbase {
+namespace cr {
 namespace internal {
 
 LockImpl::LockImpl() {
@@ -33,4 +33,4 @@ void LockImpl::Unlock() {
 }
 
 }  // namespace internal
-}  // namespace crbase
+}  // namespace cr

@@ -15,7 +15,7 @@
 #include "crbase/bits.h"
 #include "crbase/macros.h"
 
-namespace crbase {
+namespace cr {
 
 // static
 const int Pickle::kPayloadUnit = 64;
@@ -26,6 +26,13 @@ PickleIterator::PickleIterator(const Pickle& pickle)
     : payload_(pickle.payload()),
       read_index_(0),
       end_index_(pickle.payload_size()) {
+}
+
+PickleIterator::PickleIterator(const char* payload, size_t payload_size)
+    : payload_(payload),
+      read_index_(0),
+      end_index_(payload_size) {
+
 }
 
 template <typename Type>
@@ -429,4 +436,4 @@ inline void Pickle::WriteBytesCommon(const void* data, size_t length) {
   memcpy(write, data, length);
 }
 
-}  // namespace crbase
+}  // namespace cr

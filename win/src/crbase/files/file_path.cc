@@ -20,7 +20,7 @@
 #include <windows.h>
 #endif
 
-namespace crbase {
+namespace cr {
 
 using StringType = FilePath::StringType;
 using StringPieceType = FilePath::StringPieceType;
@@ -514,7 +514,7 @@ FilePath FilePath::Append(const FilePath& component) const {
 }
 
 FilePath FilePath::AppendASCII(StringPiece component) const {
-  CR_DCHECK(crbase::IsStringASCII(component));
+  CR_DCHECK(cr::IsStringASCII(component));
 #if defined(MINI_CHROMIUM_OS_WIN)
   return Append(ASCIIToUTF16(component));
 #elif defined(MINI_CHROMIUM_OS_POSIX)
@@ -581,7 +581,7 @@ string16 FilePath::LossyDisplayName() const {
 }
 
 std::string FilePath::MaybeAsASCII() const {
-  if (crbase::IsStringASCII(path_))
+  if (cr::IsStringASCII(path_))
     return path_;
   return std::string();
 }
@@ -627,7 +627,7 @@ string16 FilePath::LossyDisplayName() const {
 }
 
 std::string FilePath::MaybeAsASCII() const {
-  if (crbase::IsStringASCII(path_))
+  if (cr::IsStringASCII(path_))
     return UTF16ToASCII(path_);
   return std::string();
 }
@@ -759,12 +759,12 @@ FilePath FilePath::NormalizePathSeparatorsTo(CharType separator) const {
 #endif
 }
 
-}  // namespace crbase
+}  // namespace cr
 
 namespace std {
 
-std::ostream& operator<<(std::ostream& out, const crbase::FilePath& value) {
-  std::string str = crbase::UTF16ToUTF8(value.value());
+std::ostream& operator<<(std::ostream& out, const cr::FilePath& value) {
+  std::string str = cr::UTF16ToUTF8(value.value());
   return out << str;
 }
 

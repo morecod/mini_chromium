@@ -7,12 +7,12 @@
 
 #include <stdlib.h>
 
-namespace crbase {
+namespace cr {
 
 // Function object which invokes 'free' on its parameter, which must be
 // a pointer. Can be used to store malloc-allocated pointers in std::unique_ptr:
 //
-// std::unique_ptr<int, crbase::FreeDeleter> foo_ptr(
+// std::unique_ptr<int, cr::FreeDeleter> foo_ptr(
 //     static_cast<int*>(malloc(sizeof(int))));
 struct FreeDeleter {
   inline void operator()(void* ptr) const {
@@ -20,6 +20,6 @@ struct FreeDeleter {
   }
 };
 
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_SRC_CRBASE_MEMORY_FREE_DELETER_H_

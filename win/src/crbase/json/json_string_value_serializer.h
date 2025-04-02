@@ -13,7 +13,7 @@
 #include "crbase/strings/string_piece.h"
 #include "crbase/values.h"
 
-namespace crbase {
+namespace cr {
 
 class CRBASE_EXPORT JSONStringValueSerializer 
     : public ValueSerializer {
@@ -84,6 +84,6 @@ class CRBASE_EXPORT JSONStringValueDeserializer
   bool allow_trailing_comma_;
 };
 
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_SRC_CRBASE_JSON_JSON_STRING_VALUE_SERIALIZER_H_

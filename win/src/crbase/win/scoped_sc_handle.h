@@ -10,7 +10,7 @@
 #include "crbase/win/scoped_handle.h"
 #include "crbase/macros.h"
 
-namespace crbase {
+namespace cr {
 namespace win {
 
 class ScHandleTraits {
@@ -50,6 +50,6 @@ class TimerTraits {
 typedef GenericScopedHandle<TimerTraits, DummyVerifierTraits> ScopedTimerHandle;
 
 }  // namespace win
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_SRC_CRBASE_WIN_SCOPED_SC_HANDLE_H_

@@ -23,7 +23,7 @@
 #endif
 
 
-namespace crbase {
+namespace cr {
 
 class TimeDelta;
 
@@ -158,7 +158,7 @@ class CRBASE_EXPORT WaitableEvent {
 
     bool Dequeue(Waiter* waiter, void* tag);
 
-    crbase::Lock lock_;
+    cr::Lock lock_;
     const bool manual_reset_;
     bool signaled_;
     std::list<Waiter*> waiters_;
@@ -186,6 +186,6 @@ class CRBASE_EXPORT WaitableEvent {
 #endif
 };
 
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_SRC_CRBASE_SYNCHRONIZATION_WAITABLE_EVENT_H_

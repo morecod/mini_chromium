@@ -17,7 +17,7 @@
 #endif
 
 
-namespace crbase {
+namespace cr {
 
 // Provides a move-only encapsulation of a process.
 //
@@ -170,6 +170,6 @@ class CRBASE_EXPORT Process {
 #endif
 };
 
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_SRC_CRBASE_PROCESS_PROCESS_H_

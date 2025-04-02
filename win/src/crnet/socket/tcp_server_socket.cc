@@ -68,8 +68,8 @@ int TCPServerSocket::Accept(std::unique_ptr<StreamSocket>* socket,
   // It is safe to use base::Unretained(this). |socket_| is owned by this class,
   // and the callback won't be run after |socket_| is destroyed.
   CompletionOnceCallback accept_callback =
-      crbase::BindOnce(&TCPServerSocket::OnAcceptCompleted, 
-                       crbase::Unretained(this), socket, std::move(callback));
+      cr::BindOnce(&TCPServerSocket::OnAcceptCompleted, 
+                       cr::Unretained(this), socket, std::move(callback));
   int result = socket_.Accept(&accepted_socket_, &accepted_address_,
                               std::move(accept_callback));
   if (result != ERR_IO_PENDING) {

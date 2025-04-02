@@ -8,7 +8,7 @@
 #include "crbase/atomic/atomicops.h"
 #include "crbase/threading/platform_thread.h"
 
-namespace crbase {
+namespace cr {
 namespace internal {
 
 // TODO(joth): This function could be shared with Singleton, in place of its
@@ -51,4 +51,4 @@ void CompleteLazyInstance(subtle::AtomicWord* state,
 }
 
 }  // namespace internal
-}  // namespace crbase
+}  // namespace cr

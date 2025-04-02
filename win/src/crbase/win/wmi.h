@@ -26,7 +26,7 @@
 #include "crbase/strings/string_piece.h"
 #include "crbase/win/scoped_comptr.h"
 
-namespace crbase {
+namespace cr {
 namespace win {
 
 // Creates an instance of the WMI service connected to the local computer and
@@ -88,6 +88,6 @@ class CRBASE_EXPORT WmiComputerSystemInfo {
 };
 
 }  // namespace win
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_SRC_CRBASE_WIN_WIN_WMI_H_

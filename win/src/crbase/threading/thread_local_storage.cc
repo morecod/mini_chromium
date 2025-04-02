@@ -7,7 +7,7 @@
 #include "crbase/logging.h"
 #include "crbase/atomic/atomicops.h"
 
-using crbase::internal::PlatformThreadLocalStorage;
+using cr::internal::PlatformThreadLocalStorage;
 
 namespace {
 // In order to make TLS destructors work, we need to keep around a function
@@ -18,7 +18,7 @@ namespace {
 // Chromium consumers.
 
 // g_native_tls_key is the one native TLS that we use.  It stores our table.
-crbase::subtle::Atomic32 g_native_tls_key =
+cr::subtle::Atomic32 g_native_tls_key =
     PlatformThreadLocalStorage::TLS_KEY_OUT_OF_INDEXES;
 
 // g_last_used_tls_key is the high-water-mark of allocated thread local storage.
@@ -28,7 +28,7 @@ crbase::subtle::Atomic32 g_native_tls_key =
 // instance of ThreadLocalStorage::Slot has been freed (i.e., destructor called,
 // etc.).  This reserved use of 0 is then stated as the initial value of
 // g_last_used_tls_key, so that the first issued index will be 1.
-crbase::subtle::Atomic32 g_last_used_tls_key = 0;
+cr::subtle::Atomic32 g_last_used_tls_key = 0;
 
 // The maximum number of 'slots' in our thread local storage stack.
 const int kThreadLocalStorageSize = 256;
@@ -46,7 +46,7 @@ const int kMaxDestructorIterations = kThreadLocalStorageSize;
 // re-fetch an array element, and I want to be sure a call to free the key
 // (i.e., null out the destructor entry) that happens on a separate thread can't
 // hurt the racy calls to the destructors on another thread.
-volatile crbase::ThreadLocalStorage::TLSDestructorFunc
+volatile cr::ThreadLocalStorage::TLSDestructorFunc
     g_tls_destructors[kThreadLocalStorageSize];
 
 // This function is called to initialize our entire Chromium TLS system.
@@ -57,7 +57,7 @@ volatile crbase::ThreadLocalStorage::TLSDestructorFunc
 // require memory allocations.
 void** ConstructTlsVector() {
   PlatformThreadLocalStorage::TLSKey key =
-      crbase::subtle::NoBarrier_Load(&g_native_tls_key);
+      cr::subtle::NoBarrier_Load(&g_native_tls_key);
   if (key == PlatformThreadLocalStorage::TLS_KEY_OUT_OF_INDEXES) {
     CR_CHECK(PlatformThreadLocalStorage::AllocTLS(&key));
 
@@ -77,14 +77,14 @@ void** ConstructTlsVector() {
     // another thread already did our dirty work.
     if (PlatformThreadLocalStorage::TLS_KEY_OUT_OF_INDEXES !=
         static_cast<PlatformThreadLocalStorage::TLSKey>(
-            crbase::subtle::NoBarrier_CompareAndSwap(
+            cr::subtle::NoBarrier_CompareAndSwap(
                 &g_native_tls_key,
                 PlatformThreadLocalStorage::TLS_KEY_OUT_OF_INDEXES, key))) {
       // We've been shortcut. Another thread replaced g_native_tls_key first so
       // we need to destroy our index and use the one the other thread got
       // first.
       PlatformThreadLocalStorage::FreeTLS(key);
-      key = crbase::subtle::NoBarrier_Load(&g_native_tls_key);
+      key = cr::subtle::NoBarrier_Load(&g_native_tls_key);
     }
   }
   CR_CHECK(!PlatformThreadLocalStorage::GetTLSValue(key));
@@ -125,7 +125,7 @@ void OnThreadExitInternal(void* value) {
   memcpy(stack_allocated_tls_data, tls_data, sizeof(stack_allocated_tls_data));
   // Ensure that any re-entrant calls change the temp version.
   PlatformThreadLocalStorage::TLSKey key =
-      crbase::subtle::NoBarrier_Load(&g_native_tls_key);
+      cr::subtle::NoBarrier_Load(&g_native_tls_key);
   PlatformThreadLocalStorage::SetTLSValue(key, stack_allocated_tls_data);
   delete[] tls_data;  // Our last dependence on an allocator.
 
@@ -139,14 +139,14 @@ void OnThreadExitInternal(void* value) {
     // allocator) and should also be destroyed last.  If we get the order wrong,
     // then we'll itterate several more times, so it is really not that
     // critical (but it might help).
-    crbase::subtle::Atomic32 last_used_tls_key =
-        crbase::subtle::NoBarrier_Load(&g_last_used_tls_key);
+    cr::subtle::Atomic32 last_used_tls_key =
+        cr::subtle::NoBarrier_Load(&g_last_used_tls_key);
     for (int slot = last_used_tls_key; slot > 0; --slot) {
       void* tls_value = stack_allocated_tls_data[slot];
       if (tls_value == NULL)
         continue;
 
-      crbase::ThreadLocalStorage::TLSDestructorFunc destructor =
+      cr::ThreadLocalStorage::TLSDestructorFunc destructor =
           g_tls_destructors[slot];
       if (destructor == NULL)
         continue;
@@ -169,13 +169,13 @@ void OnThreadExitInternal(void* value) {
 
 }  // namespace
 
-namespace crbase {
+namespace cr {
 
 namespace internal {
 
 void PlatformThreadLocalStorage::OnThreadExit() {
   PlatformThreadLocalStorage::TLSKey key =
-      crbase::subtle::NoBarrier_Load(&g_native_tls_key);
+      cr::subtle::NoBarrier_Load(&g_native_tls_key);
   if (key == PlatformThreadLocalStorage::TLS_KEY_OUT_OF_INDEXES)
     return;
   void *tls_data = GetTLSValue(key);
@@ -189,25 +189,25 @@ void PlatformThreadLocalStorage::OnThreadExit() {
 
 ThreadLocalStorage::Slot::Slot(TLSDestructorFunc destructor) {
   slot_ = 0;
-  crbase::subtle::Release_Store(&initialized_, 0);
+  cr::subtle::Release_Store(&initialized_, 0);
   Initialize(destructor);
 }
 
 void ThreadLocalStorage::StaticSlot::Initialize(TLSDestructorFunc destructor) {
   PlatformThreadLocalStorage::TLSKey key =
-      crbase::subtle::NoBarrier_Load(&g_native_tls_key);
+      cr::subtle::NoBarrier_Load(&g_native_tls_key);
   if (key == PlatformThreadLocalStorage::TLS_KEY_OUT_OF_INDEXES ||
       !PlatformThreadLocalStorage::GetTLSValue(key))
     ConstructTlsVector();
 
   // Grab a new slot.
-  slot_ = crbase::subtle::NoBarrier_AtomicIncrement(&g_last_used_tls_key, 1);
+  slot_ = cr::subtle::NoBarrier_AtomicIncrement(&g_last_used_tls_key, 1);
   CR_DCHECK_GT(slot_, 0);
   CR_CHECK_LT(slot_, kThreadLocalStorageSize);
 
   // Setup our destructor.
   g_tls_destructors[slot_] = destructor;
-  crbase::subtle::Release_Store(&initialized_, 1);
+  cr::subtle::Release_Store(&initialized_, 1);
 }
 
 void ThreadLocalStorage::StaticSlot::Free() {
@@ -217,13 +217,13 @@ void ThreadLocalStorage::StaticSlot::Free() {
   CR_DCHECK_LT(slot_, kThreadLocalStorageSize);
   g_tls_destructors[slot_] = NULL;
   slot_ = 0;
-  crbase::subtle::Release_Store(&initialized_, 0);
+  cr::subtle::Release_Store(&initialized_, 0);
 }
 
 void* ThreadLocalStorage::StaticSlot::Get() const {
   void** tls_data = static_cast<void**>(
       PlatformThreadLocalStorage::GetTLSValue(
-          crbase::subtle::NoBarrier_Load(&g_native_tls_key)));
+          cr::subtle::NoBarrier_Load(&g_native_tls_key)));
   if (!tls_data)
     tls_data = ConstructTlsVector();
   CR_DCHECK_GT(slot_, 0);
@@ -234,7 +234,7 @@ void* ThreadLocalStorage::StaticSlot::Get() const {
 void ThreadLocalStorage::StaticSlot::Set(void* value) {
   void** tls_data = static_cast<void**>(
       PlatformThreadLocalStorage::GetTLSValue(
-          crbase::subtle::NoBarrier_Load(&g_native_tls_key)));
+          cr::subtle::NoBarrier_Load(&g_native_tls_key)));
   if (!tls_data)
     tls_data = ConstructTlsVector();
   CR_DCHECK_GT(slot_, 0);
@@ -242,4 +242,4 @@ void ThreadLocalStorage::StaticSlot::Set(void* value) {
   tls_data[slot_] = value;
 }
 
-}  // namespace crbase
+}  // namespace cr

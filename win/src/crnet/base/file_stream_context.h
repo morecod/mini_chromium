@@ -48,7 +48,7 @@ namespace crnet {
 class IOBuffer;
 
 #if defined(MINI_CHROMIUM_OS_WIN)
-class FileStream::Context : public crbase::MessageLoopForIO::IOHandler {
+class FileStream::Context : public cr::MessageLoopForIO::IOHandler {
 #elif defined(MINI_CHROMIUM_OS_POSIX)
 class FileStream::Context {
 #endif
@@ -62,10 +62,10 @@ class FileStream::Context {
   ////////////////////////////////////////////////////////////////////////////
 
   explicit Context(
-      const crbase::scoped_refptr<crbase::TaskRunner>& task_runner);
+      const cr::scoped_refptr<cr::TaskRunner>& task_runner);
   Context(
-      crbase::File file, 
-      const crbase::scoped_refptr<crbase::TaskRunner>& task_runner);
+      cr::File file, 
+      const cr::scoped_refptr<cr::TaskRunner>& task_runner);
 
 #if defined(MINI_CHROMIUM_OS_WIN)
   ~Context() override;
@@ -92,7 +92,7 @@ class FileStream::Context {
   // not closed yet.
   void Orphan();
 
-  void Open(const crbase::FilePath& path,
+  void Open(const cr::FilePath& path,
             int open_flags,
             CompletionOnceCallback callback);
 
@@ -108,11 +108,11 @@ class FileStream::Context {
  private:
   struct IOResult {
     IOResult();
-    IOResult(int64_t result, crbase_logging::SystemErrorCode os_error);
-    static IOResult FromOSError(crbase_logging::SystemErrorCode os_error);
+    IOResult(int64_t result, cr_logging::SystemErrorCode os_error);
+    static IOResult FromOSError(cr_logging::SystemErrorCode os_error);
 
     int64_t result;
-    crbase_logging::SystemErrorCode os_error;  // Set only when result < 0.
+    cr_logging::SystemErrorCode os_error;  // Set only when result < 0.
   };
 
   struct OpenResult {
@@ -121,11 +121,11 @@ class FileStream::Context {
     OpenResult& operator=(const OpenResult&) = delete;
 
     OpenResult();
-    OpenResult(crbase::File file, IOResult error_code);
+    OpenResult(cr::File file, IOResult error_code);
     OpenResult(OpenResult&& other);
     OpenResult& operator=(OpenResult&& other);
 
-    crbase::File file;
+    cr::File file;
     IOResult error_code;
 
    private:
@@ -157,7 +157,7 @@ class FileStream::Context {
   // Platform-independent methods implemented in file_stream_context.cc.
   ////////////////////////////////////////////////////////////////////////////
 
-  OpenResult OpenFileImpl(const crbase::FilePath& path, int open_flags);
+  OpenResult OpenFileImpl(const cr::FilePath& path, int open_flags);
 
   IOResult CloseFileImpl();
 
@@ -191,7 +191,7 @@ class FileStream::Context {
                              IOBuffer* buf);
 
   // Implementation of MessageLoopForIO::IOHandler.
-  void OnIOCompleted(crbase::MessageLoopForIO::IOContext* context,
+  void OnIOCompleted(cr::MessageLoopForIO::IOContext* context,
                      DWORD bytes_read,
                      DWORD error) override;
 
@@ -219,10 +219,10 @@ class FileStream::Context {
   static void ReadAsync(
       FileStream::Context* context,
       HANDLE file,
-      crbase::scoped_refptr<IOBuffer> buf,
+      cr::scoped_refptr<IOBuffer> buf,
       int buf_len,
       OVERLAPPED* overlapped,
-      crbase::scoped_refptr<crbase::SingleThreadTaskRunner> 
+      cr::scoped_refptr<cr::SingleThreadTaskRunner> 
           origin_thread_task_runner);
 
   // This callback executes on the main calling thread. It informs the caller
@@ -238,27 +238,27 @@ class FileStream::Context {
 #elif defined(MINI_CHROMIUM_OS_POSIX)
   // ReadFileImpl() is a simple wrapper around read() that handles EINTR
   // signals and calls RecordAndMapError() to map errno to net error codes.
-  IOResult ReadFileImpl(crbase::scoped_refptr<IOBuffer> buf, int buf_len);
+  IOResult ReadFileImpl(cr::scoped_refptr<IOBuffer> buf, int buf_len);
 
   // WriteFileImpl() is a simple wrapper around write() that handles EINTR
   // signals and calls MapSystemError() to map errno to net error codes.
   // It tries to write to completion.
-  IOResult WriteFileImpl(crbase::scoped_refptr<IOBuffer> buf, int buf_len);
+  IOResult WriteFileImpl(cr::scoped_refptr<IOBuffer> buf, int buf_len);
 #endif
 
-  crbase::File file_;
+  cr::File file_;
   bool async_in_progress_;
 
   // TODO(xunjieli): Remove after crbug.com/487732 is fixed.
   LastOperation last_operation_;
 
   bool orphaned_;
-  crbase::scoped_refptr<crbase::TaskRunner> task_runner_;
+  cr::scoped_refptr<cr::TaskRunner> task_runner_;
 
 #if defined(MINI_CHROMIUM_OS_WIN)
-  crbase::MessageLoopForIO::IOContext io_context_;
+  cr::MessageLoopForIO::IOContext io_context_;
   CompletionOnceCallback callback_;
-  crbase::scoped_refptr<IOBuffer> in_flight_buf_;
+  cr::scoped_refptr<IOBuffer> in_flight_buf_;
   // This flag is set to true when we receive a Read request which is queued to
   // the thread pool.
   bool async_read_initiated_;

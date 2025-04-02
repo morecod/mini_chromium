@@ -79,7 +79,7 @@ inline bool IsComponentChar(unsigned char c) {
 void AppendStringOfType(const char* source, int length,
                         SharedCharTypes type,
                         CanonOutput* output);
-void AppendStringOfType(const crbase::char16* source, int length,
+void AppendStringOfType(const cr::char16* source, int length,
                         SharedCharTypes type,
                         CanonOutput* output);
 
@@ -123,7 +123,7 @@ inline int IsDot(const CHAR* spec, int offset, int end) {
 // required for relative URL resolving to test for scheme equality.
 //
 // Returns 0 if the input character is not a valid scheme character.
-char CanonicalSchemeChar(crbase::char16 ch);
+char CanonicalSchemeChar(cr::char16 ch);
 
 // Write a single character, escaped, to the output. This always escapes: it
 // does no checking that thee character requires escaping.
@@ -138,7 +138,7 @@ inline void AppendEscapedChar(UINCHAR ch,
 }
 
 // The character we'll substitute for undecodable or invalid characters.
-extern const crbase::char16 kUnicodeReplacementCharacter;
+extern const cr::char16 kUnicodeReplacementCharacter;
 
 // UTF-8 functions ------------------------------------------------------------
 
@@ -225,19 +225,19 @@ inline void AppendUTF8EscapedValue(unsigned char_value, CanonOutput* output) {
 // |*begin| will be updated to point to the last character consumed so it
 // can be incremented in a loop and will be ready for the next character.
 // (for a single-16-bit-word character, it will not be changed).
-CRURL_EXPORT bool ReadUTFChar(const crbase::char16* str, int* begin, 
+CRURL_EXPORT bool ReadUTFChar(const cr::char16* str, int* begin, 
                               int length, unsigned* code_point_out);
 
 // Equivalent to U16_APPEND_UNSAFE in ICU but uses our output method.
 inline void AppendUTF16Value(unsigned code_point,
-                             CanonOutputT<crbase::char16>* output) {
+                             CanonOutputT<cr::char16>* output) {
   if (code_point > 0xffff) {
     output->push_back(
-        static_cast<crbase::char16>((code_point >> 10) + 0xd7c0));
+        static_cast<cr::char16>((code_point >> 10) + 0xd7c0));
     output->push_back(
-        static_cast<crbase::char16>((code_point & 0x3ff) | 0xdc00));
+        static_cast<cr::char16>((code_point & 0x3ff) | 0xdc00));
   } else {
-    output->push_back(static_cast<crbase::char16>(code_point));
+    output->push_back(static_cast<cr::char16>(code_point));
   }
 }
 
@@ -262,7 +262,7 @@ inline void AppendUTF16Value(unsigned code_point,
 //
 // Assumes that ch[begin] is within range in the array, but does not assume
 // that any following characters are.
-inline bool AppendUTF8EscapedChar(const crbase::char16* str, int* begin,
+inline bool AppendUTF8EscapedChar(const cr::char16* str, int* begin,
                                   int length, CanonOutput* output) {
   // UTF-16 input. ReadUTFChar will handle invalid characters for us and give
   // us the kUnicodeReplacementCharacter, so we don't have to do special
@@ -297,7 +297,7 @@ inline bool AppendUTF8EscapedChar(const char* str, int* begin, int length,
 inline bool Is8BitChar(char c) {
   return true;  // this case is specialized to avoid a warning
 }
-inline bool Is8BitChar(crbase::char16 c) {
+inline bool Is8BitChar(cr::char16 c) {
   return c <= 255;
 }
 
@@ -333,7 +333,7 @@ inline bool DecodeEscaped(const CHAR* spec, int* begin, int end,
 // the escaping rules are not guaranteed!
 void AppendInvalidNarrowString(const char* spec, int begin, int end,
                                CanonOutput* output);
-void AppendInvalidNarrowString(const crbase::char16* spec, int begin, int end,
+void AppendInvalidNarrowString(const cr::char16* spec, int begin, int end,
                                CanonOutput* output);
 
 // Misc canonicalization helpers ----------------------------------------------
@@ -346,14 +346,14 @@ void AppendInvalidNarrowString(const crbase::char16* spec, int begin, int end,
 // replacing the invalid characters with the "invalid character". It will
 // return false in the failure case, and the caller should not continue as
 // normal.
-CRURL_EXPORT bool ConvertUTF16ToUTF8(const crbase::char16* input, int input_len,
+CRURL_EXPORT bool ConvertUTF16ToUTF8(const cr::char16* input, int input_len,
                                      CanonOutput* output);
 CRURL_EXPORT bool ConvertUTF8ToUTF16(const char* input, int input_len,
-                                     CanonOutputT<crbase::char16>* output);
+                                     CanonOutputT<cr::char16>* output);
 
 // Converts from UTF-16 to 8-bit using the character set converter. If the
 // converter is NULL, this will use UTF-8.
-void ConvertUTF16ToQueryEncoding(const crbase::char16* input,
+void ConvertUTF16ToQueryEncoding(const cr::char16* input,
                                  const Component& query,
                                  CharsetConverter* converter,
                                  CanonOutput* output);
@@ -389,7 +389,7 @@ void SetupOverrideComponents(const char* base,
 // although we will have still done the override with "invalid characters" in
 // place of errors.
 bool SetupUTF16OverrideComponents(const char* base,
-                                  const Replacements<crbase::char16>& repl,
+                                  const Replacements<cr::char16>& repl,
                                   CanonOutput* utf8_buffer,
                                   URLComponentSource<char>* source,
                                   Parsed* parsed);
@@ -400,7 +400,7 @@ bool CanonicalizePartialPath(const char* spec,
                              const Component& path,
                              int path_begin_in_output,
                              CanonOutput* output);
-bool CanonicalizePartialPath(const crbase::char16* spec,
+bool CanonicalizePartialPath(const cr::char16* spec,
                              const Component& path,
                              int path_begin_in_output,
                              CanonOutput* output);
@@ -410,7 +410,7 @@ bool CanonicalizePartialPath(const crbase::char16* spec,
 // Implementations of Windows' int-to-string conversions
 CRURL_EXPORT int _itoa_s(int value, char* buffer, size_t size_in_chars,
                          int radix);
-CRURL_EXPORT int _itow_s(int value, crbase::char16* buffer, 
+CRURL_EXPORT int _itow_s(int value, cr::char16* buffer, 
                          size_t size_in_chars,
                          int radix);
 

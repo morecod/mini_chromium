@@ -8,7 +8,10 @@
 #include <memory>
 #include <utility>
 
-namespace crbase {
+#include "crbase/base_export.h"
+#include "crbase/array_view.h"
+
+namespace cr {
 
 // Helper to transfer ownership of a raw pointer to a std::unique_ptr<T>.
 // Note that std::unique_ptr<T> has very different semantics from
@@ -69,6 +72,6 @@ template <typename T, typename... Args>
 typename internal::MakeUniqueResult<T>::Invalid MakeUnique(Args&&... args) =
     delete;
 
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_CRBASE_MEMORY_PTR_UTIL_H_

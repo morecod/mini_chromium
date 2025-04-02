@@ -19,7 +19,7 @@ HMODULE GetNativeModule() {
 template<typename FuncType>
 FuncType GetNativeFunction(const char* name) {
   std::string api_name;
-  if (!crbase::Base64Decode(name, &api_name))
+  if (!cr::Base64Decode(name, &api_name))
     return nullptr;
 
   FuncType fun = reinterpret_cast<FuncType>(

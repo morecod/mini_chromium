@@ -68,7 +68,7 @@
 #include <windows.h>
 #endif
 
-namespace crbase {
+namespace cr {
 
 class TimeDelta;
 
@@ -744,6 +744,6 @@ class CRBASE_EXPORT ThreadTicks : public time_internal::TimeBase<ThreadTicks> {
 // For logging use only.
 CRBASE_EXPORT std::ostream& operator<<(std::ostream& os, ThreadTicks time_ticks);
 
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_SRC_CRBASE_TIME_TIME_H_

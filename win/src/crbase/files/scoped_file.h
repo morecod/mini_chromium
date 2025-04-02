@@ -14,7 +14,7 @@
 #include "crbase/scoped_generic.h"
 #include "crbase/build_config.h"
 
-namespace crbase {
+namespace cr {
 
 namespace internal {
 
@@ -57,6 +57,6 @@ typedef ScopedGeneric<int, internal::ScopedFDCloseTraits> ScopedFD;
 // Automatically closes |FILE*|s.
 typedef std::unique_ptr<FILE, internal::ScopedFILECloser> ScopedFILE;
 
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_CRBASE_FILES_SCOPED_FILE_H_

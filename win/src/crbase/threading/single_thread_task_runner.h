@@ -8,7 +8,7 @@
 #include "crbase/base_export.h"
 #include "crbase/threading/sequenced_task_runner.h"
 
-namespace crbase {
+namespace cr {
 
 // A SingleThreadTaskRunner is a SequencedTaskRunner with one more
 // guarantee; namely, that all tasks are run on a single dedicated
@@ -33,6 +33,6 @@ class CRBASE_EXPORT SingleThreadTaskRunner : public SequencedTaskRunner {
   ~SingleThreadTaskRunner() override {}
 };
 
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_SRC_CRBASE_THREADING_SINGLE_THREAD_TASK_RUNNER_H_

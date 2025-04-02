@@ -12,7 +12,7 @@
 // SequencedTaskRunner use these helpers (instead of MessageLoop).
 // Then we can just move these to sequenced_task_runner.h.
 
-namespace crbase {
+namespace cr {
 
 namespace tracked_objects {
 class Location;
@@ -74,7 +74,7 @@ namespace subtle {
 //      void* object)
 //
 // An implementation of this function should simply create a
-// crbase::Closure from (function, object) and return the result of
+// cr::Closure from (function, object) and return the result of
 // posting the task.
 template <class T, class ReturnType>
 class DeleteHelperInternal {
@@ -110,6 +110,6 @@ class ReleaseHelperInternal {
 
 }  // namespace subtle
 
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_SRC_CRBASE_THREADING_SEQUENCED_TASK_RUNNER_HELPERS_H_

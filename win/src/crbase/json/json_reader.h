@@ -34,7 +34,7 @@
 #include "crbase/base_export.h"
 #include "crbase/strings/string_piece.h"
 
-namespace crbase {
+namespace cr {
 
 class Value;
 
@@ -131,6 +131,6 @@ class CRBASE_EXPORT JSONReader {
   std::unique_ptr<internal::JSONParser> parser_;
 };
 
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_SRC_CRBASE_JSON_JSON_READER_H_

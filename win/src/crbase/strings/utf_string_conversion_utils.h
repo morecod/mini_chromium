@@ -13,7 +13,7 @@
 #include "crbase/base_export.h"
 #include "crbase/strings/string16.h"
 
-namespace crbase {
+namespace cr {
 
 inline bool IsValidCodepoint(uint32_t code_point) {
   // Excludes the surrogate code points ([0xD800, 0xDFFF]) and
@@ -78,6 +78,6 @@ void PrepareForUTF8Output(const wchar_t* src, size_t src_len, std::string* outpu
 ///void PrepareForUTF16Or32Output(const char* src, size_t src_len, STRING* output);
 void PrepareForUTF16Or32Output(const char* src, size_t src_len, std::wstring* output);
 
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_SRC_CRBASE_STRINGS_UTF_STRING_CONVERSION_UTILS_H_

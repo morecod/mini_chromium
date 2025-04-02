@@ -26,7 +26,7 @@
 #include <dirent.h>
 #endif
 
-namespace crbase {
+namespace cr {
 
 #if defined(MINI_CHROMIUM_OS_WIN)
 struct ProcessEntry : public PROCESSENTRY32W {
@@ -140,6 +140,6 @@ class CRBASE_EXPORT NamedProcessIterator : public ProcessIterator {
 CRBASE_EXPORT int GetProcessCount(const FilePath::StringType& executable_name,
                                   const ProcessFilter* filter);
 
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_SRC_CRBASE_PROCESS_PROCESS_ITERATOR_H_

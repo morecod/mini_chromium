@@ -8,7 +8,7 @@
 #include "crbase/base_export.h"
 #include "crbase/time/tick_clock.h"
 
-namespace crbase {
+namespace cr {
 
 // DefaultClock is a Clock implementation that uses TimeTicks::Now().
 class CRBASE_EXPORT DefaultTickClock : public TickClock {
@@ -19,6 +19,6 @@ class CRBASE_EXPORT DefaultTickClock : public TickClock {
   TimeTicks NowTicks() const override;
 };
 
-}  // namespace crbase
+}  // namespace cr
 
 #endif  //MINI_CHROMIUM_SRC_CRBASE_TIME_DEFAULT_TICK_CLOCK_H_

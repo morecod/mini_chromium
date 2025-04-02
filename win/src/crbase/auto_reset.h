@@ -9,16 +9,16 @@
 
 #include "crbase/macros.h"
 
-// crbase::AutoReset<> is useful for setting a variable to a new value only 
-// within a particular scope. An crbase::AutoReset<> object resets a variable 
+// cr::AutoReset<> is useful for setting a variable to a new value only 
+// within a particular scope. An cr::AutoReset<> object resets a variable 
 // to its original value upon destruction, making it an alternative to writing
 // "var = false;" or "var = old_val;" at all of a block's exit points.
 //
-// This should be obvious, but note that an crbase::AutoReset<> instance should
+// This should be obvious, but note that an cr::AutoReset<> instance should
 // have a shorter lifetime than its scoped_variable, to prevent invalid memory
-// writes when the crbase::AutoReset<> object is destroyed.
+// writes when the cr::AutoReset<> object is destroyed.
 
-namespace crbase {
+namespace cr {
 
 template<typename T>
 class AutoReset {
@@ -39,6 +39,6 @@ class AutoReset {
   T original_value_;
 };
 
-}  // namespace crbase
+}  // namespace cr
 
 #endif  // MINI_CHROMIUM_SRC_CRBASE_AUTO_RESET_H_

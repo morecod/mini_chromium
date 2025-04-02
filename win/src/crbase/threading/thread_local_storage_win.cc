@@ -9,7 +9,7 @@
 #include "crbase/logging.h"
 #include "crbase/build_config.h"
 
-namespace crbase {
+namespace cr {
 
 namespace internal {
 
@@ -38,7 +38,7 @@ void PlatformThreadLocalStorage::SetTLSValue(TLSKey key, void* value) {
 
 }  // namespace internal
 
-}  // namespace crbase
+}  // namespace cr
 
 
 // Static callback function to call with each thread termination.
@@ -46,7 +46,7 @@ void NTAPI OnThreadExit(PVOID module, DWORD reason, PVOID reserved) {
   // On XP SP0 & SP1, the DLL_PROCESS_ATTACH is never seen. It is sent on SP2+
   // and on W2K and W2K3. So don't assume it is sent.
   if (DLL_THREAD_DETACH == reason || DLL_PROCESS_DETACH == reason)
-    crbase::internal::PlatformThreadLocalStorage::OnThreadExit();
+    cr::internal::PlatformThreadLocalStorage::OnThreadExit();
 }
 
 #if defined(MINI_CHROMIUM_COMPILER_MSVC)

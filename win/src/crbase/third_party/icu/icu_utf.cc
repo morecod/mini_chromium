@@ -19,7 +19,7 @@
 
 #include "crbase/third_party/icu/icu_utf.h"
 
-namespace crbase_icu {
+namespace cr_icu {
 
 /**
  * UTF8_ERROR_VALUE_1 and UTF8_ERROR_VALUE_2 are special error values for UTF-8,
@@ -224,4 +224,4 @@ UChar32 utf8_nextCharSafeBody(const uint8_t* s,
     return c;
 }
 
-}  // namespace crbase_icu
+}  // namespace cr_icu
