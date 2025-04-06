@@ -7,6 +7,7 @@
 
 #include "crbase/base_export.h"
 #include "crbase/functional/callback_forward.h"
+#include "crbase/threading/task_runner_util.h"
 #include "crbase/memory/ref_counted.h"
 
 namespace cr {
@@ -43,6 +44,37 @@ class CRBASE_EXPORT WorkerPool {
                                OnceClosure task,
                                OnceClosure reply,
                                bool task_is_slow);
+
+  // When you have these methods
+  //
+  //   R DoWorkAndReturn();
+  //   void Callback(const R& result);
+  //
+  // and want to call them in a PostTaskAndReply kind of fashion where the
+  // result of DoWorkAndReturn is passed to the Callback, you can use
+  // PostTaskAndReplyWithResult as in this example:
+  //
+  // PostTaskAndReplyWithResult(
+  //     FROM_HERE,
+  //     BindOnce(&DoWorkAndReturn),
+  //     BindOnce(&Callback));
+  template <typename TaskReturnType, typename ReplyArgType>
+  static bool PostTaskAndReplyWithResult(
+      const tracked_objects::Location& from_here,
+      OnceCallback<TaskReturnType()> task,
+      OnceCallback<void(ReplyArgType)> reply,
+      bool task_is_slow) {
+    CR_DCHECK(task);
+    CR_DCHECK(reply);
+    TaskReturnType* result = new TaskReturnType();
+    return WorkerPool::PostTaskAndReply(
+        from_here,
+        BindOnce(&internal::ReturnAsParamAdapter<TaskReturnType>, std::move(task),
+                 result),
+        BindOnce(&internal::ReplyAdapter<TaskReturnType, ReplyArgType>,
+                 std::move(reply), Owned(result)),
+        task_is_slow);
+  }
 
   // Return true if the current thread is one that this WorkerPool runs tasks
   // on.  (Note that if the Windows worker pool is used without going through

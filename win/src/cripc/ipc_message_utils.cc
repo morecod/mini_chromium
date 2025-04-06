@@ -203,7 +203,7 @@ bool ReadValue(const Message* m,
     }
     case cr::Value::TYPE_BINARY: {
       const char* data;
-      int length;
+      size_t length;
       if (!iter->ReadData(&data, &length))
         return false;
       *value = cr::BinaryValue::CreateWithCopiedBuffer(data, length);
@@ -250,54 +250,16 @@ void ParamTraits<bool>::Log(const param_type& p, std::string* l) {
   l->append(p ? "true" : "false");
 }
 
-void ParamTraits<signed char>::Write(Message* m, const param_type& p) {
-  m->WriteBytes(&p, sizeof(param_type));
-}
-
-bool ParamTraits<signed char>::Read(const Message *m,
-                                    cr::PickleIterator* iter, 
-                                    param_type *r) {
-  const char* data;
-  if (!iter->ReadBytes(&data, sizeof(param_type)))
-    return false;
-  memcpy(r, data, sizeof(param_type));
-  return true;
-}
-
 void ParamTraits<signed char>::Log(const param_type& p, std::string* l) {
   l->append(cr::IntToString(p));
-}
-
-void ParamTraits<unsigned char>::Write(Message* m, const param_type& p) {
-  m->WriteBytes(&p, sizeof(param_type));
-}
-
-bool ParamTraits<unsigned char>::Read(const Message* m,
-                                      cr::PickleIterator* iter,
-                                      param_type* r) {
-  const char* data;
-  if (!iter->ReadBytes(&data, sizeof(param_type)))
-    return false;
-  memcpy(r, data, sizeof(param_type));
-  return true;
 }
 
 void ParamTraits<unsigned char>::Log(const param_type& p, std::string* l) {
   l->append(cr::UintToString(p));
 }
 
-void ParamTraits<unsigned short>::Write(Message* m, const param_type& p) {
-  m->WriteBytes(&p, sizeof(param_type));
-}
-
-bool ParamTraits<unsigned short>::Read(const Message* m,
-                                       cr::PickleIterator* iter,
-                                       param_type* r) {
-  const char* data;
-  if (!iter->ReadBytes(&data, sizeof(param_type)))
-    return false;
-  memcpy(r, data, sizeof(param_type));
-  return true;
+void ParamTraits<short>::Log(const param_type& p, std::string* l) {
+  l->append(cr::UintToString(p));
 }
 
 void ParamTraits<unsigned short>::Log(const param_type& p, std::string* l) {
@@ -332,22 +294,6 @@ void ParamTraits<float>::Log(const param_type& p, std::string* l) {
   l->append(cr::StringPrintf("%e", p));
 }
 
-void ParamTraits<double>::Write(Message* m, const param_type& p) {
-  m->WriteBytes(reinterpret_cast<const char*>(&p), sizeof(param_type));
-}
-
-bool ParamTraits<double>::Read(const Message* m,
-                               cr::PickleIterator* iter,
-                               param_type* r) {
-  const char *data;
-  if (!iter->ReadBytes(&data, sizeof(*r))) {
-    CR_NOTREACHED();
-    return false;
-  }
-  memcpy(r, data, sizeof(param_type));
-  return true;
-}
-
 void ParamTraits<double>::Log(const param_type& p, std::string* l) {
   l->append(cr::StringPrintf("%e", p));
 }
@@ -365,7 +311,7 @@ void ParamTraits<std::vector<char> >::Write(Message* m, const param_type& p) {
   if (p.empty()) {
     m->WriteData(NULL, 0);
   } else {
-    m->WriteData(&p.front(), static_cast<int>(p.size()));
+    m->WriteData(&p.front(), p.size());
   }
 }
 
@@ -373,8 +319,8 @@ bool ParamTraits<std::vector<char>>::Read(const Message* m,
                                           cr::PickleIterator* iter,
                                           param_type* r) {
   const char *data;
-  int data_size = 0;
-  if (!iter->ReadData(&data, &data_size) || data_size < 0)
+  size_t data_size = 0;
+  if (!iter->ReadData(&data, &data_size))
     return false;
   r->resize(data_size);
   if (data_size)
@@ -391,8 +337,7 @@ void ParamTraits<std::vector<unsigned char> >::Write(Message* m,
   if (p.empty()) {
     m->WriteData(NULL, 0);
   } else {
-    m->WriteData(reinterpret_cast<const char*>(&p.front()),
-                 static_cast<int>(p.size()));
+    m->WriteData(reinterpret_cast<const char*>(&p.front()), p.size());
   }
 }
 
@@ -400,8 +345,8 @@ bool ParamTraits<std::vector<unsigned char>>::Read(const Message* m,
                                                    cr::PickleIterator* iter,
                                                    param_type* r) {
   const char *data;
-  int data_size = 0;
-  if (!iter->ReadData(&data, &data_size) || data_size < 0)
+  size_t data_size = 0;
+  if (!iter->ReadData(&data, &data_size))
     return false;
   r->resize(data_size);
   if (data_size)
@@ -415,7 +360,7 @@ void ParamTraits<std::vector<unsigned char> >::Log(const param_type& p,
 }
 
 void ParamTraits<std::vector<bool> >::Write(Message* m, const param_type& p) {
-  WriteParam(m, static_cast<int>(p.size()));
+  m->WriteLength(p.size());
   // Cast to bool below is required because libc++'s
   // vector<bool>::const_reference is different from bool, and we want to avoid
   // writing an extra specialization of ParamTraits for it.
@@ -426,7 +371,7 @@ void ParamTraits<std::vector<bool> >::Write(Message* m, const param_type& p) {
 bool ParamTraits<std::vector<bool>>::Read(const Message* m,
                                           cr::PickleIterator* iter,
                                           param_type* r) {
-  int size;
+  size_t size;
   // ReadLength() checks for < 0 itself.
   if (!iter->ReadLength(&size))
     return false;
@@ -745,13 +690,14 @@ bool ParamTraits<Message>::Read(const Message* m,
       !iter->ReadUInt32(&flags))
     return false;
 
-  int payload_size;
+  size_t payload_size;
   const char* payload;
   if (!iter->ReadData(&payload, &payload_size))
     return false;
 
   r->SetHeaderValues(static_cast<int32_t>(routing_id), type, flags);
-  return r->WriteBytes(payload, payload_size);
+  r->WriteBytes(payload, payload_size);
+  return true;
 }
 
 void ParamTraits<Message>::Log(const Message& p, std::string* l) {
@@ -761,14 +707,14 @@ void ParamTraits<Message>::Log(const Message& p, std::string* l) {
 // Note that HWNDs/HANDLE/HCURSOR/HACCEL etc are always 32 bits, even on 64
 // bit systems. That's why we use the Windows macros to convert to 32 bits.
 void ParamTraits<HANDLE>::Write(Message* m, const param_type& p) {
-  m->WriteInt(HandleToLong(p));
+  m->WriteLong(HandleToLong(p));
 }
 
 bool ParamTraits<HANDLE>::Read(const Message* m,
                                cr::PickleIterator* iter,
                                param_type* r) {
-  int32_t temp;
-  if (!iter->ReadInt(&temp))
+  long temp;
+  if (!iter->ReadLong(&temp))
     return false;
   *r = LongToHandle(temp);
   return true;
@@ -786,7 +732,7 @@ bool ParamTraits<LOGFONT>::Read(const Message* m,
                                 cr::PickleIterator* iter,
                                 param_type* r) {
   const char *data;
-  int data_size = 0;
+  size_t data_size = 0;
   if (iter->ReadData(&data, &data_size) && data_size == sizeof(LOGFONT)) {
     const LOGFONT *font = reinterpret_cast<LOGFONT*>(const_cast<char*>(data));
     if (_tcsnlen(font->lfFaceName, LF_FACESIZE) < LF_FACESIZE) {
@@ -811,7 +757,7 @@ bool ParamTraits<MSG>::Read(const Message* m,
                             cr::PickleIterator* iter,
                             param_type* r) {
   const char *data;
-  int data_size = 0;
+  size_t data_size = 0;
   bool result = iter->ReadData(&data, &data_size);
   if (result && data_size == sizeof(MSG)) {
     memcpy(r, data, sizeof(MSG));

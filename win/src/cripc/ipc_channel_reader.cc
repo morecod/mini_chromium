@@ -49,7 +49,6 @@ ChannelReader::DispatchState ChannelReader::ProcessIncomingMessages() {
 ChannelReader::DispatchState ChannelReader::AsyncReadComplete(int bytes_read) {
   if (!TranslateInputData(input_buf_, bytes_read))
     return DISPATCH_ERROR;
-
   return DispatchMessages();
 }
 

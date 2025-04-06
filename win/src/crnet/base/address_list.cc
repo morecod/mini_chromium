@@ -8,7 +8,6 @@
 
 #include "crbase/functional/bind.h"
 #include "crbase/logging.h"
-#include "crnet/base/net_util.h"
 #include "crnet/base/sys_addrinfo.h"
 
 namespace crnet {
@@ -38,12 +37,6 @@ AddressList::~AddressList() {}
 
 AddressList::AddressList(const IPEndPoint& endpoint) {
   push_back(endpoint);
-}
-
-// static
-AddressList AddressList::CreateFromIPAddress(const IPAddressNumber& address,
-                                             uint16_t port) {
-  return AddressList(IPEndPoint(address, port));
 }
 
 // static

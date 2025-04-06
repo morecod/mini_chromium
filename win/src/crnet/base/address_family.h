@@ -5,10 +5,11 @@
 #ifndef MINI_CHROMIUM_SRC_CRNET_BASE_ADDRESS_FAMILY_H_
 #define MINI_CHROMIUM_SRC_CRNET_BASE_ADDRESS_FAMILY_H_
 
-#include "crnet/base/ip_address_number.h"
 #include "crnet/base/net_export.h"
 
 namespace crnet {
+
+class IPAddress;
 
 // Enum wrapper around the address family types supported by host resolver
 // procedures.
@@ -34,7 +35,7 @@ enum {
 typedef int HostResolverFlags;
 
 // Returns AddressFamily for |address|.
-CRNET_EXPORT AddressFamily GetAddressFamily(const IPAddressNumber& address);
+CRNET_EXPORT AddressFamily GetAddressFamily(const IPAddress& address);
 
 // Maps the given AddressFamily to either AF_INET, AF_INET6 or AF_UNSPEC.
 CRNET_EXPORT int ConvertAddressFamily(AddressFamily address_family);

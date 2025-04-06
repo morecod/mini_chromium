@@ -24,7 +24,7 @@
 #include "crbase/strings/string16.h"
 #include "crbase/strings/string_util.h"
 #include "crbase/strings/stringprintf.h"
-#include "crbase/tuple.h"
+#include "crbase/containers/tuple.h"
 
 #include "cripc/ipc_message.h"
 #include "cripc/ipc_param_traits.h"
@@ -132,30 +132,56 @@ struct ParamTraits<bool> {
 template <>
 struct CRIPC_EXPORT ParamTraits<signed char> {
   typedef signed char param_type;
-  static void Write(Message* m, const param_type& p);
+  static void Write(Message* m, const param_type& p) {
+    m->WriteInt8(p);
+  }
   static bool Read(const Message* m, 
                    cr::PickleIterator* iter,
-                   param_type* r);
+                   param_type* r) {
+    return iter->ReadInt8(r);
+  }
   static void Log(const param_type& p, std::string* l);
 };
 
 template <>
 struct CRIPC_EXPORT ParamTraits<unsigned char> {
   typedef unsigned char param_type;
-  static void Write(Message* m, const param_type& p);
+  static void Write(Message* m, const param_type& p) {
+    m->WriteUInt8(p);
+  }
   static bool Read(const Message* m, 
                    cr::PickleIterator* iter,
-                   param_type* r);
+                   param_type* r) {
+    return iter->ReadUInt8(r);
+  }
+  static void Log(const param_type& p, std::string* l);
+};
+
+template <>
+struct CRIPC_EXPORT ParamTraits<short> {
+  typedef short param_type;
+  static void Write(Message* m, const param_type& p) {
+    m->WriteInt16(p);
+  }
+  static bool Read(const Message* m, 
+                   cr::PickleIterator* iter,
+                   param_type* r) {
+    return iter->ReadInt16(r);
+  }
   static void Log(const param_type& p, std::string* l);
 };
 
 template <>
 struct CRIPC_EXPORT ParamTraits<unsigned short> {
   typedef unsigned short param_type;
-  static void Write(Message* m, const param_type& p);
+  static void Write(Message* m, const param_type& p) {
+    m->WriteUInt16(p);
+  }
   static bool Read(const Message* m, 
                    cr::PickleIterator* iter,
-                   param_type* r);
+                   param_type* r) {
+    return iter->ReadUInt16(r);
+  }
   static void Log(const param_type& p, std::string* l);
 };
 
@@ -191,7 +217,7 @@ template <>
 struct ParamTraits<long> {
   typedef long param_type;
   static void Write(Message* m, const param_type& p) {
-    m->WriteLongUsingDangerousNonPortableLessPersistableForm(p);
+    m->WriteLong(p);
   }
   static bool Read(const Message* m,
                    cr::PickleIterator* iter,
@@ -205,7 +231,7 @@ template <>
 struct ParamTraits<unsigned long> {
   typedef unsigned long param_type;
   static void Write(Message* m, const param_type& p) {
-    m->WriteLongUsingDangerousNonPortableLessPersistableForm(p);
+    m->WriteLong(p);
   }
   static bool Read(const Message* m,
                    cr::PickleIterator* iter,
@@ -263,10 +289,14 @@ struct CRIPC_EXPORT ParamTraits<float> {
 template <>
 struct CRIPC_EXPORT ParamTraits<double> {
   typedef double param_type;
-  static void Write(Message* m, const param_type& p);
+  static void Write(Message* m, const param_type& p) {
+    m->WriteDouble(p);
+  }
   static bool Read(const Message* m,
                    cr::PickleIterator* iter,
-                   param_type* r);
+                   param_type* r) {
+    return iter->ReadDouble(r);
+  }
   static void Log(const param_type& p, std::string* l);
 };
 
@@ -334,14 +364,14 @@ template <class P>
 struct ParamTraits<std::vector<P> > {
   typedef std::vector<P> param_type;
   static void Write(Message* m, const param_type& p) {
-    WriteParam(m, static_cast<int>(p.size()));
+    m->WriteLength(p.size());
     for (size_t i = 0; i < p.size(); i++)
       WriteParam(m, p[i]);
   }
   static bool Read(const Message* m,
                    cr::PickleIterator* iter,
                    param_type* r) {
-    int size;
+    size_t size;
     // ReadLength() checks for < 0 itself.
     if (!iter->ReadLength(&size))
       return false;
@@ -368,7 +398,7 @@ template <class P>
 struct ParamTraits<std::set<P> > {
   typedef std::set<P> param_type;
   static void Write(Message* m, const param_type& p) {
-    WriteParam(m, static_cast<int>(p.size()));
+    m->WriteLength(p.size());
     typename param_type::const_iterator iter;
     for (iter = p.begin(); iter != p.end(); ++iter)
       WriteParam(m, *iter);
@@ -396,7 +426,7 @@ template <class K, class V, class C, class A>
 struct ParamTraits<std::map<K, V, C, A> > {
   typedef std::map<K, V, C, A> param_type;
   static void Write(Message* m, const param_type& p) {
-    WriteParam(m, static_cast<int>(p.size()));
+    m->WriteLength(p.size());
     typename param_type::const_iterator iter;
     for (iter = p.begin(); iter != p.end(); ++iter) {
       WriteParam(m, iter->first);
@@ -406,8 +436,8 @@ struct ParamTraits<std::map<K, V, C, A> > {
   static bool Read(const Message* m,
                    cr::PickleIterator* iter,
                    param_type* r) {
-    int size;
-    if (!ReadParam(m, iter, &size) || size < 0)
+    size_t size;
+    if (!ReadLength(m, iter, &size))
       return false;
     for (int i = 0; i < size; ++i) {
       K k;
@@ -683,14 +713,14 @@ template<class P>
 struct ParamTraits<cr::ScopedVector<P> > {
   typedef cr::ScopedVector<P> param_type;
   static void Write(Message* m, const param_type& p) {
-    WriteParam(m, static_cast<int>(p.size()));
+    m->WriteLength(p.size());
     for (size_t i = 0; i < p.size(); i++)
       WriteParam(m, *p[i]);
   }
   static bool Read(const Message* m,
                    cr::PickleIterator* iter,
                    param_type* r) {
-    int size = 0;
+    size_t size = 0;
     if (!iter->ReadLength(&size))
       return false;
     if (INT_MAX/sizeof(P) <= static_cast<size_t>(size))
@@ -711,78 +741,6 @@ struct ParamTraits<cr::ScopedVector<P> > {
     }
   }
 };
-
-///template <class P, size_t stack_capacity>
-///struct ParamTraits<cr::StackVector<P, stack_capacity> > {
-///  typedef cr::StackVector<P, stack_capacity> param_type;
-///  static void Write(Message* m, const param_type& p) {
-///    WriteParam(m, static_cast<int>(p->size()));
-///    for (size_t i = 0; i < p->size(); i++)
-///      WriteParam(m, p[i]);
-///  }
-///  static bool Read(const Message* m,
-///                   cr::PickleIterator* iter,
-///                   param_type* r) {
-///    int size;
-///    // ReadLength() checks for < 0 itself.
-///    if (!iter->ReadLength(&size))
-///      return false;
-///    // Sanity check for the vector size.
-///    if (INT_MAX / sizeof(P) <= static_cast<size_t>(size))
-///      return false;
-///    P value;
-///    for (int i = 0; i < size; i++) {
-///      if (!ReadParam(m, iter, &value))
-///        return false;
-///      (*r)->push_back(value);
-///    }
-///    return true;
-///  }
-///  static void Log(const param_type& p, std::string* l) {
-///    for (size_t i = 0; i < p->size(); ++i) {
-///      if (i != 0)
-///        l->append(" ");
-///      LogParam((p[i]), l);
-///    }
-///  }
-///};
-///
-///template <typename NormalMap,
-///          int kArraySize,
-///          typename EqualKey,
-///          typename MapInit>
-///struct ParamTraits<cr::SmallMap<NormalMap, kArraySize, EqualKey, MapInit> > {
-///  typedef cr::SmallMap<NormalMap, kArraySize, EqualKey, MapInit> param_type;
-///  typedef typename param_type::key_type K;
-///  typedef typename param_type::data_type V;
-///  static void Write(Message* m, const param_type& p) {
-///    WriteParam(m, static_cast<int>(p.size()));
-///    typename param_type::const_iterator iter;
-///    for (iter = p.begin(); iter != p.end(); ++iter) {
-///      WriteParam(m, iter->first);
-///      WriteParam(m, iter->second);
-///    }
-///  }
-///  static bool Read(const Message* m,
-///                   cr::PickleIterator* iter,
-///                   param_type* r) {
-///    int size;
-///    if (!iter->ReadLength(&size))
-///      return false;
-///    for (int i = 0; i < size; ++i) {
-///      K key;
-///      if (!ReadParam(m, iter, &key))
-///        return false;
-///      V& value = (*r)[key];
-///      if (!ReadParam(m, iter, &value))
-///        return false;
-///    }
-///    return true;
-///  }
-///  static void Log(const param_type& p, std::string* l) {
-///    l->append("<cr::SmallMap>");
-///  }
-///};
 
 template <class P>
 struct ParamTraits<std::unique_ptr<P> > {

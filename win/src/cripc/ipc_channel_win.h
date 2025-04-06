@@ -53,7 +53,7 @@ class ChannelWin : public Channel,
   cr::ProcessId GetSenderPID() override;
 
   static const cr::string16 PipeName(const std::string& channel_id,
-                                         int32_t* secret);
+                                     uint32_t* secret);
   bool CreatePipe(const ChannelHandle &channel_handle, Mode mode);
 
   bool ProcessConnection();
@@ -124,7 +124,7 @@ class ChannelWin : public Channel,
   // a connection. If the value is non-zero, the client passes it in the hello
   // and the host validates. (We don't send the zero value fto preserve IPC
   // compatability with existing clients that don't validate the channel.)
-  int32_t client_secret_;
+  uint32_t client_secret_;
 
   cr::WeakPtrFactory<ChannelWin> weak_factory_;
 };

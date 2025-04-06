@@ -92,9 +92,9 @@ struct DestructorAtExitLazyInstanceTraits {
 };
 
 // Use LazyInstance<T>::Leaky for a less-verbose call-site typedef; e.g.:
-// base::LazyInstance<T>::Leaky my_leaky_lazy_instance;
+// cr::LazyInstance<T>::Leaky my_leaky_lazy_instance;
 // instead of:
-// base::LazyInstance<T, base::internal::LeakyLazyInstanceTraits<T> >
+// cr::LazyInstance<T, cr::internal::LeakyLazyInstanceTraits<T> >
 // my_leaky_lazy_instance;
 // (especially when T is MyLongTypeNameImplClientHolderFactory).
 // Only use this internal::-qualified verbose form to extend this traits class

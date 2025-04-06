@@ -9,109 +9,82 @@
 
 namespace crnet {
 
-namespace {
-
 // TODO(eroman): IOBuffer is being converted to require buffer sizes and offsets
 // be specified as "size_t" rather than "int" (crbug.com/488553). To facilitate
-// this move (since LOTS of code needs to be updated), both "size_t" and "int
-// are being accepted. When using "size_t" this function ensures that it can be
-// safely converted to an "int" without truncation.
-void AssertValidBufferSize(size_t size) {
+// this move (since LOTS of code needs to be updated), this function ensures
+// that sizes can be safely converted to an "int" without truncation. The
+// assert ensures calling this with an "int" argument is also safe.
+void IOBuffer::AssertValidBufferSize(size_t size) {
+  static_assert(sizeof(size_t) >= sizeof(int), "size overflowed.");
   cr::CheckedNumeric<int>(size).ValueOrDie();
 }
 
-void AssertValidBufferSize(int size) {
-  CR_CHECK_GE(size, 0);
+IOBuffer::IOBuffer(cr::BytesView bytes_view)
+    : bytes_view_(bytes_view) {
+  AssertValidBufferSize(bytes_view.size());
 }
 
-}  // namespace
-
-IOBuffer::IOBuffer()
-    : data_(NULL) {
+void IOBuffer::SetBytesView(cr::BytesView bytes_view) {
+  AssertValidBufferSize(bytes_view.size());
+  bytes_view_ = bytes_view;
 }
 
-///IOBuffer::IOBuffer(int buffer_size) {
-///  AssertValidBufferSize(buffer_size);
-///  data_ = new char[buffer_size];
-///}
-
-IOBuffer::IOBuffer(size_t buffer_size) {
-  AssertValidBufferSize(buffer_size);
-  data_ = new char[buffer_size];
+void IOBuffer::ClearBytesView() {
+  bytes_view_ = cr::BytesView();
 }
 
-IOBuffer::IOBuffer(char* data)
-    : data_(data) {
-}
+// -- IOBufferWithSize
+IOBufferWithSize::IOBufferWithSize() = default;
 
-IOBuffer::~IOBuffer() {
-  delete[] data_;
-  data_ = NULL;
-}
-
-///IOBufferWithSize::IOBufferWithSize(int size)
-///    : IOBuffer(size),
-///      size_(size) {
-///  AssertValidBufferSize(size);
-///}
-
-IOBufferWithSize::IOBufferWithSize(size_t size) : IOBuffer(size), size_(size) {
-  // Note: Size check is done in superclass' constructor.
-}
-
-///IOBufferWithSize::IOBufferWithSize(char* data, int size)
-///    : IOBuffer(data),
-///      size_(size) {
-///  AssertValidBufferSize(size);
-//}
-
-IOBufferWithSize::IOBufferWithSize(char* data, size_t size)
-    : IOBuffer(data), size_(size) {
+IOBufferWithSize::IOBufferWithSize(size_t size) {
   AssertValidBufferSize(size);
+  data_.reset(new uint8_t[size]);
+  SetBytesView(cr::MakeBytesView(data_.get(), size));
 }
 
 IOBufferWithSize::~IOBufferWithSize() {
+  // Clear pointer before this destructor makes it dangle.
+  ClearBytesView();
+  data_.reset();
 }
 
-StringIOBuffer::StringIOBuffer(const std::string& s)
-    : IOBuffer(static_cast<char*>(NULL)),
-      string_data_(s) {
-  AssertValidBufferSize(s.size());
-  data_ = const_cast<char*>(string_data_.data());
+// -- VectorIOBuffer
+VectorIOBuffer::VectorIOBuffer(std::vector<uint8_t> vector) 
+    : vector_(std::move(vector)) {
+  SetBytesView(cr::MakeBytesView(vector_));
 }
 
-StringIOBuffer::StringIOBuffer(std::unique_ptr<std::string> s)
-    : IOBuffer(static_cast<char*>(NULL)) {
-  AssertValidBufferSize(s->size());
-  string_data_.swap(*s.get());
-  data_ = const_cast<char*>(string_data_.data());
+VectorIOBuffer::VectorIOBuffer(cr::BytesView bytes_view) {
+  AssertValidBufferSize(bytes_view.size());
+  vector_.assign(bytes_view.begin(), bytes_view.end());
+  SetBytesView(bytes_view);
+}
+
+VectorIOBuffer::~VectorIOBuffer() {
+  ClearBytesView();
+}
+
+// -- StringIOBuffer
+StringIOBuffer::StringIOBuffer(std::string s) 
+    : string_data_(std::move(s)) {
+  SetBytesView(cr::MakeBytesView(string_data_));
 }
 
 StringIOBuffer::~StringIOBuffer() {
-  // We haven't allocated the buffer, so remove it before the base class
-  // destructor tries to delete[] it.
-  data_ = NULL;
+  ClearBytesView();
 }
 
-///DrainableIOBuffer::DrainableIOBuffer(IOBuffer* base, int size)
-///    : IOBuffer(base->data()),
-///      base_(base),
-///      size_(size),
-///      used_(0) {
-///  AssertValidBufferSize(size);
-///}
-
-DrainableIOBuffer::DrainableIOBuffer(IOBuffer* base, size_t size)
-    : IOBuffer(base->data()), base_(base), size_(size), used_(0) {
-  AssertValidBufferSize(size);
-}
+// -- DrainableIOBuffer 
+DrainableIOBuffer::DrainableIOBuffer(cr::scoped_refptr<IOBuffer> base, 
+                                     size_t size)
+    : IOBuffer(base->first(size)), base_(std::move(base)) {}
 
 void DrainableIOBuffer::DidConsume(size_t bytes) {
   SetOffset(used_ + bytes);
 }
 
 size_t DrainableIOBuffer::BytesRemaining() const {
-  return size_ - used_;
+  return size();
 }
 
 // Returns the number of consumed bytes.
@@ -120,27 +93,32 @@ size_t DrainableIOBuffer::BytesConsumed() const {
 }
 
 void DrainableIOBuffer::SetOffset(size_t bytes) {
-  CR_DCHECK_GE(bytes, 0);
-  CR_DCHECK_LE(bytes, size_);
+  // Length from the start of `base_` to the end of the buffer passed in to the
+  // constructor isn't stored anywhere, so need to calculate it.
+  size_t length = size() + used_;
+  CR_CHECK_LE(bytes, length);
   used_ = bytes;
-  data_ = base_->data() + used_;
+  SetBytesView(cr::MakeBytesView(base_->bytes() + used_, length - bytes));
 }
 
 DrainableIOBuffer::~DrainableIOBuffer() {
-  // The buffer is owned by the |base_| instance.
-  data_ = NULL;
+  // Clear ptr before this destructor destroys the |base_| instance,
+  // making it dangle.
+  ClearBytesView();
 }
 
-GrowableIOBuffer::GrowableIOBuffer()
-    : IOBuffer(),
-      capacity_(0),
-      offset_(0) {
-}
+// -- GrowableIOBuffer 
+void GrowableIOBuffer::SetCapacity(size_t capacity) {
+  CR_CHECK_LE(capacity, std::numeric_limits<int>::max());
 
-void GrowableIOBuffer::SetCapacity(int capacity) {
-  CR_DCHECK_GE(capacity, 0);
+  // The ArrayView will be set again in `set_offset()`. Need to clear raw 
+  // pointers to the data before reallocating the buffer.
+  ClearBytesView();
+
   // realloc will crash if it fails.
-  real_data_.reset(static_cast<char*>(realloc(real_data_.release(), capacity)));
+  real_data_.reset(
+      static_cast<uint8_t*>(realloc(real_data_.release(), capacity)));
+
   capacity_ = capacity;
   if (offset_ > capacity)
     set_offset(capacity);
@@ -148,42 +126,33 @@ void GrowableIOBuffer::SetCapacity(int capacity) {
     set_offset(offset_);  // The pointer may have changed.
 }
 
-void GrowableIOBuffer::set_offset(int offset) {
-  CR_DCHECK_GE(offset, 0);
-  CR_DCHECK_LE(offset, capacity_);
+void GrowableIOBuffer::set_offset(size_t offset) {
+  CR_CHECK_LE(offset, capacity_);
   offset_ = offset;
-  data_ = real_data_.get() + offset;
+
+  SetBytesView(cr::MakeBytesView(
+      real_data_.get() + offset, capacity_ - offset));
 }
 
-int GrowableIOBuffer::RemainingCapacity() {
-  return capacity_ - offset_;
+void GrowableIOBuffer::DidConsume(size_t bytes) {
+  CR_CHECK_LE(bytes, size());
+  set_offset(offset_ + bytes);
 }
 
-char* GrowableIOBuffer::StartOfBuffer() {
-  return real_data_.get();
+size_t GrowableIOBuffer::RemainingCapacity() {
+  return size();
+}
+
+cr::BytesView GrowableIOBuffer::everything() {
+  return cr::MakeBytesView(real_data_.get(), capacity_);
+}
+
+cr::BytesView GrowableIOBuffer::bytes_view_before_offset() {
+  return cr::MakeBytesView(real_data_.get(), offset_);
 }
 
 GrowableIOBuffer::~GrowableIOBuffer() {
-  data_ = NULL;
-}
-
-PickledIOBuffer::PickledIOBuffer() : IOBuffer() {
-}
-
-void PickledIOBuffer::Done() {
-  data_ = const_cast<char*>(static_cast<const char*>(pickle_.data()));
-}
-
-PickledIOBuffer::~PickledIOBuffer() {
-  data_ = NULL;
-}
-
-WrappedIOBuffer::WrappedIOBuffer(const char* data)
-    : IOBuffer(const_cast<char*>(data)) {
-}
-
-WrappedIOBuffer::~WrappedIOBuffer() {
-  data_ = NULL;
+  ClearBytesView();
 }
 
 }  // namespace crnet

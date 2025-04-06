@@ -14,23 +14,6 @@
 #include "crbase/base_export.h"
 #include "crbase/logging.h"
 
-// compatible with <windows.h>
-#if defined(MINI_CHROMIUM_COMPILER_MSVC)
-
-#if defined(min)
-#undef min
-#endif
-
-#if defined(max)
-#undef max
-#endif
-
-#ifndef NOMINMAX
-#define NOMINMAX
-#endif
-
-#endif
-
 namespace cr {
 
 // WARNING: This hash function should not be used for any cryptographic purpose.

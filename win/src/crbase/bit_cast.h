@@ -63,7 +63,6 @@ template <class Dest, class Source>
 inline Dest bit_cast(const Source& source) {
   static_assert(sizeof(Dest) == sizeof(Source),
                 "bit_cast requires source and destination to be the same size");
-
   Dest dest;
   memcpy(&dest, &source, sizeof(dest));
   return dest;

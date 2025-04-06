@@ -106,9 +106,9 @@ class CRBASE_EXPORT TaskRunner
   //    void GetData() {
   //      scoped_refptr<DataBuffer> buffer = new DataBuffer();
   //      target_thread_.task_runner()->PostTaskAndReply(
-  //          FROM_HERE,
-  //          base::Bind(&DataBuffer::AddData, buffer),
-  //          base::Bind(&DataLoader::OnDataReceived, AsWeakPtr(), buffer));
+  //          CR_FROM_HERE,
+  //          cr::BindOnce(&DataBuffer::AddData, buffer),
+  //          cr::BindOnce(&DataLoader::OnDataReceived, AsWeakPtr(), buffer));
   //    }
   //
   //  private:

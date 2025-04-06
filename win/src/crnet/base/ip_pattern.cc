@@ -13,6 +13,8 @@
 #include "crbase/strings/string_split.h"
 #include "crbase/strings/string_tokenizer.h"
 
+#include "crnet/base/ip_address.h"
+
 namespace crnet {
 
 class IPPattern::ComponentPattern {
@@ -57,11 +59,10 @@ IPPattern::IPPattern() : is_ipv4_(true) {}
 
 IPPattern::~IPPattern() {}
 
-bool IPPattern::Match(const IPAddressNumber& address) const {
+bool IPPattern::Match(const IPAddress& address) const {
   if (ip_mask_.empty())
     return false;
-  bool address_is_ipv4 = address.size() == kIPv4AddressSize;
-  if (address_is_ipv4 != is_ipv4_)
+  if (address.IsIPv4() != is_ipv4_)
     return false;
 
   ComponentPatternList::const_iterator pattern_it(component_patterns_.begin());
@@ -70,9 +71,9 @@ bool IPPattern::Match(const IPAddressNumber& address) const {
   // 8, so it is easier to count separately.
   int address_index = 0;
   for (size_t i = 0; i < ip_mask_.size(); ++i) {
-    uint32_t value_to_test = address[address_index++];
+    uint32_t value_to_test = address.bytes()[address_index++];
     if (!is_ipv4_) {
-      value_to_test = (value_to_test << 8) + address[address_index++];
+      value_to_test = (value_to_test << 8) + address.bytes()[address_index++];
     }
     if (ip_mask_[i]) {
       if (component_values_[fixed_value_index++] != value_to_test)
@@ -98,11 +99,13 @@ bool IPPattern::ParsePattern(const std::string& ip_pattern) {
                                cr::SPLIT_WANT_ALL);
   if (components.size() != (is_ipv4_ ? 4u : 8u)) {
     ///CR_DVLOG(1) << "Invalid component count: " << ip_pattern;
+    CR_DLOG(WARNING) << "Invalid component count: " << ip_pattern;
     return false;
   }
   for (cr::StringPiece component : components) {
     if (component.empty()) {
       ///CR_DVLOG(1) << "Empty component: " << ip_pattern;
+      CR_DLOG(WARNING) << "Empty component: " << ip_pattern;
       return false;
     }
     if (component == "*") {
@@ -119,11 +122,13 @@ bool IPPattern::ParsePattern(const std::string& ip_pattern) {
     }
     if (component[component.size() - 1] != ']') {
       ///CR_DVLOG(1) << "Missing close bracket: " << ip_pattern;
+      CR_DLOG(WARNING) << "Missing close bracket: " << ip_pattern;
       return false;
     }
     // Now we know the size() is at least 2.
     if (component.size() == 2) {
       ///CR_DVLOG(1) << "Empty bracket: " << ip_pattern;
+      CR_DLOG(WARNING) << "Empty bracket: " << ip_pattern;
       return false;
     }
     // We'll need a pattern to match this bracketed component.
@@ -158,6 +163,7 @@ bool IPPattern::ParseComponentPattern(const cr::StringPiece& text,
     if (range_pair.GetNext()) {
       // Too many "-" in this range specifier.
       ///CR_DVLOG(1) << "Too many hyphens in range: ";
+      CR_DLOG(WARNING) << "Too many hyphens in range: ";
       return false;
     }
     pattern->AppendRange(min, max);
@@ -171,14 +177,17 @@ bool IPPattern::ValueTextToInt(const cr::StringPiece& input,
                        cr::HexStringToUInt(input, output);
   if (!ok) {
     ///CR_DVLOG(1) << "Could not convert value to number: " << input;
+    CR_DLOG(WARNING) << "Could not convert value to number: " << input;
     return false;
   }
   if (is_ipv4_ && *output > 255u) {
     ///CR_DVLOG(1) << "IPv4 component greater than 255";
+    CR_DLOG(WARNING) << "IPv4 component greater than 255";
     return false;
   }
   if (!is_ipv4_ && *output > 0xFFFFu) {
     ///CR_DVLOG(1) << "IPv6 component greater than 0xFFFF";
+    CR_DLOG(WARNING) << "IPv6 component greater than 0xFFFF";
     return false;
   }
   return ok;

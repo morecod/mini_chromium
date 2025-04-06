@@ -13,6 +13,7 @@
 #include "crbase/base_export.h"
 #include "crbase/strings/string16.h"
 #include "crbase/strings/string_piece.h"
+#include "crbase/numerics/safe_conversions.h"
 
 namespace cr {
 
@@ -24,7 +25,6 @@ class CRBASE_EXPORT PickleIterator {
  public:
   PickleIterator() : payload_(NULL), read_index_(0), end_index_(0) {}
   explicit PickleIterator(const Pickle& pickle);
-  explicit PickleIterator(const char* payload, size_t payload_size);
 
   // Methods for reading the payload of the Pickle. To read from the start of
   // the Pickle, create a PickleIterator from a Pickle. If successful, these
@@ -34,15 +34,17 @@ class CRBASE_EXPORT PickleIterator {
   bool ReadBool(bool* result);
   bool ReadInt8(int8_t* result);
   bool ReadUInt8(uint8_t* result);
-  bool ReadInt(int* result);
-  bool ReadLong(long* result);
+  bool ReadInt16(int16_t* result);
   bool ReadUInt16(uint16_t* result);
+  bool ReadInt32(int32_t* result);
   bool ReadUInt32(uint32_t* result);
   bool ReadInt64(int64_t* result);
   bool ReadUInt64(uint64_t* result);
-  bool ReadSizeT(size_t* result);
+  bool ReadInt(int* result);
+  bool ReadLong(long* result);
   bool ReadFloat(float* result);
   bool ReadDouble(double* result);
+
   bool ReadString(std::string* result);
   // The StringPiece data will only be valid for the lifetime of the message.
   bool ReadStringPiece(StringPiece* result);
@@ -54,19 +56,23 @@ class CRBASE_EXPORT PickleIterator {
   // placed in |*length|. The pointer placed into |*data| points into the
   // message's buffer so it will be scoped to the lifetime of the message (or
   // until the message data is mutated). Do not keep the pointer around!
-  bool ReadData(const char** data, int* length);
+  bool ReadData(const char** data, size_t* length);
 
   // A pointer to the data will be placed in |*data|. The caller specifies the
   // number of bytes to read, and ReadBytes will validate this length. The
   // pointer placed into |*data| points into the message's buffer so it will be
   // scoped to the lifetime of the message (or until the message data is
   // mutated). Do not keep the pointer around!
-  bool ReadBytes(const char** data, int length);
+  bool ReadBytes(const char** data, size_t length);
 
-  // A safer version of ReadInt() that checks for the result not being negative.
-  // Use it for reading the object sizes.
-  bool ReadLength(int* result) {
-    return ReadInt(result) && *result >= 0;
+  // A version of ReadInt() that checks for the result not being negative. Use
+  // it for reading the object sizes.
+  bool ReadLength(size_t* result) {
+    int32_t result_int;
+    if (!ReadInt32(&result_int) || result_int < 0)
+      return false;
+    *result = static_cast<size_t>(result_int);
+    return true;
   }
 
   // Skips bytes in the read buffer and returns true if there are at least
@@ -90,16 +96,16 @@ class CRBASE_EXPORT PickleIterator {
 
   // Get read pointer for |num_bytes| and advance read pointer. This method
   // checks num_bytes for negativity and wrapping.
-  const char* GetReadPointerAndAdvance(int num_bytes);
+  const char* GetReadPointerAndAdvance(size_t num_bytes);
 
   // Get read pointer for (num_elements * size_element) bytes and advance read
   // pointer. This method checks for int overflow, negativity and wrapping.
-  const char* GetReadPointerAndAdvance(int num_elements,
+  const char* GetReadPointerAndAdvance(size_t num_elements,
                                        size_t size_element);
 
   const char* payload_;  // Start of our pickle's payload.
-  size_t read_index_;  // Offset of the next readable byte in payload.
-  size_t end_index_;  // Payload size.
+  size_t read_index_;    // Offset of the next readable byte in payload.
+  size_t end_index_;     // Payload size.
 };
 
 // This class provides facilities for basic binary value packing and unpacking.
@@ -133,7 +139,7 @@ class CRBASE_EXPORT Pickle {
   // instead the data is merely referenced by this Pickle.  Only const methods
   // should be used on the Pickle when initialized this way.  The header
   // padding size is deduced from the data length.
-  Pickle(const char* data, int data_len);
+  Pickle(const char* data, size_t data_len);
 
   // Initializes a Pickle as a deep copy of another Pickle.
   Pickle(const Pickle& other);
@@ -165,46 +171,40 @@ class CRBASE_EXPORT Pickle {
   // Pickle, it is important to read them in the order in which they were added
   // to the Pickle.
 
-  bool WriteBool(bool value) {
-    return WriteInt(value ? 1 : 0);
-  }
-  bool WriteInt(int value) {
-    return WritePOD(value);
-  }
-  // WARNING: DO NOT USE THIS METHOD IF PICKLES ARE PERSISTED IN ANY WAY.
-  // It will write whatever a "long" is on this architecture. On 32-bit
-  // platforms, it is 32 bits. On 64-bit platforms, it is 64 bits. If persisted
-  // pickles are still around after upgrading to 64-bit, or if they are copied
-  // between dissimilar systems, YOUR PICKLES WILL HAVE GONE BAD.
-  bool WriteLongUsingDangerousNonPortableLessPersistableForm(long value) {
-    return WritePOD(value);
-  }
-  bool WriteInt8(int8_t value) { return WritePOD(value); }
-  bool WriteUInt8(uint8_t value) { return WritePOD(value); }
-  bool WriteUInt16(uint16_t value) { return WritePOD(value); }
-  bool WriteUInt32(uint32_t value) { return WritePOD(value); }
-  bool WriteInt64(int64_t value) { return WritePOD(value); }
-  bool WriteUInt64(uint64_t value) { return WritePOD(value); }
-  bool WriteSizeT(size_t value) {
-    // Always write size_t as a 64-bit value to ensure compatibility between
+  void WriteBool(bool value) { WriteInt8(value ? 1 : 0);}
+  void WriteInt8(int8_t value) { WritePOD(value); }
+  void WriteUInt8(uint8_t value) { WritePOD(value); }
+  void WriteInt16(int16_t value) { WritePOD(value); }
+  void WriteUInt16(uint16_t value) { WritePOD(value); }
+  void WriteInt32(int32_t value) { WritePOD(value); }
+  void WriteUInt32(uint32_t value) { WritePOD(value); }
+  void WriteInt64(int64_t value) { WritePOD(value); }
+  void WriteUInt64(uint64_t value) { WritePOD(value); }
+  void WriteInt(int value) { WritePOD(value); }
+  void WriteFloat(float value) { WritePOD(value); }
+  void WriteDouble(double value) { WritePOD(value); }
+  void WriteLong(long value) {
+    // Always write long as a 64-bit value to ensure compatibility between
     // 32-bit and 64-bit processes.
-    return WritePOD(static_cast<uint64_t>(value));
+    WritePOD(static_cast<int64_t>(value));
   }
-  bool WriteFloat(float value) {
-    return WritePOD(value);
+
+  inline void WriteLength(size_t value) {
+    WriteInt32(checked_cast<int32_t>(value));
   }
-  bool WriteDouble(double value) {
-    return WritePOD(value);
-  }
-  bool WriteString(const StringPiece& value);
-  bool WriteString16(const StringPiece16& value);
+
+  // Write string length and string bytes.
+  void WriteString(const StringPiece& value);
+  void WriteString16(const StringPiece16& value);
+
   // "Data" is a blob with a length. When you read it out you will be given the
   // length. See also WriteBytes.
-  bool WriteData(const char* data, int length);
+  void WriteData(const char* data, size_t length);
+  
   // "Bytes" is a blob with no length. The caller must specify the length both
   // when reading and writing. It is normally used to serialize PoD types of a
   // known size. See also WriteData.
-  bool WriteBytes(const void* data, int length);
+  void WriteBytes(const void* data, size_t length);
 
   // Reserves space for upcoming writes when multiple writes will be made and
   // their sizes are computed in advance. It can be significantly faster to call
@@ -298,12 +298,13 @@ class CRBASE_EXPORT Pickle {
   size_t write_offset_;
 
   // Just like WriteBytes, but with a compile-time size, for performance.
-  template<size_t length> void CRBASE_EXPORT WriteBytesStatic(const void* data);
+  template<size_t length> 
+  void CRBASE_EXPORT WriteBytesStatic(const void* data);
 
   // Writes a POD by copying its bytes.
-  template <typename T> bool WritePOD(const T& data) {
+  template <typename T> 
+  void WritePOD(const T& data) {
     WriteBytesStatic<sizeof(data)>(&data);
-    return true;
   }
 
   inline void* ClaimUninitializedBytesInternal(size_t num_bytes);

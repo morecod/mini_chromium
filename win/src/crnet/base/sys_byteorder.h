@@ -13,7 +13,7 @@
 #include <stdint.h>
 
 #include "crbase/build_config.h"
-#include "crbase/bytes_swap.h"
+#include "crbase/byte_order.h"
 
 namespace crnet {
 

@@ -28,6 +28,7 @@
 #include <string>
 
 #include "crbase/base_export.h"
+#include "crbase/logging.h"
 #include "crbase/strings/string16.h"
 
 namespace cr {
@@ -208,14 +209,29 @@ template <typename STRING_TYPE> class BasicStringPiece {
     length_ = str ? STRING_TYPE::traits_type::length(str) : 0;
   }
 
-  value_type operator[](size_type i) const { return ptr_[i]; }
+  value_type operator[](size_type i) const { 
+    CR_CHECK(i < length_);
+    return ptr_[i]; 
+  }
+
+  value_type front() const {
+    CR_CHECK_NE(0UL, length_);
+    return ptr_[0];
+  }
+
+  value_type back() const {
+    CR_CHECK_NE(0UL, length_);
+    return ptr_[length_ - 1];
+  }
 
   void remove_prefix(size_type n) {
+    CR_CHECK(n <= length_);
     ptr_ += n;
     length_ -= n;
   }
 
   void remove_suffix(size_type n) {
+    CR_CHECK(n <= length_);
     length_ -= n;
   }
 
@@ -421,7 +437,7 @@ CRBASE_EXPORT std::ostream& operator<<(std::ostream& o, const StringPiece& piece
 // This hash function is copied from base/containers/hash_tables.h. We don't
 // use the ones already defined for string and string16 directly because it
 // would require the string constructors to be called, which we don't want.
-#define CR_HASH_STRING_PIECE(StringPieceType, string_piece)           \
+#define CR_HASH_STRING_PIECE(StringPieceType, string_piece)             \
   std::size_t result = 0;                                               \
   for (StringPieceType::const_iterator i = string_piece.begin();        \
        i != string_piece.end(); ++i)                                    \

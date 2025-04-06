@@ -103,12 +103,8 @@ bool SyncMessage::ReadSyncHeader(const Message& msg, SyncHeader* header) {
 bool SyncMessage::WriteSyncHeader(Message* msg, const SyncHeader& header) {
   CR_DCHECK(msg->is_sync() || msg->is_reply());
   CR_DCHECK(msg->payload_size() == 0);
-  bool result = msg->WriteInt(header.message_id);
-  if (!result) {
-    CR_NOTREACHED();
-    return false;
-  }
-
+  msg->WriteInt(header.message_id);
+ 
   // Note: if you add anything here, you need to update kSyncMessageHeaderSize.
   CR_DCHECK(kSyncMessageHeaderSize == msg->payload_size());
 

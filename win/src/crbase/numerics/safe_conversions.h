@@ -10,6 +10,7 @@
 #include <limits>
 #include <type_traits>
 
+#include "crbase/logging.h"
 #include "crbase/numerics/safe_conversions_impl.h"
 
 namespace cr {
@@ -45,6 +46,7 @@ typename std::enable_if<!std::numeric_limits<T>::is_signed, bool>::type
 // overflow or underflow. NaN source will always trigger a CHECK.
 template <typename Dst, typename Src>
 inline Dst checked_cast(Src value) {
+  CR_CHECK(IsValueInRangeForNumericType<Dst>(value));
   return static_cast<Dst>(value);
 }
 
@@ -52,6 +54,7 @@ inline Dst checked_cast(Src value) {
 struct SaturatedCastNaNBehaviorCheck {
   template <typename T>
   static T HandleNaN() {
+    CR_CHECK(false);
     return T();
   }
 };
@@ -91,6 +94,7 @@ inline Dst saturated_cast(Src value) {
       return NaNHandler::template HandleNaN<Dst>();
   }
 
+  CR_NOTREACHED();
   return static_cast<Dst>(value);
 }
 

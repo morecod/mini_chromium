@@ -7,10 +7,18 @@
     <ClCompile Include="..\..\..\src\examples\crnet_stun_client\crnet_stun_client.cc">
       <Filter>crnet_stun_client</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\examples\crnet_stun_client\stun.cc">
+      <Filter>crnet_stun_client</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="crnet_stun_client">
       <UniqueIdentifier>{04fb8149-2d50-4898-b119-927eefd6046b}</UniqueIdentifier>
     </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\src\examples\crnet_stun_client\stun.h">
+      <Filter>crnet_stun_client</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -7,9 +7,6 @@
     <Filter Include="codes">
       <UniqueIdentifier>{bbcb5f9c-b6c3-4463-aed7-fce4cf3bc5a1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="crypto">
-      <UniqueIdentifier>{18039319-4622-46bf-9b0f-0c505d98e336}</UniqueIdentifier>
-    </Filter>
     <Filter Include="debug">
       <UniqueIdentifier>{02cea0cf-997e-40ed-8970-b3293d59e307}</UniqueIdentifier>
     </Filter>
@@ -79,6 +76,15 @@
     <Filter Include="functional">
       <UniqueIdentifier>{1cd3d220-06f3-443c-95fb-9800ee6e6b7b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="buffer">
+      <UniqueIdentifier>{cb9b66ed-bd58-44ca-8265-d806a1398bab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="digest">
+      <UniqueIdentifier>{18039319-4622-46bf-9b0f-0c505d98e336}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="containers">
+      <UniqueIdentifier>{15bef2de-1231-47e3-9b41-72b633a03f4d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\src\crbase\atomic\atomic_ref_count.h">
@@ -92,9 +98,6 @@
     </ClInclude>
     <ClInclude Include="..\..\..\src\crbase\codes\base64.h">
       <Filter>codes</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\crbase\crypto\sha1.h">
-      <Filter>crypto</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\crbase\debug\alias.h">
       <Filter>debug</Filter>
@@ -480,7 +483,6 @@
     <ClInclude Include="..\..\..\src\crbase\stl_util.h" />
     <ClInclude Include="..\..\..\src\crbase\sys_info.h" />
     <ClInclude Include="..\..\..\src\crbase\template_util.h" />
-    <ClInclude Include="..\..\..\src\crbase\tuple.h" />
     <ClInclude Include="..\..\..\src\crbase\value_conversions.h" />
     <ClInclude Include="..\..\..\src\crbase\values.h" />
     <ClInclude Include="..\..\..\src\crbase\version.h" />
@@ -488,7 +490,6 @@
     <ClInclude Include="..\..\..\src\crbase\strings\string_tokenizer.h">
       <Filter>strings</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\crbase\bytes_swap.h" />
     <ClInclude Include="..\..\..\src\crbase\strings\utf_offset_string_conversions.h">
       <Filter>strings</Filter>
     </ClInclude>
@@ -549,14 +550,35 @@
       <Filter>functional</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\crbase\immediate_crash.h" />
-    <ClInclude Include="..\..\..\src\crbase\array_view.h" />
+    <ClInclude Include="..\..\..\src\crbase\memory\zero_memory.h">
+      <Filter>memory</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\crbase\buffer\buffer.h">
+      <Filter>buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\crbase\buffer\byte_buffer.h">
+      <Filter>buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\crbase\byte_order.h" />
+    <ClInclude Include="..\..\..\src\crbase\digest\sha1.h">
+      <Filter>digest</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\crbase\digest\md5.h">
+      <Filter>digest</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\crbase\digest\crc32.h">
+      <Filter>digest</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\crbase\containers\array_view.h">
+      <Filter>containers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\crbase\containers\tuple.h">
+      <Filter>containers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\crbase\codes\base64.cc">
       <Filter>codes</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\crbase\crypto\sha1.cc">
-      <Filter>crypto</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\crbase\debug\alias.cc">
       <Filter>debug</Filter>
@@ -938,6 +960,21 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\crbase\functional\callback_internal.cc">
       <Filter>functional</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\crbase\memory\zero_memory.cc">
+      <Filter>memory</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\crbase\buffer\byte_buffer.cc">
+      <Filter>buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\crbase\digest\sha1.cc">
+      <Filter>digest</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\crbase\digest\md5.cc">
+      <Filter>digest</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\crbase\digest\crc32.cc">
+      <Filter>digest</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

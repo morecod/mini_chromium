@@ -4,7 +4,7 @@
 #include "crbase/logging.h"
 
 #include "crnet/base/net_errors.h"
-#include "crnet/socket/tcp_server_socket.h"
+#include "crnet/socket/tcp/tcp_server_socket.h"
 #include "crnet/server/stream_connection.h"
 #include "crnet/server/stream_server.h"
 
@@ -15,10 +15,10 @@
 namespace {
 
 void InitLogging() {
-  crbase_logging::LoggingSettings settings;
-  settings.logging_dest = crbase_logging::LOG_TO_STDERR;
+  cr_logging::LoggingSettings settings;
+  settings.logging_dest = cr_logging::LOG_TO_STDERR;
 
-  crbase_logging::InitLogging(settings);
+  cr_logging::InitLogging(settings);
 }
 
 class TCPSimpleServer : public crnet::StreamServer::Delegate {
@@ -32,7 +32,7 @@ class TCPSimpleServer : public crnet::StreamServer::Delegate {
   // crnet::StreamServer::Delegate overrides.
   void OnConnectionCreate(uint32_t connection_id) override;
   int OnConnectionData(uint32_t connection_id, 
-                       const char* data, int data_len) override;
+                       const char* data, size_t data_len) override;
   void OnConnectionClose(uint32_t connection_id) override;
 
  private:
@@ -69,11 +69,12 @@ void TCPSimpleServer::OnConnectionCreate(uint32_t connection_id) {
 }
 
 int TCPSimpleServer::OnConnectionData(uint32_t connection_id, 
-                                      const char* data, int data_len) {
+                                      const char* data, 
+                                      size_t data_len) {
   std::string msg;
   msg.assign(data, data_len);
   CR_LOG(INFO) << "Message[" << connection_id << "]:" << msg;
-  return data_len;
+  return static_cast<int>(data_len);
 }
 
 void TCPSimpleServer::OnConnectionClose(uint32_t connection_id) {

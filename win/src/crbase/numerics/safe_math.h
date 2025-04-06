@@ -80,6 +80,7 @@ class CheckedNumeric {
   // ValueOrDie() The primary accessor for the underlying value. If the current
   // state is not valid it will CHECK and crash.
   T ValueOrDie() const {
+    CR_CHECK(IsValid());
     return state_.value();
   }
 

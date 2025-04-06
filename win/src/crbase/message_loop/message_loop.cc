@@ -302,12 +302,6 @@ bool MessageLoop::HasHighResolutionTasks() {
   return incoming_task_queue_->HasHighResolutionTasks();
 }
 
-///bool MessageLoop::IsIdleForTesting() {
-///  // We only check the incoming queue, since we don't want to lock the work
-///  // queue.
-///  return incoming_task_queue_->IsIdleForTesting();
-///}
-
 //------------------------------------------------------------------------------
 
 // static

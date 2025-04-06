@@ -10,8 +10,7 @@
 
 #include "crnet/base/net_export.h"
 #include "crnet/base/rand_callback.h"
-#include "crnet/udp/datagram_socket.h"
-///#include "crnet/socket/socket_performance_watcher.h"
+#include "crnet/socket/udp/datagram_socket.h"
 
 namespace crnet {
 
@@ -28,8 +27,7 @@ class CRNET_EXPORT ClientSocketFactory {
   // |source| is the NetLogSource for the entity trying to create the socket,
   // if it has one.
   virtual std::unique_ptr<DatagramClientSocket> CreateDatagramClientSocket(
-      DatagramSocket::BindType bind_type,
-      const RandIntCallback& rand_int_cb) = 0;
+      DatagramSocket::BindType bind_type) = 0;
 
   virtual std::unique_ptr<StreamSocket> CreateTransportClientSocket(
       const AddressList& addresses) = 0;

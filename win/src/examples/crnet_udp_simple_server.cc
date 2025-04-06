@@ -10,7 +10,7 @@
 #include "crnet/base/ip_endpoint.h"
 #include "crnet/base/io_buffer.h"
 #include "crnet/base/net_errors.h"
-#include "crnet/udp/udp_server_socket.h"
+#include "crnet/socket/udp/udp_server_socket.h"
 
 #include "crbase/import_libs.cc"
 
@@ -19,10 +19,10 @@
 namespace {
   
 void InitLogging() {
-  crbase_logging::LoggingSettings settings;
-  settings.logging_dest = crbase_logging::LOG_TO_STDERR;
+  cr_logging::LoggingSettings settings;
+  settings.logging_dest = cr_logging::LOG_TO_STDERR;
 
-  crbase_logging::InitLogging(settings);
+  cr_logging::InitLogging(settings);
 }
 
 constexpr uint32_t kReadBufferSize = 1024;

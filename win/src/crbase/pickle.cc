@@ -14,6 +14,7 @@
 #include "crbase/logging.h"
 #include "crbase/bits.h"
 #include "crbase/macros.h"
+#include "crbase/numerics/safe_math.h"
 
 namespace cr {
 
@@ -26,13 +27,6 @@ PickleIterator::PickleIterator(const Pickle& pickle)
     : payload_(pickle.payload()),
       read_index_(0),
       end_index_(pickle.payload_size()) {
-}
-
-PickleIterator::PickleIterator(const char* payload, size_t payload_size)
-    : payload_(payload),
-      read_index_(0),
-      end_index_(payload_size) {
-
 }
 
 template <typename Type>
@@ -67,9 +61,8 @@ inline const char* PickleIterator::GetReadPointerAndAdvance() {
   return current_read_ptr;
 }
 
-const char* PickleIterator::GetReadPointerAndAdvance(int num_bytes) {
-  if (num_bytes < 0 ||
-      end_index_ - read_index_ < static_cast<size_t>(num_bytes)) {
+const char* PickleIterator::GetReadPointerAndAdvance(size_t num_bytes) {
+  if (num_bytes > end_index_ - read_index_) {
     read_index_ = end_index_;
     return NULL;
   }
@@ -79,14 +72,16 @@ const char* PickleIterator::GetReadPointerAndAdvance(int num_bytes) {
 }
 
 inline const char* PickleIterator::GetReadPointerAndAdvance(
-    int num_elements,
+    size_t num_elements,
     size_t size_element) {
-  // Check for int32_t overflow.
-  int64_t num_bytes = static_cast<int64_t>(num_elements) * size_element;
-  int num_bytes32 = static_cast<int>(num_bytes);
-  if (num_bytes != static_cast<int64_t>(num_bytes32))
+  CheckedNumeric<size_t> num_bytes = num_elements;
+  num_bytes *= size_element;
+
+  // Check for size_t overflow.
+  if (!num_bytes.IsValid())
     return NULL;
-  return GetReadPointerAndAdvance(num_bytes32);
+
+  return GetReadPointerAndAdvance(num_bytes.ValueUnsafe());
 }
 
 bool PickleIterator::ReadBool(bool* result) {
@@ -101,15 +96,15 @@ bool PickleIterator::ReadUInt8(uint8_t* result) {
   return ReadBuiltinType(result);
 }
 
-bool PickleIterator::ReadInt(int* result) {
-  return ReadBuiltinType(result);
-}
-
-bool PickleIterator::ReadLong(long* result) {
+bool PickleIterator::ReadInt16(int16_t* result) {
   return ReadBuiltinType(result);
 }
 
 bool PickleIterator::ReadUInt16(uint16_t* result) {
+  return ReadBuiltinType(result);
+}
+
+bool PickleIterator::ReadInt32(int32_t* result) {
   return ReadBuiltinType(result);
 }
 
@@ -125,14 +120,17 @@ bool PickleIterator::ReadUInt64(uint64_t* result) {
   return ReadBuiltinType(result);
 }
 
-bool PickleIterator::ReadSizeT(size_t* result) {
-  // Always read size_t as a 64-bit value to ensure compatibility between 32-bit
-  // and 64-bit processes.
-  uint64_t result_uint64 = 0;
-  bool success = ReadBuiltinType(&result_uint64);
-  *result = static_cast<size_t>(result_uint64);
-  // Fail if the cast above truncates the value.
-  return success && (*result == result_uint64);
+bool PickleIterator::ReadInt(int* result) {
+  return ReadBuiltinType(result);
+}
+
+bool PickleIterator::ReadLong(long* result) {
+  int64_t r64;
+  if (ReadBuiltinType(&r64)) {
+    *result = static_cast<long>(r64);
+    return true;
+  }
+  return false;
 }
 
 bool PickleIterator::ReadFloat(float* result) {
@@ -160,8 +158,8 @@ bool PickleIterator::ReadDouble(double* result) {
 }
 
 bool PickleIterator::ReadString(std::string* result) {
-  int len;
-  if (!ReadInt(&len))
+  size_t len;
+  if (!ReadLength(&len))
     return false;
   const char* read_from = GetReadPointerAndAdvance(len);
   if (!read_from)
@@ -172,8 +170,8 @@ bool PickleIterator::ReadString(std::string* result) {
 }
 
 bool PickleIterator::ReadStringPiece(StringPiece* result) {
-  int len;
-  if (!ReadInt(&len))
+  size_t len;
+  if (!ReadLength(&len))
     return false;
   const char* read_from = GetReadPointerAndAdvance(len);
   if (!read_from)
@@ -184,8 +182,8 @@ bool PickleIterator::ReadStringPiece(StringPiece* result) {
 }
 
 bool PickleIterator::ReadString16(string16* result) {
-  int len;
-  if (!ReadInt(&len))
+  size_t len;
+  if (!ReadLength(&len))
     return false;
   const char* read_from = GetReadPointerAndAdvance(len, sizeof(char16));
   if (!read_from)
@@ -196,8 +194,8 @@ bool PickleIterator::ReadString16(string16* result) {
 }
 
 bool PickleIterator::ReadStringPiece16(StringPiece16* result) {
-  int len;
-  if (!ReadInt(&len))
+  size_t len;
+  if (!ReadLength(&len))
     return false;
   const char* read_from = GetReadPointerAndAdvance(len, sizeof(char16));
   if (!read_from)
@@ -207,17 +205,17 @@ bool PickleIterator::ReadStringPiece16(StringPiece16* result) {
   return true;
 }
 
-bool PickleIterator::ReadData(const char** data, int* length) {
+bool PickleIterator::ReadData(const char** data, size_t* length) {
   *length = 0;
   *data = 0;
 
-  if (!ReadInt(length))
+  if (!ReadLength(length))
     return false;
 
   return ReadBytes(data, *length);
 }
 
-bool PickleIterator::ReadBytes(const char** data, int length) {
+bool PickleIterator::ReadBytes(const char** data, size_t length) {
   const char* read_from = GetReadPointerAndAdvance(length);
   if (!read_from)
     return false;
@@ -247,12 +245,12 @@ Pickle::Pickle(int header_size)
   header_->payload_size = 0;
 }
 
-Pickle::Pickle(const char* data, int data_len)
+Pickle::Pickle(const char* data, size_t data_len)
     : header_(reinterpret_cast<Header*>(const_cast<char*>(data))),
       header_size_(0),
       capacity_after_header_(kCapacityReadOnly),
       write_offset_(0) {
-  if (data_len >= static_cast<int>(sizeof(Header)))
+  if (data_len >= sizeof(Header))
     header_size_ = data_len - header_->payload_size;
 
   if (header_size_ > static_cast<unsigned int>(data_len))
@@ -300,28 +298,23 @@ Pickle& Pickle::operator=(const Pickle& other) {
   return *this;
 }
 
-bool Pickle::WriteString(const StringPiece& value) {
-  if (!WriteInt(static_cast<int>(value.size())))
-    return false;
-
-  return WriteBytes(value.data(), static_cast<int>(value.size()));
+void Pickle::WriteString(const StringPiece& value) {
+  WriteLength(value.size());
+  WriteBytes(value.data(), static_cast<int>(value.size()));
 }
 
-bool Pickle::WriteString16(const StringPiece16& value) {
-  if (!WriteInt(static_cast<int>(value.size())))
-    return false;
-
-  return WriteBytes(value.data(),
-                    static_cast<int>(value.size()) * sizeof(char16));
+void Pickle::WriteString16(const StringPiece16& value) {
+  WriteLength(value.size());
+  WriteBytes(value.data(), static_cast<int>(value.size()) * sizeof(char16));
 }
 
-bool Pickle::WriteData(const char* data, int length) {
-  return length >= 0 && WriteInt(length) && WriteBytes(data, length);
+void Pickle::WriteData(const char* data, size_t length) {
+  WriteLength(length); 
+  WriteBytes(data, length);
 }
 
-bool Pickle::WriteBytes(const void* data, int length) {
+void Pickle::WriteBytes(const void* data, size_t length) {
   WriteBytesCommon(data, length);
-  return true;
 }
 
 void Pickle::Reserve(size_t length) {

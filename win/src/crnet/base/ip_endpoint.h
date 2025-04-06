@@ -11,15 +11,13 @@
 
 #include "crbase/compiler_specific.h"
 #include "crnet/base/address_family.h"
-#include "crnet/base/ip_address_number.h"
+#include "crnet/base/ip_address.h"
 #include "crnet/base/net_export.h"
 #include "crnet/base/sys_addrinfo.h"
 
 struct sockaddr;
 
 namespace crnet {
-
-class IPAddress;
 
 // An IPEndPoint represents the address of a transport endpoint:
 //  * IP address (either v4 or v6)
@@ -28,12 +26,11 @@ class CRNET_EXPORT IPEndPoint {
  public:
   IPEndPoint();
   ~IPEndPoint();
-  // DEPRECATED(crbug.com/496258): Use the ctor that takes IPAddress instead.
-  IPEndPoint(const IPAddressNumber& address, uint16_t port);
+
   IPEndPoint(const IPAddress& address, uint16_t port);
   IPEndPoint(const IPEndPoint& endpoint);
-
-  const IPAddressNumber& address() const { return address_; }
+  
+  const IPAddress& address() const { return address_; }
   uint16_t port() const { return port_; }
 
   // Returns AddressFamily of the address.
@@ -70,7 +67,7 @@ class CRNET_EXPORT IPEndPoint {
   bool operator==(const IPEndPoint& that) const;
 
  private:
-  IPAddressNumber address_;
+  IPAddress address_;
   uint16_t port_;
 };
 

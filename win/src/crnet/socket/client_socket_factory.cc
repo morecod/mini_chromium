@@ -8,8 +8,8 @@
 
 #include "crbase/lazy_instance.h"
 #include "crbase/build_config.h"
-#include "crnet/socket/tcp_client_socket.h"
-#include "crnet/udp/udp_client_socket.h"
+#include "crnet/socket/tcp/tcp_client_socket.h"
+#include "crnet/socket/udp/udp_client_socket.h"
 
 namespace crnet {
 
@@ -26,10 +26,9 @@ class DefaultClientSocketFactory : public ClientSocketFactory {
   }
 
   std::unique_ptr<DatagramClientSocket> CreateDatagramClientSocket(
-      DatagramSocket::BindType bind_type,
-      const RandIntCallback& rand_int_cb) override {
+      DatagramSocket::BindType bind_type) override {
     return std::unique_ptr<DatagramClientSocket>(
-        new UDPClientSocket(bind_type, rand_int_cb));
+        new UDPClientSocket(bind_type));
   }
 
   std::unique_ptr<StreamSocket> CreateTransportClientSocket(

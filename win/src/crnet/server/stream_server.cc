@@ -19,9 +19,9 @@
 #include "crnet/base/sys_byteorder.h"
 #include "crnet/base/net_errors.h"
 #include "crnet/server/stream_connection.h"
-#include "crnet/socket/server_socket.h"
-#include "crnet/socket/stream_socket.h"
-#include "crnet/socket/tcp_server_socket.h"
+#include "crnet/socket/tcp/server_socket.h"
+#include "crnet/socket/tcp/stream_socket.h"
+#include "crnet/socket/tcp/tcp_server_socket.h"
 #include "crbase/build_config.h"
 
 namespace crnet {
@@ -144,7 +144,7 @@ void StreamServer::DoReadLoop(StreamConnection* connection) {
 
     rv = connection->socket()->Read(
         read_buf,
-        read_buf->RemainingCapacity(),
+        static_cast<int>(read_buf->RemainingCapacity()),
         cr::BindOnce(&StreamServer::OnReadCompleted,
                      weak_ptr_factory_.GetWeakPtr(), connection->id()));
     if (rv == ERR_IO_PENDING)
@@ -172,9 +172,11 @@ int StreamServer::HandleReadResult(StreamConnection* connection, int rv) {
   read_buf->DidRead(rv);
 
   // Handles stream.
-  while (read_buf->GetSize() > 0) {
+  while (!read_buf->readable_bytes().empty()) {
     int handled = delegate_->OnConnectionData(
-        connection->id(), read_buf->StartOfBuffer(),  read_buf->GetSize());
+        connection->id(), 
+        reinterpret_cast<const char*>(read_buf->readable_bytes().data()),  
+        read_buf->readable_bytes().size());
     if (handled == 0) {
       break;
     }
@@ -198,7 +200,7 @@ void StreamServer::DoWriteLoop(StreamConnection* connection) {
   while (rv == OK && write_buf->GetSizeToWrite() > 0) {
     rv = connection->socket()->Write(
         write_buf,
-        write_buf->GetSizeToWrite(),
+        static_cast<int>(write_buf->GetSizeToWrite()),
         cr::BindOnce(&StreamServer::OnWriteCompleted,
                      weak_ptr_factory_.GetWeakPtr(), connection->id()));
     if (rv == ERR_IO_PENDING || rv == OK)

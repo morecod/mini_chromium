@@ -4,14 +4,17 @@
     <Filter Include="base">
       <UniqueIdentifier>{188a862e-d03c-44c1-8622-45a0453712ce}</UniqueIdentifier>
     </Filter>
-    <Filter Include="socket">
-      <UniqueIdentifier>{4bf6ce21-f5b9-4e58-b87f-4b5d65e37635}</UniqueIdentifier>
-    </Filter>
     <Filter Include="server">
       <UniqueIdentifier>{29782671-098f-44c7-adea-0ab7b5924ed5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="udp">
-      <UniqueIdentifier>{4dd43860-002d-4cba-ab74-99f83aeb0036}</UniqueIdentifier>
+    <Filter Include="socket">
+      <UniqueIdentifier>{02ba20a9-4dcd-452a-bcf0-40c5e5cc7000}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="socket\tcp">
+      <UniqueIdentifier>{af33ccf7-5119-46fa-96b0-81d95ab2aafa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="socket\udp">
+      <UniqueIdentifier>{71455e08-f159-4dc2-9638-d6d291663fd1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -19,9 +22,6 @@
       <Filter>base</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\crnet\base\ip_address.cc">
-      <Filter>base</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\crnet\base\ip_address_number.cc">
       <Filter>base</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\crnet\base\ip_endpoint.cc">
@@ -42,34 +42,13 @@
     <ClCompile Include="..\..\..\src\crnet\base\address_list.cc">
       <Filter>base</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\crnet\socket\tcp_socket_win.cc">
-      <Filter>socket</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\src\crnet\base\net_errors_win.cc">
       <Filter>base</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\crnet\base\net_errors.cc">
       <Filter>base</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\crnet\socket\socket_descriptor.cc">
-      <Filter>socket</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\src\crnet\base\winsock_util.cc">
-      <Filter>base</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\crnet\socket\server_socket.cc">
-      <Filter>socket</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\crnet\socket\tcp_server_socket.cc">
-      <Filter>socket</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\crnet\socket\tcp_client_socket.cc">
-      <Filter>socket</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\crnet\socket\stream_socket.cc">
-      <Filter>socket</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\crnet\base\net_util.cc">
       <Filter>base</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\crnet\server\stream_connection.cc">
@@ -77,15 +56,6 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\crnet\server\stream_server.cc">
       <Filter>server</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\crnet\udp\udp_client_socket.cc">
-      <Filter>udp</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\crnet\udp\udp_server_socket.cc">
-      <Filter>udp</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\crnet\udp\udp_socket_win.cc">
-      <Filter>udp</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\crnet\base\file_stream.cc">
       <Filter>base</Filter>
@@ -96,11 +66,38 @@
     <ClCompile Include="..\..\..\src\crnet\base\file_stream_context_win.cc">
       <Filter>base</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\crnet\socket\udp\datagram_server_socket.cc">
+      <Filter>socket\udp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\crnet\socket\udp\udp_client_socket.cc">
+      <Filter>socket\udp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\crnet\socket\udp\udp_server_socket.cc">
+      <Filter>socket\udp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\crnet\socket\udp\udp_socket_win.cc">
+      <Filter>socket\udp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\crnet\socket\tcp\server_socket.cc">
+      <Filter>socket\tcp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\crnet\socket\tcp\stream_socket.cc">
+      <Filter>socket\tcp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\crnet\socket\tcp\tcp_client_socket.cc">
+      <Filter>socket\tcp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\crnet\socket\tcp\tcp_server_socket.cc">
+      <Filter>socket\tcp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\crnet\socket\tcp\tcp_socket_win.cc">
+      <Filter>socket\tcp</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\src\crnet\socket\client_socket_factory.cc">
       <Filter>socket</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\crnet\udp\datagram_server_socket.cc">
-      <Filter>udp</Filter>
+    <ClCompile Include="..\..\..\src\crnet\socket\socket_descriptor.cc">
+      <Filter>socket</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -108,9 +105,6 @@
       <Filter>base</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\crnet\base\ip_address.h">
-      <Filter>base</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\crnet\base\ip_address_number.h">
       <Filter>base</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\crnet\base\ip_endpoint.h">
@@ -143,40 +137,10 @@
     <ClInclude Include="..\..\..\src\crnet\base\address_list.h">
       <Filter>base</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\crnet\socket\tcp_socket_win.h">
-      <Filter>socket</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\src\crnet\base\net_errors.h">
       <Filter>base</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\crnet\base\net_error_list.h">
-      <Filter>base</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\crnet\socket\socket_descriptor.h">
-      <Filter>socket</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\crnet\socket\tcp_socket.h">
-      <Filter>socket</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\crnet\socket\socket.h">
-      <Filter>socket</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\crnet\socket\server_socket.h">
-      <Filter>socket</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\crnet\socket\tcp_server_socket.h">
-      <Filter>socket</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\crnet\socket\connection_attempts.h">
-      <Filter>socket</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\crnet\socket\tcp_client_socket.h">
-      <Filter>socket</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\crnet\socket\stream_socket.h">
-      <Filter>socket</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\crnet\base\net_util.h">
       <Filter>base</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\crnet\server\stream_connection.h">
@@ -185,32 +149,8 @@
     <ClInclude Include="..\..\..\src\crnet\server\stream_server.h">
       <Filter>server</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\crnet\udp\udp_socket_win.h">
-      <Filter>udp</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\crnet\udp\datagram_client_socket.h">
-      <Filter>udp</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\crnet\udp\datagram_server_socket.h">
-      <Filter>udp</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\crnet\udp\udp_client_socket.h">
-      <Filter>udp</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\crnet\udp\udp_server_socket.h">
-      <Filter>udp</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\crnet\udp\udp_socket.h">
-      <Filter>udp</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\crnet\udp\datagram_socket.h">
-      <Filter>udp</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\src\crnet\base\rand_callback.h">
       <Filter>base</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\crnet\udp\diff_serv_code_point.h">
-      <Filter>udp</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\crnet\base\completion_once_callback.h">
       <Filter>base</Filter>
@@ -221,7 +161,58 @@
     <ClInclude Include="..\..\..\src\crnet\base\file_stream_context.h">
       <Filter>base</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\crnet\socket\udp\datagram_client_socket.h">
+      <Filter>socket\udp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\crnet\socket\udp\datagram_server_socket.h">
+      <Filter>socket\udp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\crnet\socket\udp\datagram_socket.h">
+      <Filter>socket\udp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\crnet\socket\udp\diff_serv_code_point.h">
+      <Filter>socket\udp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\crnet\socket\udp\udp_client_socket.h">
+      <Filter>socket\udp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\crnet\socket\udp\udp_server_socket.h">
+      <Filter>socket\udp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\crnet\socket\udp\udp_socket.h">
+      <Filter>socket\udp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\crnet\socket\udp\udp_socket_win.h">
+      <Filter>socket\udp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\crnet\socket\tcp\server_socket.h">
+      <Filter>socket\tcp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\crnet\socket\tcp\stream_socket.h">
+      <Filter>socket\tcp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\crnet\socket\tcp\tcp_client_socket.h">
+      <Filter>socket\tcp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\crnet\socket\tcp\tcp_server_socket.h">
+      <Filter>socket\tcp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\crnet\socket\tcp\tcp_socket.h">
+      <Filter>socket\tcp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\crnet\socket\tcp\tcp_socket_win.h">
+      <Filter>socket\tcp</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\src\crnet\socket\client_socket_factory.h">
+      <Filter>socket</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\crnet\socket\connection_attempts.h">
+      <Filter>socket</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\crnet\socket\socket.h">
+      <Filter>socket</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\crnet\socket\socket_descriptor.h">
       <Filter>socket</Filter>
     </ClInclude>
   </ItemGroup>

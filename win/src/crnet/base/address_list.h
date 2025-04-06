@@ -11,8 +11,8 @@
 #include <vector>
 
 #include "crbase/compiler_specific.h"
-#include "crnet/base/ip_address_number.h"
 #include "crnet/base/ip_endpoint.h"
+#include "crnet/base/ip_address.h"
 #include "crnet/base/net_export.h"
 ///#include "crnet/log/net_log.h"
 
@@ -30,10 +30,6 @@ class CRNET_EXPORT AddressList
 
   // Creates an address list for a single IP literal.
   explicit AddressList(const IPEndPoint& endpoint);
-
-  // DEPRECATED(crbug.com/496258): Use the method below that takes IPAddress.
-  static AddressList CreateFromIPAddress(const IPAddressNumber& address,
-                                         uint16_t port);
 
   static AddressList CreateFromIPAddress(const IPAddress& address,
                                          uint16_t port);

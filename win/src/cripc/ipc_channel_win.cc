@@ -198,12 +198,12 @@ void ChannelWin::HandleInternalMessage(const Message& msg) {
                static_cast<unsigned>(Channel::HELLO_MESSAGE_TYPE));
   // The hello message contains one parameter containing the PID.
   cr::PickleIterator it(msg);
-  int32_t claimed_pid;
-  bool failed = !it.ReadInt(&claimed_pid);
+  uint32_t claimed_pid;
+  bool failed = !it.ReadUInt32(&claimed_pid);
 
   if (!failed && validate_client_) {
-    int32_t secret;
-    failed = it.ReadInt(&secret) ? (secret != client_secret_) : true;
+    uint32_t secret;
+    failed = it.ReadUInt32(&secret) ? (secret != client_secret_) : true;
   }
 
   if (failed) {
@@ -233,14 +233,14 @@ bool ChannelWin::DidEmptyInputBuffers() {
 
 // static
 const cr::string16 ChannelWin::PipeName(const std::string& channel_id,
-                                            int32_t* secret) {
+                                        uint32_t* secret) {
   std::string name("\\\\.\\pipe\\cripc.");
 
   // Prevent the shared secret from ending up in the pipe name.
   size_t index = channel_id.find_first_of('\\');
   if (index != std::string::npos) {
     if (secret)  // Retrieve the secret if asked for.
-      cr::StringToInt(channel_id.substr(index + 1), secret);
+      cr::StringToUint(channel_id.substr(index + 1), secret);
     return cr::ASCIIToUTF16(name.append(channel_id.substr(0, index - 1)));
   }
 
@@ -333,12 +333,10 @@ bool ChannelWin::CreatePipe(const ChannelHandle &channel_handle,
 
   // Don't send the secret to the untrusted process, and don't send a secret
   // if the value is zero (for IPC backwards compatability).
-  int32_t secret = validate_client_ ? 0 : client_secret_;
-  if (!m->WriteInt(GetCurrentProcessId()) ||
-      (secret && !m->WriteUInt32(secret))) {
-    pipe_.Close();
-    return false;
-  }
+  uint32_t secret = validate_client_ ? 0 : client_secret_;
+  m->WriteUInt32(GetCurrentProcessId());
+  if (secret)
+    m->WriteUInt32(secret);
 
   OutputElement* element = new OutputElement(m.release());
   output_queue_.push(element);
